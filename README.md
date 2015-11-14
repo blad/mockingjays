@@ -15,7 +15,7 @@ API at least once.
 ## Command Line
 ### Install Mockingjays
 ```bash
-npm install -g moockingjays
+npm install -g mockingjays
 ```
 
 ### Start Mockingjays
