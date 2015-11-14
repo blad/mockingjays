@@ -1,0 +1,26 @@
+{
+  "name": "mockingjays",
+  "version": "0.0.1",
+  "description": "Mockingjays is a proxying library that mocks APIs requests only after observing a request and response a single time.",
+  "main": "mockingjays.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blad/mockingjays.git"
+  },
+  "keywords": [
+    "mock",
+    "proxy",
+    "api",
+    "cache",
+    "tools"
+  ],
+  "author": "Bladymir Tellez <btellez@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/blad/mockingjays/issues"
+  },
+  "homepage": "https://github.com/blad/mockingjays#readme"
+}
