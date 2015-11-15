@@ -7,16 +7,14 @@ var CacheClient = function(cacheDir) {
 
 CacheClient.prototype.isCached = function (request) {
   var self = this;
-  return new Promise(function(resolve, reject) {
-    var mode = FileSystem.F_OK | FileSystem.R_OK | FileSystem.W_OK;
-    FileSystem.access(self.path(request), mode, function (error) {
-      if (error) { // No Access, File Does Not Exist.
-        resolve(false);
-      } else { // File Exists and is accessable.
-        resolve(true);
-      }
-    });
-  });
+  var mode = FileSystem.F_OK | FileSystem.R_OK | FileSystem.W_OK;
+  var error;
+  try {
+    error = FileSystem.accessSync(self.path(request), mode);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 CacheClient.prototype.fetch = function (request) {
@@ -27,6 +25,19 @@ CacheClient.prototype.fetch = function (request) {
         reject(err);
       } else {
         resolve(data);
+      }
+    });
+  });
+}
+
+CacheClient.prototype.record = function (request, response) {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    FileSystem.writeFile(self.path(request), response, function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(response);
       }
     });
   });
