@@ -1,15 +1,15 @@
 Mockingjays
 ========================
 
-Mockingjays is a proxying library that mocks APIs requests only after
+*Mockingjays* is a proxying library that mocks APIs requests only after
 observing a request and response a single time.
 
-The idea behind Mockingjays is that when mocking you *should* not need to
+The idea behind *Mockingjays* is that when mocking you *should* not need to
 spend time copying and pasting requests and responses to test your app
 logic against a mock implementation of the API.
 
-The caveat being that you need to train Mockingjays, but this can be done 
-simply by having Mocking.js observe(proxy) the interactions with your
+The caveat being that you need to train *Mockingjays*, but this can be done
+simply by having *Mockingjays* observe(proxy) the interactions with your
 API at least once.
 
 ## Command Line
@@ -21,21 +21,19 @@ npm install -g mockingjays
 ### Start Mockingjays
 ```bash
 mockingjays \
-  --port=9000 \
-  --cache-dir=/var/app/fixtures \
-  --server-base-url='http://swapi.co/api/'
+  --port=9000 \ # Port that the proxy server should bind to.
+  --cache-dir=/var/app/fixtures \ # Place where cached responses are stored.
+  --server-base-url='http://swapi.co' # Place where an unseen request can be learned.
 ```
 
 ## Programatic API
 ```javascript
-Mockingjays = require('mockingjays');
-options = {
-  port: 9000,
-  cacheDir: '/var/app/fixtures',
-  serverBaseUrl: 'http://swapi.co/api/'
-};
-
-Mockingjays.start(options);
+var Mockingjays = require('../mockingjays')
+new Mockingjays().start({
+  port: 9000, // Port that the proxy server should bind to.
+  cacheDir: '/var/app/fixtures', // Place where cached responses are stored.
+  serverBaseUrl: 'http://swapi.co' // Place where an unseen request can be learned.
+});
 ```
 
 # License: Apache 2.0
