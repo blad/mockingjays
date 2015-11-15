@@ -14,8 +14,9 @@ var Mockingjays = function() {}
  *          :serverBaseUrl - Base URL for the source server.
  */
 Mockingjays.prototype.start = function(options) {
-  var finalOptions = DefaultOptions.merge(options);
-  var mockingjay = new Mockingjay();
+  var defaultOptions = new DefaultOptions();
+  var finalOptions = defaultOptions.merge(options);
+  var mockingjay = new Mockingjay(finalOptions);
   Server.listen(finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
 }
 
