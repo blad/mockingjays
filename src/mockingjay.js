@@ -23,7 +23,7 @@ Mockingjay.prototype.knows = function(request) {
  * Fetch a Request form cache.
  */
 Mockingjay.prototype.repeat = function(request) {
-  console.log('Mockingjay Repeating: ' + JSON.stringify(request));
+  console.log("\tMockingjay Repeating: " + JSON.stringify(request));
   return this.cacheClient.fetch(request);
 };
 
@@ -31,7 +31,7 @@ Mockingjay.prototype.repeat = function(request) {
  * Fetch a Request form the Source.
  */
 Mockingjay.prototype.learn = function(request) {
-  console.log('Mockingjay Learning: ' + JSON.stringify(request));
+  console.log("\tMockingjay Learning: " + JSON.stringify(request));
   var self = this;
   var responsePromise = this.httpClient.fetch(request);
   return responsePromise.then(function(response) {
@@ -47,8 +47,11 @@ Mockingjay.prototype.learn = function(request) {
 Mockingjay.prototype.echo = function(request, outputBuffer) {
   var responsePromise = this.knows(request) ? this.repeat(request) : this.learn(request);
   responsePromise.then(function(response) {
+    var responseString = JSON.stringify(response.data);
+    console.log("\n\tResponding: ", response.status, response.type);
+    console.log("\t"+ responseString);
     outputBuffer.writeHead(response.status, response.type);
-    outputBuffer.write(JSON.stringify(response.data));
+    outputBuffer.write(responseString);
     outputBuffer.end();
   });
 };
@@ -60,11 +63,14 @@ Mockingjay.prototype.onRequest = function(request, response) {
   var self = this;
   var simplifiedRequest = this.simplify(request);
 
-  // Set CORS headers
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Request-Method', '*');
-  response.setHeader('Access-Control-Allow-Methods', ' POST, GET, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Authorization');
+  console.log("\n\t\[\033[1;34m\]New Request:\[\033[0m\]", request.url, request.method);
+  if (request.method === 'OPTIONS') {
+    // Set CORS headers
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Request-Method', '*');
+    response.setHeader('Access-Control-Allow-Methods', ' POST, GET, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Authorization');
+  }
 
   request.on('data', function(data) {
     simplifiedRequest.body += data;
@@ -107,8 +113,10 @@ Mockingjay.prototype.reduceHeaders = function (requestHeaders) {
     'access-control-request-method',
     'accept-encoding',
     'accept-language',
+    'cache-control',
     'host',
     'origin',
+    'pragma',
     'referer',
     'user-agent'].forEach(function (key) {
     delete headers[key];

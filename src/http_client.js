@@ -23,7 +23,13 @@ HttpClient.prototype.fetch = function (requestOptions) {
         responseData += chunk;
       });
       res.on('end', function() {
-        resolve({status: statusCode, type: contentType, data: responseData});
+        options.body = requestOptions.body; // For Record Keeping
+        resolve({
+                  request: options,
+                  status: statusCode,
+                  type: contentType,
+                  data: options.method == 'OPTIONS' ? responseData : JSON.parse(responseData)
+                });
       });
       res.on('error', function () {
         reject('Unable to load data from request.');

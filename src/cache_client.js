@@ -33,7 +33,7 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    FileSystem.writeFile(self.path(request), JSON.stringify(response), function (err) {
+    FileSystem.writeFile(self.path(request), JSON.stringify(response, null, 2), function (err) {
       if (err) {
         reject(err);
       } else {
