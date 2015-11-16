@@ -8,7 +8,7 @@ HttpClient.prototype.fetch = function (requestOptions) {
   var http = require(isHttps ? 'https' : 'http');
   var options = {
     hostname: urlSplit.hostname,
-    port: requestOptions.port || (isHttps ? 443 : 80),
+    port: urlSplit.port || (isHttps ? 443 : 80),
     path: urlSplit.path,
     method: requestOptions.method,
     headers: requestOptions.headers
