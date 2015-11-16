@@ -71,7 +71,11 @@ Mockingjay.prototype.onRequest = function(request, response) {
 
 
 Mockingjay.prototype.simplify = function (req) {
-  delete req.headers.host
+  // Remove Headers which Might Vary from agent to agent.
+  // Variability in headers leads to a different hash for a requst.
+  ['host', 'user-agent', 'accept'].forEach(function (key) {
+    delete req.headers[key];
+  });
   return {
     url: this.options.serverBaseUrl + req.url,
     body: '',
