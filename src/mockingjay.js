@@ -67,7 +67,7 @@ Mockingjay.prototype.onRequest = function(request, response) {
   response.setHeader('Access-Control-Allow-Headers', 'Authorization');
 
   request.on('data', function(data) {
-    request.body += data;
+    simplifiedRequest.body += data;
   });
 
   request.on('end', function() {
