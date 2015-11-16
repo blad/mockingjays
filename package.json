@@ -1,6 +1,6 @@
 {
   "name": "mockingjays",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Mockingjays is a proxying library that mocks APIs requests only after observing a request and response a single time.",
   "main": "mockingjays.js",
   "scripts": {
