@@ -45,11 +45,10 @@ Mockingjay.prototype.learn = function(request) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
-  console.log('Mockingjay echoing response for requests: ' + JSON.stringify(request));
   var responsePromise = this.knows(request) ? this.repeat(request) : this.learn(request);
   responsePromise.then(function(response) {
-    // outputBuffer.writeHead(200, {"Content-Type": "text/plain"});
-    outputBuffer.write(response);
+    outputBuffer.writeHead(response.status, response.type);
+    outputBuffer.write(JSON.stringify(response.data));
     outputBuffer.end();
   });
 };
@@ -59,29 +58,63 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
  */
 Mockingjay.prototype.onRequest = function(request, response) {
   var self = this;
-  var simplifiedResponse = this.simplify(request);
+  var simplifiedRequest = this.simplify(request);
+
+  // Set CORS headers
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Request-Method', '*');
+  response.setHeader('Access-Control-Allow-Methods', ' POST, GET, OPTIONS');
+  response.setHeader('Access-Control-Allow-Headers', 'Authorization');
+
   request.on('data', function(data) {
     request.body += data;
   });
 
   request.on('end', function() {
-    self.echo(simplifiedResponse, response);
+    self.echo(simplifiedRequest, response);
   });
 };
 
 
 Mockingjay.prototype.simplify = function (req) {
-  // Remove Headers which Might Vary from agent to agent.
-  // Variability in headers leads to a different hash for a requst.
-  ['host', 'user-agent', 'accept'].forEach(function (key) {
-    delete req.headers[key];
-  });
+  var headers = this.reduceHeaders(req.headers);
   return {
     url: this.options.serverBaseUrl + req.url,
     body: '',
-    headers: req.headers,
+    headers: headers,
     method: req.method
-  }
+  };
 };
+
+
+Mockingjay.prototype.reduceHeaders = function (requestHeaders) {
+  // Sort the keys to get predictable order in object keys.
+  var keys = [];
+  for (var key in requestHeaders) {
+    keys.push(key);
+  }
+  keys.sort();
+
+  // Copy the Keys in order:
+  var headers = {};
+  keys.forEach(function(key) {
+    headers[key] = requestHeaders[key];
+  });
+
+  // Remove Headers which Might Vary from agent to agent.
+  // Variability in headers leads to a different hash for a requst.
+  ['accept',
+    'access-control-request-method',
+    'accept-encoding',
+    'accept-language',
+    'host',
+    'origin',
+    'referer',
+    'user-agent'].forEach(function (key) {
+    delete headers[key];
+  });
+
+  return headers;
+}
 
 module.exports = Mockingjay

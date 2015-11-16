@@ -24,7 +24,7 @@ CacheClient.prototype.fetch = function (request) {
       if (err) {
         reject(err);
       } else {
-        resolve(data);
+        resolve(JSON.parse(data));
       }
     });
   });
@@ -33,7 +33,7 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    FileSystem.writeFile(self.path(request), response, function (err) {
+    FileSystem.writeFile(self.path(request), JSON.stringify(response), function (err) {
       if (err) {
         reject(err);
       } else {

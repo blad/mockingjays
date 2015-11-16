@@ -16,12 +16,14 @@ HttpClient.prototype.fetch = function (requestOptions) {
 
   return new Promise(function(resolve, reject) {
     var req = http.request(options, function(res) {
+      var statusCode = res.statusCode;
+      var contentType = res.headers['content-type'];
       var responseData = '';
       res.on('data', function (chunk) {
         responseData += chunk;
       });
       res.on('end', function() {
-        resolve(responseData);
+        resolve({status: statusCode, type: contentType, data: responseData});
       });
       res.on('error', function () {
         reject('Unable to load data from request.');
