@@ -1,16 +1,11 @@
 Mockingjays
 ========================
 
-*Mockingjays* is a proxying library that mocks APIs requests only after
-observing a request and response a single time.
+*Mockingjays* is a proxying tool that responds to requests with responses that have been
+previously observed.
 
-The idea behind *Mockingjays* is that when mocking you *should* not need to
-spend time copying and pasting requests and responses to test your app
-logic against a mock implementation of the API.
-
-The caveat being that you need to train *Mockingjays*, but this can be done
-simply by having *Mockingjays* observe(proxy) the interactions with your
-API at least once.
+*Mockingjays* acts as a mock server for previously seen requests and captures
+new request for future use.
 
 ## Command Line
 ### Install Mockingjays
@@ -22,8 +17,8 @@ npm install -g mockingjays
 ```bash
 mockingjays \
   --port=9000 \ # Port that the proxy server should bind to.
-  --cache-dir=/var/app/fixtures \ # Place where cached responses are stored.
-  --server-base-url='http://swapi.co' # Place where an unseen request can be learned.
+  --cacheDir=/var/app/fixtures \ # Place where cached responses are stored.
+  --serverBaseUrl='http://swapi.co' # Place where an unseen request can be learned.
 ```
 
 ## Programatic API
