@@ -29,6 +29,9 @@ HttpClient.prototype.fetch = function (requestOptions) {
         reject('Unable to load data from request.');
       });
     });
+    if (requestOptions.body) {
+      req.write(requestOptions.body);
+    }
     req.end()
   });
 }
