@@ -28,6 +28,7 @@ HttpClient.prototype.fetch = function (requestOptions) {
                   request: options,
                   status: statusCode,
                   type: contentType,
+                  headers: res.headers,
                   data: options.method == 'OPTIONS' ? responseData : JSON.parse(responseData)
                 });
       });

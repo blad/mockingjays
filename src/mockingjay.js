@@ -47,12 +47,11 @@ Mockingjay.prototype.learn = function(request) {
 Mockingjay.prototype.echo = function(request, outputBuffer) {
   var responsePromise = this.knows(request) ? this.repeat(request) : this.learn(request);
   responsePromise.then(function(response) {
-    var responseString = JSON.stringify(response.data);
+    var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
     console.log("\n\tResponding: ", response.status, response.type);
     console.log("\t"+ responseString);
     outputBuffer.writeHead(response.status, response.type);
-    outputBuffer.write(responseString);
-    outputBuffer.end();
+    outputBuffer.end(responseString);
   });
 };
 
@@ -64,13 +63,12 @@ Mockingjay.prototype.onRequest = function(request, response) {
   var simplifiedRequest = this.simplify(request);
 
   console.log("\n\t\[\033[1;34m\]New Request:\[\033[0m\]", request.url, request.method);
-  if (request.method === 'OPTIONS') {
-    // Set CORS headers
-    response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Request-Method', '*');
-    response.setHeader('Access-Control-Allow-Methods', ' POST, GET, OPTIONS');
-    response.setHeader('Access-Control-Allow-Headers', 'Authorization');
-  }
+  // Set CORS headers
+  response.setHeader('Access-Control-Allow-Credentials', 'true');
+  response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
+  response.setHeader('Access-Control-Allow-Methods', 'HEAD,OPTIONS,GET,PUT,POST,DELETE');
+  response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  response.setHeader('Access-Control-Max-Age', '1800');
 
   request.on('data', function(data) {
     simplifiedRequest.body += data;
