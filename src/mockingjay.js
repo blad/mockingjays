@@ -23,7 +23,7 @@ Mockingjay.prototype.knows = function(request) {
  * Fetch a Request form cache.
  */
 Mockingjay.prototype.repeat = function(request) {
-  console.log("\tMockingjay Repeating: " + JSON.stringify(request));
+  console.log("\033[1;33mRepeating:\033[0m: ", JSON.stringify(request));
   return this.cacheClient.fetch(request);
 };
 
@@ -31,7 +31,7 @@ Mockingjay.prototype.repeat = function(request) {
  * Fetch a Request form the Source.
  */
 Mockingjay.prototype.learn = function(request) {
-  console.log("\tMockingjay Learning: " + JSON.stringify(request));
+  console.log("\033[1;31mLearning:\033[0m: ", JSON.stringify(request));
   var self = this;
   var responsePromise = this.httpClient.fetch(request);
   return responsePromise.then(function(response) {
@@ -48,8 +48,8 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
   var responsePromise = this.knows(request) ? this.repeat(request) : this.learn(request);
   responsePromise.then(function(response) {
     var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
-    console.log("\n\tResponding: ", response.status, response.type);
-    console.log("\t"+ responseString);
+    console.log("\nResponding: ", response.status, response.type);
+    console.log(responseString);
     outputBuffer.writeHead(response.status, response.type);
     outputBuffer.end(responseString);
   });
@@ -62,7 +62,7 @@ Mockingjay.prototype.onRequest = function(request, response) {
   var self = this;
   var simplifiedRequest = this.simplify(request);
 
-  console.log("\n\t\[\033[1;34m\]New Request:\[\033[0m\]", request.url, request.method);
+  console.log("\n\033[1;32mRequest Recieved:\033[0m", request.url, request.method);
   // Set CORS headers
   response.setHeader('Access-Control-Allow-Credentials', 'true');
   response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
