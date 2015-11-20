@@ -1,3 +1,5 @@
+var FileSystemHelper = require('./FileSystemHelper');
+
 /**
  * Provides default values and verifies that requied values are set.
  */
@@ -16,6 +18,17 @@ DefaultOptions.prototype.merge = function(options) {
   if (!options.cacheDir) {
     throw Error("cacheDir is required! It can not be empty.");
   }
+
+  if (!FileSystemHelper.directoryExists(options.cacheDir)) {
+    console.warn('Cache Directory Does not Exists.')
+    console.warn('Attempting to Create: ', options.cacheDir);
+    FileSystemHelper
+      .createDirectory(options.cacheDir)
+      .catch(function() {
+        throw Error("Please Use a Writable Location for the Cache Directory.");
+      });
+  }
+
 
   // The PORT where the server should bind.
   options.port = options.port || defaults.port;
