@@ -90,8 +90,33 @@ Mockingjay.prototype.simplify = function (req) {
   };
 };
 
+Mockingjay.prototype.HeaderWhiteList = ['authorization', 'content-length', 'content-type'];
 
 Mockingjay.prototype.reduceHeaders = function (requestHeaders) {
+  var headers = this.sortHeaders(requestHeaders);
+  var whitelist = this.HeaderWhiteList;
+  var self = this;
+
+  var isAllowed = function(key) {
+    var isInWhiteList = whitelist.indexOf(key) !== -1;
+    if (isInWhiteList)
+      return !(key === 'content-length' && headers[key] === "0"); // Only include content length of non-zero length.
+    return false;
+  };
+
+  var allowedHeaders = {};
+  for (var key in headers) {
+    if (isAllowed(key)) {
+      allowedHeaders[key] = headers[key];
+    }
+  }
+  // Remove Headers which Might Vary from agent to agent.
+  // Variability in headers leads to a different hash for a requst.
+  return allowedHeaders;
+}
+
+
+Mockingjay.prototype.sortHeaders = function (requestHeaders) {
   // Sort the keys to get predictable order in object keys.
   var keys = [];
   for (var key in requestHeaders) {
@@ -102,22 +127,8 @@ Mockingjay.prototype.reduceHeaders = function (requestHeaders) {
   // Copy the Keys in order:
   var headers = {};
   keys.forEach(function(key) {
-    headers[key] = requestHeaders[key];
-  });
-
-  // Remove Headers which Might Vary from agent to agent.
-  // Variability in headers leads to a different hash for a requst.
-  ['accept',
-    'access-control-request-method',
-    'accept-encoding',
-    'accept-language',
-    'cache-control',
-    'host',
-    'origin',
-    'pragma',
-    'referer',
-    'user-agent'].forEach(function (key) {
-    delete headers[key];
+    // Standardize the key to be lowercase:
+    headers[key.toLowerCase()] = requestHeaders[key];
   });
 
   return headers;
