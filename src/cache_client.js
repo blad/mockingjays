@@ -1,4 +1,6 @@
 var FileSystem = require('fs');
+var url = require('url')
+var FileSystemHelper = require('./filesystem_helper');
 var RequestHash = require('./request_hash');
 
 var CacheClient = function(cacheDir) {
@@ -24,7 +26,7 @@ CacheClient.prototype.fetch = function (request) {
       if (err) {
         reject(err);
       } else {
-        resolve(JSON.parse(data));
+        resolve(JSON.parse(data)); // TODO: Handle Non-JSON Data
       }
     });
   });
@@ -33,20 +35,45 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    var responseString = JSON.stringify(response, null, 2);
-    FileSystem.writeFile(self.path(request), responseString, function (err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(response);
-      }
-    });
+    var responseString;
+    try {
+      responseString = JSON.stringify(response, null, 2);
+    } catch (e) {
+      responseString = response;
+    }
+
+    var writeToFile = function() {
+      FileSystem.writeFile(self.path(request), responseString, function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(response);
+        }
+      });
+    };
+
+    var directory = self.directory(request);
+    if (!FileSystemHelper.directoryExists(directory)) {
+      FileSystemHelper.createDirectory(directory).then(writeToFile);
+    } else {
+      writeToFile();
+    }
   });
 }
 
+CacheClient.prototype.directory = function (request) {
+  var urlSplit = url.parse(request.url);
+  var path = urlSplit.path || ''
+  var pathEndsSlash = path.lastIndexOf('/') === path.length - 1
+  path = pathEndsSlash ? path.substr(0, path.length - 1) : path;
+  return this.cacheDir + path;
+}
+
+
 CacheClient.prototype.path = function (request) {
   var requestHash = new RequestHash(request).toString();
-  return this.cacheDir + '/' + requestHash;
+  var directory = this.directory(request);
+  return directory + '/' + requestHash;
 }
 
 module.exports = CacheClient

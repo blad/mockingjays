@@ -1,21 +1,19 @@
 var FileSystem = require('fs');
+var path = require('path');
 
 var FileSystemHelper = {};
 
 FileSystemHelper.directoryExists = function (path) {
-  var mode = FileSystem.F_OK | FileSystem.R_OK | FileSystem.W_OK;
   try {
-    fs.accessSync(path, mode);
-    return true;
+    return FileSystem.statSync(path).isDirectory();
   } catch (e) {
     return false;
   }
 }
 
-
 FileSystemHelper.createDirectory = function (path) {
   return new Promise(function (resolve, reject) {
-    FileSystem.mkdir(path, function (error) {
+    FileSystemHelper.createDirectoryParent(path, function (error) {
       if (error) {
         var errorMessage = 'Failed to Create Directory: ' + path;
         console.warn('Failed to Create Directory: ' + path, error);
@@ -25,6 +23,17 @@ FileSystemHelper.createDirectory = function (path) {
         resolve();
       }
     });
+  });
+}
+
+FileSystemHelper.createDirectoryParent = function (dirPath, callback) {
+  FileSystem.mkdir(dirPath, function (error) {
+    if (error && error.code === 'ENOENT') {
+      FileSystemHelper.createDirectoryParent(path.dirname(dirPath),
+        FileSystemHelper.createDirectoryParent.bind(this, dirPath, callback));
+    } else if (callback) {
+      callback(error);
+    }
   });
 }
 

@@ -24,12 +24,13 @@ HttpClient.prototype.fetch = function (requestOptions) {
       });
       res.on('end', function() {
         options.body = requestOptions.body; // For Record Keeping
+        var isJson = contentType === 'application/json'
         resolve({
                   request: options,
                   status: statusCode,
                   type: contentType,
                   headers: res.headers,
-                  data: options.method == 'OPTIONS' ? responseData : JSON.parse(responseData)
+                  data: options.method == 'OPTIONS' ? responseData : (isJson ? JSON.parse(responseData) : responseData)
                 });
       });
       res.on('error', function () {

@@ -1,4 +1,4 @@
-var FileSystemHelper = require('./FileSystemHelper');
+var FileSystemHelper = require('./filesystem_helper');
 
 /**
  * Provides default values and verifies that requied values are set.
