@@ -18,7 +18,9 @@ npm install -g mockingjays
 mockingjays \
   --port=9000 \ # Port that the proxy server should bind to.
   --cacheDir=/var/app/fixtures \ # Place where cached responses are stored.
-  --serverBaseUrl='http://swapi.co' # Place where an unseen request can be learned.
+  --serverBaseUrl='http://swapi.co' \ # Place where an unseen request can be learned.
+  # Optional Settings
+  --ignoreContentType='image/*,text/html' # Skip Cache on any Image and HTML document.
 ```
 
 ## Programatic API
@@ -27,7 +29,9 @@ var Mockingjays = require('../mockingjays')
 new Mockingjays().start({
   port: 9000, // Port that the proxy server should bind to.
   cacheDir: '/var/app/fixtures', // Place where cached responses are stored.
-  serverBaseUrl: 'http://swapi.co' // Place where an unseen request can be learned.
+  serverBaseUrl: 'http://swapi.co', // Place where an unseen request can be learned.
+  // Optional Settings
+  ignoreContentType: 'image/*,text/html' // Skip Cache on any Image and HTML document.
 });
 ```
 
