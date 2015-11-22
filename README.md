@@ -20,7 +20,8 @@ mockingjays \
   --cacheDir=/var/app/fixtures \ # Place where cached responses are stored.
   --serverBaseUrl='http://swapi.co' \ # Place where an unseen request can be learned.
   # Optional Settings
-  --ignoreContentType='image/*,text/html' # Skip Cache on any Image and HTML document.
+  --ignoreContentType='image/*,text/html' \ # Skip Cache on any Image and HTML document.
+  --refresh=true # Always Visit the Source for a Newer Response
 ```
 
 ## Programatic API
@@ -31,7 +32,8 @@ new Mockingjays().start({
   cacheDir: '/var/app/fixtures', // Place where cached responses are stored.
   serverBaseUrl: 'http://swapi.co', // Place where an unseen request can be learned.
   // Optional Settings
-  ignoreContentType: 'image/*,text/html' // Skip Cache on any Image and HTML document.
+  ignoreContentType: 'image/*,text/html', // Skip Cache on any Image and HTML document.
+  refresh: true # Always Visit the Source for a Newer Response
 });
 ```
 
