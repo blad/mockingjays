@@ -29,8 +29,8 @@ DefaultOptions.prototype._handlePortDefault = function (options) {
 DefaultOptions.prototype._handleContentTypeDefault = function (options) {
   var defaults = this.options;
   var blacklist = (options.ignoreContentType || defaults.ignoreContentType)
-    .split(',');
-    .map(function (type) {return type.trim();});
+    .split(',')
+    .map(function (type) {return type.trim();})
     .map(function (type) {return type.replace(/\*/g, '.*')});
   options.ignoreContentType = blacklist;
 }

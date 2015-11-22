@@ -49,7 +49,7 @@ Mockingjay.prototype._okToCache = function (responseType) {
     var matchList = new RegExp(next).exec(responseType);
     return (matchList.length > 0) || blackListingFound
   };
-  return blacklist.reduce(inList, false);
+  return !blacklist.reduce(inList, false);
 };
 
 /**
