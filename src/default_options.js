@@ -10,15 +10,23 @@ DefaultOptions.prototype.options = {
   cacheDir: null,
   port: process.env.MOCKINGJAYS_PORT || 9000,
   serverBaseUrl: null,
-  ignoreContentType: ''
+  ignoreContentType: '',
+  refresh: false
 }
 
 DefaultOptions.prototype.merge = function(options) {
-  this._handlePortDefault(options)
+  this._handlePortDefault(options);
+  this._handleRefreshDefault(options);
   this._handleContentTypeDefault(options);
   this._handleCacheDirectoryDefault(options);
   this._handleBaseUrlDefault(options);
   return options
+}
+
+DefaultOptions.prototype._handleRefreshDefault = function (options) {
+  var defaults = this.options;
+  var value = options.refresh == 'true';
+  options.refresh = value || defaults.refresh;
 }
 
 DefaultOptions.prototype._handlePortDefault = function (options) {

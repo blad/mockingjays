@@ -58,7 +58,7 @@ Mockingjay.prototype._okToCache = function (responseType) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
-  var responsePromise = this.knows(request) ? this.repeat(request) : this.learn(request);
+  var responsePromise = this.knows(request) && !this.options.refresh ? this.repeat(request) : this.learn(request);
   responsePromise.then(function(response) {
     var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
     console.log("\nResponding: ", response.status, response.type);
