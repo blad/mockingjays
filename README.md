@@ -1,6 +1,8 @@
 Mockingjays
 ========================
 
+[![npm version](https://badge.fury.io/js/mockingjays.svg)](https://www.npmjs.com/package/mockingjays)
+
 *Mockingjays* is a proxying tool that responds to requests with responses that have been
 previously observed.
 
