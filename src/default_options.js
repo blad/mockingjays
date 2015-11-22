@@ -38,6 +38,7 @@ DefaultOptions.prototype._handleContentTypeDefault = function (options) {
   var defaults = this.options;
   var blacklist = (options.ignoreContentType || defaults.ignoreContentType)
     .split(',')
+    .filter(function (type) {return type !== ''})
     .map(function (type) {return type.trim();})
     .map(function (type) {return type.replace(/\*/g, '.*')});
   options.ignoreContentType = blacklist;
