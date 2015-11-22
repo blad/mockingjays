@@ -34,9 +34,22 @@ Mockingjay.prototype.learn = function(request) {
   console.log("\033[1;31mLearning:\033[0m: ", JSON.stringify(request));
   var self = this;
   var responsePromise = this.httpClient.fetch(request);
-  return responsePromise.then(function(response) {
-    return self.cacheClient.record(request, response);
+  return responsePromise.then(function (response) {
+    if (self._okToCache(response.headers['content-type'])) {
+      return self.cacheClient.record(request, response);
+    } else {
+      return Promise.resolve(response)
+    }
   });
+};
+
+Mockingjay.prototype._okToCache = function (responseType) {
+  var blacklist = this.options.ignoreContentType;
+  var inList = function (blackListingFound, next) {
+    var matchList = new RegExp(next).exec(responseType);
+    return (matchList.length > 0) || blackListingFound
+  };
+  return blacklist.reduce(inList, false);
 };
 
 /**
