@@ -39,6 +39,72 @@ new Mockingjays().start({
 });
 ```
 
+## Cached Responses
+
+The root of cached responses specified by the `cacheDir` option. Each response
+is then stored in a subdirectory that matches the path for the request.
+
+For example, a request to the path: `/api/` when the `cacheDir` option has the value of `/var/app/fixtures`
+will be stored in `/var/app/fixtures/api/{sha1_request_hash}` where `sha1_request_hash` is a 
+hash value of the http request.
+
+Request with deeper paths such as `/api/people/1/` will create a deep directory structure 
+inside the root of the `cacheDir`.
+
+### Cached Responses
+
+Each cached response has the following format:
+```javascript
+{
+  "request": { /* Request Being Proxied */ }
+  "status": 200, /* Response Status Code */
+  "type": "application/json", /* Response Content Type */
+  "headers": { /* Response Headers */ }
+  "data": { /* Response Payload */ }  // Can be object or string base on content type
+}
+```
+
+Example Response:
+```json
+{
+  "request": {
+    "hostname": "swapi.co",
+    "port": 80,
+    "path": "/api/",
+    "method": "GET",
+    "headers": {},
+    "body": ""
+  },
+  "status": 200,
+  "type": "application/json",
+  "headers": {
+    "date": "Mon, 23 Nov 2015 05:32:11 GMT",
+    "content-type": "application/json",
+    "transfer-encoding": "chunked",
+    "connection": "close",
+    "set-cookie": [
+      "__cfduid=d2899211d5e45cad84e75ad06258784af1448256730; expires=Tue, 22-Nov-16 05:32:10 GMT; path=/; domain=.swapi.co; HttpOnly"
+    ],
+    "allow": "GET, HEAD, OPTIONS",
+    "x-frame-options": "SAMEORIGIN",
+    "vary": "Accept, Cookie",
+    "etag": "\"1f7a4766c9ebf66cdb1ddb85d5cc6f2f\"",
+    "via": "1.1 vegur",
+    "server": "cloudflare-nginx",
+    "cf-ray": "249a7df825bf39a0-PHX"
+  },
+  "data": {
+    "people": "http://swapi.co/api/people/",
+    "planets": "http://swapi.co/api/planets/",
+    "films": "http://swapi.co/api/films/",
+    "species": "http://swapi.co/api/species/",
+    "vehicles": "http://swapi.co/api/vehicles/",
+    "starships": "http://swapi.co/api/starships/"
+  }
+}
+```
+
+
 # License: Apache 2.0
 Copyright 2015 Bladymir Tellez\<btellez@gmail.com\>
 
