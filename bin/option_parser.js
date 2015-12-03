@@ -6,8 +6,8 @@ OptionsParser.parse = function(processArgs) {
   userArgs.map(function(arg) {
     return arg.substr(2).split('=');
   }).forEach(function(pair) {
-    result[pair[0]] = pair[1];
-  })
+    result[pair[0]] = pair[1] or true;
+  });
 
   return result;
 }
