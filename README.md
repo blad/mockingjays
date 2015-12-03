@@ -24,6 +24,7 @@ mockingjays \
   # Optional Settings
   --ignoreContentType='image/*,text/html' \ # Skip Cache on any Image and HTML document.
   --refresh=true # Always Visit the Source for a Newer Response
+  --cacheHeader='authorization,content-length' # Headers should be considered in cache
 ```
 
 ## Programatic API
@@ -36,6 +37,7 @@ new Mockingjays().start({
   // Optional Settings
   ignoreContentType: 'image/*,text/html', // Skip Cache on any Image and HTML document.
   refresh: true # Always Visit the Source for a Newer Response
+  cacheHeader: 'authorization,content-length' # Headers should be considered in cache
 });
 ```
 
