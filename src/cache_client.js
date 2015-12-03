@@ -3,8 +3,9 @@ var url = require('url')
 var FileSystemHelper = require('./filesystem_helper');
 var RequestHash = require('./request_hash');
 
-var CacheClient = function(cacheDir) {
-  this.cacheDir = cacheDir;
+var CacheClient = function(options) {
+  this.cacheDir = options.cacheDir;
+  this.cacheHeaders = options.cacheHeaders;
 }
 
 CacheClient.prototype.isCached = function (request) {
@@ -71,7 +72,7 @@ CacheClient.prototype.directory = function (request) {
 
 
 CacheClient.prototype.path = function (request) {
-  var requestHash = new RequestHash(request).toString();
+  var requestHash = new RequestHash(request, this.cacheHeaders).toString();
   var directory = this.directory(request);
   return directory + '/' + requestHash;
 }

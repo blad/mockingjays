@@ -11,7 +11,8 @@ DefaultOptions.prototype.options = {
   port: process.env.MOCKINGJAYS_PORT || 9000,
   serverBaseUrl: null,
   ignoreContentType: '',
-  refresh: false
+  refresh: false,
+  cacheHeaders: []
 }
 
 DefaultOptions.prototype.merge = function(options) {
@@ -20,7 +21,8 @@ DefaultOptions.prototype.merge = function(options) {
   this._handleContentTypeDefault(options);
   this._handleCacheDirectoryDefault(options);
   this._handleBaseUrlDefault(options);
-  return options
+  this._handleCacheHeaders(options);
+  return options;
 }
 
 DefaultOptions.prototype._handleRefreshDefault = function (options) {
@@ -71,6 +73,15 @@ DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
   if (!options.serverBaseUrl) {
     throw Error("serverBaseUrl is required! It can not be empty.");
   };
+}
+
+DefaultOptions.prototype._handleCacheHeaders = function (options) {
+  var defaults = this.options;
+  if (options.cacheHeaders && typeof(options.cacheHeaders) == 'string') {
+    options.cacheHeaders = options.cacheHeaders.split(',');
+  } else {
+    options.cacheHeaders = defaults.cacheHeaders;
+  }
 }
 
 module.exports = DefaultOptions

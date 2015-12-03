@@ -8,7 +8,7 @@ var HttpClient = require('./http_client');
 
 var Mockingjay = function(options) {
   this.options = options;
-  this.cacheClient = new CacheClient(this.options.cacheDir);
+  this.cacheClient = new CacheClient(options);
   this.httpClient = new HttpClient();
 }
 
