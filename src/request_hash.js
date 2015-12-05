@@ -6,9 +6,11 @@ var RequestHash = function (request, cacheHeaders) {
 };
 
 RequestHash.prototype.toString = function () {
-  var attributes = this._filteredAttributes();
+  var request = Object.create(this.request);
+  request.headers = this._filteredAttributes();
+
   var shasum = crypto.createHash('sha1');
-  shasum.update(JSON.stringify(attributes));
+  shasum.update(JSON.stringify(request));
   return shasum.digest('hex');
 };
 

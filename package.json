@@ -25,5 +25,9 @@
   "homepage": "https://github.com/blad/mockingjays#readme",
   "bin": {
     "mockingjays": "bin/mockingjays.js"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
   }
 }
