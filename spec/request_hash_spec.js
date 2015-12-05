@@ -1,6 +1,4 @@
-var chai = require('chai');
-var assert = require('assert');
-var expect = chai.expect
+var expect = require('chai').expect;
 var RequestHash = require('../src/request_hash');
 
 
