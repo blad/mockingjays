@@ -63,7 +63,7 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
     var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
     console.log("\nResponding: ", response.status, response.type);
     console.log(responseString);
-    outputBuffer.writeHead(response.status, response.type);
+    outputBuffer.writeHead(response.status, {'Content-Type': response.type});
     outputBuffer.end(responseString);
   });
 };
