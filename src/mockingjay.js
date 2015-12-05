@@ -58,11 +58,14 @@ Mockingjay.prototype._okToCache = function (responseType) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
+  var self = this;
   var responsePromise = this.knows(request) && !this.options.refresh ? this.repeat(request) : this.learn(request);
   responsePromise.then(function(response) {
     var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
     console.log("\nResponding: ", response.status, response.type);
-    console.log(responseString);
+    if (self._okToLog(response.type)) {
+      console.log(responseString);
+    }
     outputBuffer.writeHead(response.status, {'Content-Type': response.type});
     outputBuffer.end(responseString);
   });
@@ -147,4 +150,11 @@ Mockingjay.prototype.sortHeaders = function (requestHeaders) {
   return headers;
 }
 
+Mockingjay.prototype._okToLog = function (contentType) {
+  var whitelist = ['text', 'json', 'html', 'plain'];
+  var isOkToLog = function (isOk, next) {
+      return (contentType.indexOf(next) >= 0) || isOk;
+  }
+  return whitelist.reduce(isOkToLog, false);
+}
 module.exports = Mockingjay
