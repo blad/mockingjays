@@ -47,7 +47,7 @@ Mockingjay.prototype._okToCache = function (responseType) {
   var blacklist = this.options.ignoreContentType;
   var inList = function (blackListingFound, next) {
     var matchList = new RegExp(next).exec(responseType);
-    return (matchList.length > 0) || blackListingFound
+    return (matchList && matchList.length > 0) || blackListingFound
   };
   return !blacklist.reduce(inList, false);
 };
