@@ -1,4 +1,5 @@
 var crypto = require('crypto');
+var Util = require('./util');
 
 var RequestHash = function (request, cacheHeaders) {
   this.request = request;
@@ -6,16 +7,14 @@ var RequestHash = function (request, cacheHeaders) {
 };
 
 RequestHash.prototype.toString = function () {
-  var request = Object.create(this.request);
-  request.headers = this._filteredAttributes();
-
+  var request = this._filteredAttributes();
   var shasum = crypto.createHash('sha1');
   shasum.update(JSON.stringify(request));
   return shasum.digest('hex');
 };
 
 RequestHash.prototype._filteredAttributes = function () {
-  var filteredAttributes = Object.create(this.request);
+  var filteredAttributes = Util.simpleCopy(this.request);
   var headers = {};
   var key;
   for (var index = 0; index < this.cacheHeaders.length; index++) {
