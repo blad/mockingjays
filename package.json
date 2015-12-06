@@ -4,7 +4,7 @@
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
   "main": "mockingjays.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./spec/."
   },
   "repository": {
     "type": "git",
