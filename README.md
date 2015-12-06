@@ -1,6 +1,7 @@
 Mockingjays
 ========================
 
+![Circle CI Build Status](https://circleci.com/gh/blad/mockingjays.png?circle-token=a4bd29bc70058220eb8e663e848ff4448231d79a)
 [![npm version](https://badge.fury.io/js/mockingjays.svg)](https://www.npmjs.com/package/mockingjays)
 
 *Mockingjays* is a proxying tool that responds to requests with responses that have been
@@ -47,10 +48,10 @@ The root of cached responses specified by the `cacheDir` option. Each response
 is then stored in a subdirectory that matches the path for the request.
 
 For example, a request to the path: `/api/` when the `cacheDir` option has the value of `/var/app/fixtures`
-will be stored in `/var/app/fixtures/api/{sha1_request_hash}` where `sha1_request_hash` is a 
+will be stored in `/var/app/fixtures/api/{sha1_request_hash}` where `sha1_request_hash` is a
 hash value of the http request.
 
-Request with deeper paths such as `/api/people/1/` will create a deep directory structure 
+Request with deeper paths such as `/api/people/1/` will create a deep directory structure
 inside the root of the `cacheDir`.
 
 ### Cached Responses
