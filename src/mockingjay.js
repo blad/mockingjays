@@ -30,18 +30,19 @@ Mockingjay.prototype.repeat = function(request) {
 /**
  * Fetch a Request form the Source.
  */
-Mockingjay.prototype.learn = function(request) {
+Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
   console.log("\033[1;31mLearning:\033[0m: ", JSON.stringify(request));
   var self = this;
-  var responsePromise = this.httpClient.fetch(request);
+  var responsePromise = this.httpClient.fetch(request, outputBuffer);
   return responsePromise.then(function (response) {
     if (self._okToCache(response.headers['content-type'])) {
       return self.cacheClient.record(request, response);
     } else {
-      return Promise.resolve(response)
+      return Promise.resolve(response);
     }
   });
 };
+
 
 Mockingjay.prototype._okToCache = function (responseType) {
   var blacklist = this.options.ignoreContentType;
@@ -59,15 +60,18 @@ Mockingjay.prototype._okToCache = function (responseType) {
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
   var self = this;
-  var responsePromise = this.knows(request) && !this.options.refresh ? this.repeat(request) : this.learn(request);
+  var shouldRepeat = this.knows(request) && !this.options.refresh;
+  var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
   responsePromise.then(function(response) {
-    var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
     console.log("\nResponding: ", response.status, response.type);
-    if (self._okToLog(response.type)) {
-      console.log(responseString);
+    if (!response.piped) {
+      var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
+      if (self._okToLog(response.type)) {
+        console.log(responseString);
+      }
+      outputBuffer.writeHead(response.status, {'Content-Type': response.type});
+      outputBuffer.end(responseString);
     }
-    outputBuffer.writeHead(response.status, {'Content-Type': response.type});
-    outputBuffer.end(responseString);
   });
 };
 
@@ -79,12 +83,14 @@ Mockingjay.prototype.onRequest = function(request, response) {
   var simplifiedRequest = this.simplify(request);
 
   console.log("\n\033[1;32mRequest Recieved:\033[0m", request.url, request.method);
-  // Set CORS headers
-  response.setHeader('Access-Control-Allow-Credentials', 'true');
-  response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
-  response.setHeader('Access-Control-Allow-Methods', 'HEAD,OPTIONS,GET,PUT,POST,DELETE');
-  response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  response.setHeader('Access-Control-Max-Age', '1800');
+  if (request.method == 'OPTIONS') {
+    // Set CORS headers
+    response.setHeader('Access-Control-Allow-Credentials', 'true');
+    response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
+    response.setHeader('Access-Control-Allow-Methods', 'HEAD,OPTIONS,GET,PUT,POST,DELETE');
+    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Max-Age', '1800');
+  }
 
   request.on('data', function(data) {
     simplifiedRequest.body += data;
