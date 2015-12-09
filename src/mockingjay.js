@@ -83,14 +83,13 @@ Mockingjay.prototype.onRequest = function(request, response) {
   var simplifiedRequest = this.simplify(request);
 
   console.log("\n\033[1;32mRequest Recieved:\033[0m", request.url, request.method);
-  if (request.method == 'OPTIONS') {
-    // Set CORS headers
-    response.setHeader('Access-Control-Allow-Credentials', 'true');
-    response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
-    response.setHeader('Access-Control-Allow-Methods', 'HEAD,OPTIONS,GET,PUT,POST,DELETE');
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    response.setHeader('Access-Control-Max-Age', '1800');
-  }
+
+  // Set CORS headers
+  response.setHeader('Access-Control-Allow-Credentials', 'true');
+  response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
+  response.setHeader('Access-Control-Allow-Methods', 'HEAD,OPTIONS,GET,PUT,POST,DELETE');
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Max-Age', '1800');
 
   request.on('data', function(data) {
     simplifiedRequest.body += data;
