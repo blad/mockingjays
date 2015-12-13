@@ -1,7 +1,7 @@
 Mockingjays
 ========================
 
-![Circle CI Build Status](https://circleci.com/gh/blad/mockingjays.png?circle-token=a4bd29bc70058220eb8e663e848ff4448231d79a)
+[![Circle CI Build Status](https://circleci.com/gh/blad/mockingjays.png?circle-token=a4bd29bc70058220eb8e663e848ff4448231d79a)](https://circleci.com/gh/blad/mockingjays)
 [![npm version](https://badge.fury.io/js/mockingjays.svg)](https://www.npmjs.com/package/mockingjays)
 
 *Mockingjays* is a proxying tool that responds to requests with responses that have been
