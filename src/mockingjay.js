@@ -5,6 +5,7 @@
 
 var CacheClient = require('./cache_client');
 var HttpClient = require('./http_client');
+var HeaderUtil = require('./header_util');
 
 var Mockingjay = function(options) {
   this.options = options;
@@ -66,7 +67,7 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
     console.log("\nResponding: ", response.status, response.type);
     if (!response.piped) {
       var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
-      if (self._okToLog(response.type)) {
+      if (HeaderUtil.isText(response.type)) {
         console.log(responseString);
       }
       outputBuffer.writeHead(response.status, {'Content-Type': response.type});
@@ -79,17 +80,15 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
  * Callback that is called when the server recieves a request.
  */
 Mockingjay.prototype.onRequest = function(request, response) {
-  var self = this;
-  var simplifiedRequest = this.simplify(request);
-
   console.log("\n\033[1;32mRequest Recieved:\033[0m", request.url, request.method);
 
-  // Set CORS headers
-  response.setHeader('Access-Control-Allow-Credentials', 'true');
-  response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Accept,Origin,Authorization');
-  response.setHeader('Access-Control-Allow-Methods', 'HEAD,OPTIONS,GET,PUT,POST,DELETE');
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Max-Age', '1800');
+  var self = this;
+  var simplifiedRequest = this.simplify(request);
+  var corsHeaders = HeaderUtil.getCorsHeaders();
+
+  for (var corsHeader in corsHeaders) {
+    response.setHeader(corsHeader, corsHeaders[corsHeader]);
+  }
 
   request.on('data', function(data) {
     simplifiedRequest.body += data;
@@ -102,64 +101,12 @@ Mockingjay.prototype.onRequest = function(request, response) {
 
 
 Mockingjay.prototype.simplify = function (req) {
-  var headers = this.reduceHeaders(req.headers);
   return {
     url: this.options.serverBaseUrl + req.url,
     body: '',
-    headers: headers,
+    headers: HeaderUtil.standardize(req.headers),
     method: req.method
   };
 };
 
-Mockingjay.prototype.HeaderWhiteList = ['authorization', 'content-length', 'content-type'];
-
-Mockingjay.prototype.reduceHeaders = function (requestHeaders) {
-  var headers = this.sortHeaders(requestHeaders);
-  var whitelist = this.HeaderWhiteList;
-  var self = this;
-
-  var isAllowed = function(key) {
-    var isInWhiteList = whitelist.indexOf(key) !== -1;
-    if (isInWhiteList)
-      return !(key === 'content-length' && headers[key] === "0"); // Only include content length of non-zero length.
-    return false;
-  };
-
-  var allowedHeaders = {};
-  for (var key in headers) {
-    if (isAllowed(key)) {
-      allowedHeaders[key] = headers[key];
-    }
-  }
-  // Remove Headers which Might Vary from agent to agent.
-  // Variability in headers leads to a different hash for a requst.
-  return allowedHeaders;
-}
-
-
-Mockingjay.prototype.sortHeaders = function (requestHeaders) {
-  // Sort the keys to get predictable order in object keys.
-  var keys = [];
-  for (var key in requestHeaders) {
-    keys.push(key);
-  }
-  keys.sort();
-
-  // Copy the Keys in order:
-  var headers = {};
-  keys.forEach(function(key) {
-    // Standardize the key to be lowercase:
-    headers[key.toLowerCase()] = requestHeaders[key];
-  });
-
-  return headers;
-}
-
-Mockingjay.prototype._okToLog = function (contentType) {
-  var whitelist = ['text', 'json', 'html', 'plain'];
-  var isOkToLog = function (isOk, next) {
-      return (contentType.indexOf(next) >= 0) || isOk;
-  }
-  return whitelist.reduce(isOkToLog, false);
-}
 module.exports = Mockingjay

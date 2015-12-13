@@ -1,4 +1,5 @@
 var url = require('url')
+var HeaderUtil = require('./header_util');
 
 var HttpClient = function() {}
 
@@ -26,11 +27,11 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     var req = http.request(options, function(res) {
       var statusCode = res.statusCode;
       options.body = requestOptions.body; // For Record Keeping
-      if (self._isBinary(res.headers['content-type'])) {
+      if (HeaderUtil.isText(res.headers['content-type'])) {
+        self._accumulateResponse(res, options, resolve, reject);
+      } else {
         console.log('Non Textual Content-Type Detected...Piping Response from Source Server.');
         self._pipeResonse(res, outputBuffer, resolve, reject);
-      } else {
-        self._accumulateResponse(res, options, resolve, reject);
       }
     });
 
@@ -77,12 +78,6 @@ HttpClient.prototype._accumulateResponse = function (res, options, resolve, reje
   res.on('error', function () {
     reject('Unable to load data from request.');
   });
-}
-
-HttpClient.prototype._isBinary = function (contentType) {
-  return !['plain', 'json', 'html'].reduce(function (isTextual, current) {
-    return isTextual || contentType.indexOf(current) != -1
-  }, false);
 }
 
 module.exports = HttpClient
