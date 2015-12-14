@@ -9,7 +9,7 @@ HttpClient.prototype._prepareOptions = function (requestOptions) {
   var isHttps = urlSplit.protocol === 'https:'
   var options = {
     hostname: urlSplit.hostname,
-    port: urlSplit.port || (isHttps ? 443 : 80),
+    port: parseInt(urlSplit.port) || (isHttps ? 443 : 80),
     path: urlSplit.path,
     method: requestOptions.method,
     headers: requestOptions.headers

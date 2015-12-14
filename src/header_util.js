@@ -1,5 +1,3 @@
-
-
 HEADER_WHITE_LIST = [
   'authorization',
   'content-length',

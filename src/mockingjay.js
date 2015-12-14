@@ -6,6 +6,7 @@
 var CacheClient = require('./cache_client');
 var HttpClient = require('./http_client');
 var HeaderUtil = require('./header_util');
+var Util = require('./util');
 
 var Mockingjay = function(options) {
   this.options = options;
@@ -46,13 +47,10 @@ Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
 
 
 Mockingjay.prototype._okToCache = function (responseType) {
-  var blacklist = this.options.ignoreContentType;
-  var inList = function (blackListingFound, next) {
-    var matchList = new RegExp(next).exec(responseType);
-    return (matchList && matchList.length > 0) || blackListingFound
-  };
-  return !blacklist.reduce(inList, false);
+  // Ok to Cache when the Response Type is not in the ignore list.
+  return !Util.regExArrayContains(this.options.ignoreContentType, responseType);
 };
+
 
 /**
  * Function that echos the response back to the client.
