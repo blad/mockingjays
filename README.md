@@ -5,11 +5,12 @@ Mockingjays
 [![npm version](https://badge.fury.io/js/mockingjays.svg)](https://www.npmjs.com/package/mockingjays)
 [![Gitter](https://badges.gitter.im/blad/mockingjays.svg)](https://gitter.im/blad/mockingjays?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-*Mockingjays* is a proxying tool that responds to requests with responses that have been
-previously observed.
+*Mockingjays* is a proxying tool that responds to requests with responses that have been previously observed.
 
-*Mockingjays* acts as a mock server for previously seen requests and captures
-new request for future use.
+
+![Mockingjays](https://www.dropbox.com/s/srlu5oev0t3dof1/Mockingjays.png?dl=1)
+
+*Mockingjays* acts as a mock server for previously seen requests and captures new request for future use.
 
 ## Install Mockingjays
 ```bash
