@@ -1,5 +1,6 @@
 Server = require('./src/server');
 Mockingjay = require('./src/mockingjay');
+Rehasher = require('./src/rehasher');
 DefaultOptions = require('./src/default_options');
 
 var Mockingjays = function() {}
@@ -13,11 +14,25 @@ var Mockingjays = function() {}
  *          :port - Port that Mockingjays should bind to.
  *          :serverBaseUrl - Base URL for the source server.
  */
-Mockingjays.prototype.start = function(options) {
+ Mockingjays.prototype.start = function(options) {
   var defaultOptions = new DefaultOptions();
   var finalOptions = defaultOptions.merge(options);
   var mockingjay = new Mockingjay(finalOptions);
   Server.listen(finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
+}
+
+/**
+ * Processes the existing cache with a new set of options.
+ *
+ * @param options - An {Object} with options
+ *          :cacheDir - Path to cache storage.
+ *          :port - Port that Mockingjays should bind to.
+ *          :serverBaseUrl - Base URL for the source server.
+ */
+Mockingjays.prototype.rehash = function(options) {
+  var defaultOptions = new DefaultOptions();
+  var finalOptions = defaultOptions.merge(options, {attemptToCreateCacheDir: false});
+  new Rehasher(finalOptions).process();
 }
 
 module.exports = Mockingjays

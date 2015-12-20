@@ -1,5 +1,6 @@
 var FileSystem = require('fs');
 var path = require('path');
+var joinArray = function (acc, next) {return acc.concat(next);};
 
 var FileSystemHelper = {};
 
@@ -36,5 +37,24 @@ FileSystemHelper.createDirectoryParent = function (dirPath, callback) {
     }
   });
 }
+
+FileSystemHelper.findFileType = function (root, typePredicate) {
+  var formattedRoot = root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
+
+  return FileSystem
+  .readdirSync(formattedRoot)
+  .filter(function (file) { return file != '.' && file != '..';})
+  .map(function (file) { return formattedRoot + file;})
+  .filter(typePredicate);
+}
+
+
+FileSystemHelper.findDirectories = function (root) {
+  return FileSystemHelper.findFileType(root, FileSystemHelper.directoryExists)
+  .map(function (dir) {return FileSystemHelper.findDirectories(dir);})
+  .reduce(joinArray, [root]);
+}
+
+
 
 module.exports = FileSystemHelper;

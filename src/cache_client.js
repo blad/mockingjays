@@ -60,10 +60,31 @@ CacheClient.prototype.record = function (request, response) {
   });
 }
 
+
+CacheClient.prototype.remove = function (request) {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    var directory = self.directory(request);
+    if (FileSystemHelper.directoryExists(directory)) {
+      FileSystem.unlink(self.path(request), function(error) {
+        if (error) {
+          var message = 'Unable to Delete File: ' + self.path(request);
+          console.log(message, error);
+          reject(error)
+        } else {
+          resolve();
+        }
+      });
+    } else {
+      console.log('Path does not exist for request. Skipping action.');
+      resolve();
+    }
+  });
+}
+
 CacheClient.prototype.directory = function (request) {
-  var urlSplit = url.parse(request.url);
-  var path = urlSplit.path || ''
-  var pathEndsSlash = path.lastIndexOf('/') === path.length - 1
+  var path = request.path || '';
+  var pathEndsSlash = path.lastIndexOf('/') == path.length - 1
   path = pathEndsSlash ? path.substr(0, path.length - 1) : path;
   return this.cacheDir + path;
 }

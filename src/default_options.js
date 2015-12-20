@@ -16,11 +16,16 @@ DefaultOptions.prototype.options = {
   responseHeaderBlacklist: []
 }
 
-DefaultOptions.prototype.merge = function(options) {
+DefaultOptions.prototype.defaultExtras = {
+  attemptToCreateCacheDir: true
+}
+
+DefaultOptions.prototype.merge = function(options, extraOptions) {
+  var extras = extraOptions || this.defaultExtras;
   this._handlePortDefault(options);
   this._handleRefreshDefault(options);
   this._handleContentTypeDefault(options);
-  this._handleCacheDirectoryDefault(options);
+  this._handleCacheDirectoryDefault(options, extras);
   this._handleBaseUrlDefault(options);
   this._handleCacheHeaders(options);
   this._handleResponseHeaders(options);
@@ -48,7 +53,7 @@ DefaultOptions.prototype._handleContentTypeDefault = function (options) {
   options.ignoreContentType = blacklist;
 }
 
-DefaultOptions.prototype._handleCacheDirectoryDefault = function (options) {
+DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extras) {
   var defaults = this.options;
   // Directory where the cache files can be read and written to:
   options.cacheDir = options.cacheDir || defaults.cacheDir;
@@ -56,7 +61,7 @@ DefaultOptions.prototype._handleCacheDirectoryDefault = function (options) {
     throw Error("cacheDir is required! It can not be empty.");
   }
 
-  if (!FileSystemHelper.directoryExists(options.cacheDir)) {
+  if (!FileSystemHelper.directoryExists(options.cacheDir) && extras.attemptToCreateCacheDir) {
     console.warn('Cache Directory Does not Exists.')
     console.warn('Attempting to Create: ', options.cacheDir);
     FileSystemHelper
