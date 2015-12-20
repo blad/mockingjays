@@ -66,6 +66,25 @@ HeaderUtil.filterHeaders =  function (wantedHeaders, requestHeaders) {
 
 
 /**
+ * Remove the target header fromt the header object
+ *
+ * wantedHeader - Array of headers to remove
+ * requestHeaders - Object of headers.
+ */
+HeaderUtil.removeHeaders =  function (targetHeader, requestHeaders) {
+  var headers = {};
+  targetHeader = targetHeader || [];
+  for (var key in requestHeaders) {
+    if (targetHeader.indexOf(key.toLowerCase()) == -1) {
+      headers[key] = requestHeaders[key];
+    }
+  }
+  return headers;
+};
+
+
+
+/**
  * Returns an Object of the CORS Headers
  */
 HeaderUtil.getCorsHeaders = function () {

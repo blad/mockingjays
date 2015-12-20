@@ -61,6 +61,38 @@ describe('Header Util', function () {
   });
 
 
+  describe('removeHeaders', function () {
+    var exampleHeaders = {
+      'content-type': 'application/json',
+      'authorization': 'Basic 123456',
+      'content-length': '123'
+    }
+
+    it('should remove headers in the remove list', function() {
+      var headersToRemove = ['content-type', 'authorization'];
+      var actual = HeaderUtil.removeHeaders(headersToRemove, exampleHeaders);
+      expect(actual).to.deep.equal({
+        'content-length': '123'
+      });
+    });
+
+
+    it('should remove header in the wanted list', function() {
+      var headersToRemove = ['content-type'];
+      var actual = HeaderUtil.removeHeaders(headersToRemove, exampleHeaders);
+      expect(actual).to.deep.equal({
+        'content-length': '123',
+        'authorization': 'Basic 123456'
+      });
+    });
+
+
+    it('should remove no headers when headers to remove is empty', function() {
+      expect(HeaderUtil.removeHeaders([], exampleHeaders)).to.deep.equal(exampleHeaders);
+      expect(HeaderUtil.removeHeaders(null, exampleHeaders)).to.deep.equal(exampleHeaders);
+    });
+  });
+
   describe('sortHeaders', function () {
     it('should remove filters NOT in the wanted list', function() {
       var actual = HeaderUtil.sortHeaders({

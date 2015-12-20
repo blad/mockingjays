@@ -34,7 +34,8 @@ describe('DefaultOptions', function() {
         serverBaseUrl: 'http://swapi.co',
         ignoreContentType: 'image/*,text/html',
         refresh: true,
-        cacheHeader: 'authorization,content-length'
+        cacheHeader: 'authorization,content-length',
+        responseHeaderBlacklist: ['date']
       };
 
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(userProvidedOptions);
@@ -56,7 +57,8 @@ describe('DefaultOptions', function() {
         port: 9000,
         ignoreContentType: [],
         refresh: false,
-        cacheHeaders: []
+        cacheHeaders: [],
+        responseHeaderBlacklist: []
       };
 
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);

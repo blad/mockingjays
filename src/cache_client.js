@@ -7,6 +7,7 @@ var Util = require('./util');
 var CacheClient = function(options) {
   this.cacheDir = options.cacheDir;
   this.cacheHeaders = options.cacheHeaders;
+  this.responseHeaderBlacklist = options.responseHeaderBlacklist;
 }
 
 CacheClient.prototype.isCached = function (request) {
@@ -37,6 +38,7 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
+    response.headers = HeaderUtil.removeHeaders(self.responseHeaderBlacklist, response.headers);
     var responseString = Util.stringify(response) + "\n";
 
     var writeToFile = function() {

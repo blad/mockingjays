@@ -52,9 +52,11 @@ new Mockingjays().start({
 - **port** - Port that the proxy server should bind to.
   - *Default: 9000*
 - **ignoreContentType** - Comma separated list of content-types that should be skipped. This can include a `*` which will be a wildcard match equivalent to the `.*` RegEx. No File Types Ignored by default.
-  - *Default: ''*
+  - *Default: []*
 - **refresh** - Indicates if the request/response cache should be updated unconditionally.
   - *Default: false*
+- **responseHeaderBlacklist** - Indicates headers that should not be recorded to the cache file. Things like date or fields that may change the file during refreshes are ideal candidates.
+  - *Default: []* (Record all headers)
 
 
 
