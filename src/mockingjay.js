@@ -7,6 +7,7 @@ var CacheClient = require('./cache_client');
 var HttpClient = require('./http_client');
 var HeaderUtil = require('./header_util');
 var Util = require('./util');
+var url = require('url');
 
 var Mockingjay = function(options) {
   this.options = options;
@@ -58,6 +59,7 @@ Mockingjay.prototype._okToCache = function (responseType) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
+  console.log(request);
   var self = this;
   var shouldRepeat = this.knows(request) && !this.options.refresh;
   var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
@@ -99,12 +101,18 @@ Mockingjay.prototype.onRequest = function(request, response) {
 
 
 Mockingjay.prototype.simplify = function (req) {
-  return {
-    url: this.options.serverBaseUrl + req.url,
+  var self = this;
+  var urlSplit = url.parse(this.options.serverBaseUrl + req.url);
+  var isHttps = urlSplit.protocol === 'https:'
+  var options = {
+    hostname: urlSplit.hostname,
+    port: parseInt(urlSplit.port) || (isHttps ? 443 : 80),
+    path: urlSplit.path,
     body: '',
-    headers: HeaderUtil.standardize(req.headers),
-    method: req.method
+    method: req.method,
+    headers: HeaderUtil.standardize(req.headers)
   };
+  return options;
 };
 
 module.exports = Mockingjay
