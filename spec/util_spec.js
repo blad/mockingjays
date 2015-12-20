@@ -3,7 +3,58 @@ var Util = require('../src/util');
 
 
 describe('Util Functions', function() {
-  
+
+  describe('parseJSON', function () {
+    it('should parse valid json', function () {
+      var exampleString = '{"example": "string value", "example2": 1, "example": [1, "abc"]}';
+      expect(Util.parseJSON(exampleString)).to.deep.equal({
+        example: 'string value',
+        example2: 1,
+        example: [1, 'abc']
+      });
+    });
+
+    it('should return the string value of a failed parse attempt', function () {
+      var exampleString = 'Exception occurred on server. Unable to process request.';
+      expect(Util.parseJSON(exampleString)).to.deep.equal(exampleString);
+    });
+  });
+
+
+  describe('stringify', function () {
+    it('Stringify JSON', function () {
+      var exampleString = JSON.stringify(JSON.parse('{"example": "string value", "example2": 1, "example": [1, "abc"]}'), null, 2);
+
+      expect(Util.stringify({
+        example: 'string value',
+        example2: 1,
+        example: [1, 'abc']
+      })).to.equal(exampleString);
+    });
+
+    it('should return the string if a string is provided', function () {
+      var exampleString = 'string-example';
+      expect(Util.stringify(exampleString)).to.equal(exampleString);
+    });
+
+    it('should return the string if a number is provided', function () {
+      var exampleString = '123';
+      expect(Util.stringify(123)).to.equal(exampleString);
+    });
+
+    it('should call toString if a function is provided', function () {
+      var exampleFunction = function(){};
+      expect(Util.stringify(exampleFunction)).to.equal('[Function]');
+    });
+
+    it('should call toString if a circular reference exception is encountered', function () {
+      var circularObject = {};
+      circularObject.cycle = circularObject
+      expect(Util.stringify(circularObject)).to.equal('[object Object]');
+    });
+  });
+
+
   describe('simpleCopy', function () {
     it('should provide a copy of an object', function () {
       var exampleObject = {

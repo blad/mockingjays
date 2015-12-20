@@ -2,6 +2,7 @@ var FileSystem = require('fs');
 var url = require('url')
 var FileSystemHelper = require('./filesystem_helper');
 var RequestHash = require('./request_hash');
+var Util = require('./util');
 
 var CacheClient = function(options) {
   this.cacheDir = options.cacheDir;
@@ -27,7 +28,7 @@ CacheClient.prototype.fetch = function (request) {
       if (err) {
         reject(err);
       } else {
-        resolve(JSON.parse(data)); // TODO: Handle Non-JSON Data
+        resolve(Util.parseJSON(data));
       }
     });
   });
@@ -36,12 +37,7 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    var responseString;
-    try {
-      responseString = JSON.stringify(response, null, 2);
-    } catch (e) {
-      responseString = response;
-    }
+    var responseString = Util.stringify(response);
 
     var writeToFile = function() {
       FileSystem.writeFile(self.path(request), responseString, function (err) {

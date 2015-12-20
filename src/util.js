@@ -1,5 +1,35 @@
 Util = {};
 
+Util.stringify = function (inputObject) {
+  var jsonObject = inputObject || '';
+
+  try {
+    switch (typeof(jsonObject)) {
+      case 'object':
+        return JSON.stringify(jsonObject, null, 2);
+      case 'string':
+        return jsonObject
+      case 'function':
+        return '[Function]'
+      default:
+        return jsonObject.toString();
+    }
+  } catch (error) {
+    console.warn('Error While Stringifying Object: ', error);
+    return jsonObject.toString();
+  }
+}
+
+
+Util.parseJSON = function (jsonString) {
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    return jsonString;
+  }
+}
+
+
 Util.simpleCopy = function (target) {
   return JSON.parse(JSON.stringify(target));
 }
