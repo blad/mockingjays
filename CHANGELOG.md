@@ -2,6 +2,8 @@
 
 ## v1.7.0
 
+- Add `--help` and `--version` commands
+- When no options are provided display the help menu.
 - Add `responseHeaderBlacklist` options to provide the ability to prevent specific headers in the response from being recorded to the cache files.
 - Add a new line to the end of all new cache files.
 - Handle JSON exceptions when content-type was `application/json`, but payload was not actually JSON.
