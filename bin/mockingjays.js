@@ -4,11 +4,22 @@ var HelpMenu = require('./help_menu')
 var OptionParser = require('./option_parser')
 var userOptions = OptionParser.parse(process.argv);
 
-if (userOptions['help'] || process.argv.length == 2) {
-  HelpMenu();
-} else if (userOptions['version']) {
-  var pjson = require('../package.json');
-  console.log('Mockingjays v' + pjson.version);
-} else {
-  new Mockingjays().start(userOptions);
+
+switch (true) {
+  case OptionParser.shouldDisplayHelp(userOptions):
+    HelpMenu();
+    break;
+  case OptionParser.shouldDisplayVersion(userOptions):
+    var pjson = require('../package.json');
+    console.log('Mockingjays v' + pjson.version);
+    break;
+  case OptionParser.shouldRehash(userOptions):
+    new Mockingjays().rehash(userOptions);
+    break;
+  case OptionParser.shouldServe(userOptions):
+    new Mockingjays().start(userOptions);
+    break;
+  default:
+    console.log('Error Parsing Options. Expected: serve, rehash, --help, or --version');
+    HelpMenu();
 }
