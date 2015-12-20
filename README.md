@@ -19,7 +19,7 @@ npm install -g mockingjays
 
 ## CLI Use
 ```bash
-mockingjays \
+mockingjays serve\
   --cacheDir=/var/app/fixtures \ # Required
   --serverBaseUrl='http://swapi.co' \ # Required
   --cacheHeader='authorization,content-length'
@@ -27,6 +27,17 @@ mockingjays \
   --port=9000 \
   --refresh=true \
 ```
+
+### Subcommands
+
+There are two subcommands that will indicate to Mockingjays what should be done.
+These modes are `serve` and `rehash`.
+
+`serve` starts up the proxy server that observes and responds to requests.
+
+`rehash` is a process in which the provided options will be parsed, and then applied
+to the existing cache. The `rehash` command is useful for updating the url of the
+source server, removing headers from the response and request data.
 
 ## Programatic API
 ```javascript
@@ -99,20 +110,9 @@ Example Response:
   "status": 200,
   "type": "application/json",
   "headers": {
-    "date": "Mon, 23 Nov 2015 05:32:11 GMT",
     "content-type": "application/json",
-    "transfer-encoding": "chunked",
-    "connection": "close",
-    "set-cookie": [
-      "__cfduid=d2899211d5e45cad84e75ad06258784af1448256730; expires=Tue, 22-Nov-16 05:32:10 GMT; path=/; domain=.swapi.co; HttpOnly"
-    ],
     "allow": "GET, HEAD, OPTIONS",
-    "x-frame-options": "SAMEORIGIN",
-    "vary": "Accept, Cookie",
-    "etag": "\"1f7a4766c9ebf66cdb1ddb85d5cc6f2f\"",
-    "via": "1.1 vegur",
-    "server": "cloudflare-nginx",
-    "cf-ray": "249a7df825bf39a0-PHX"
+    "x-frame-options": "SAMEORIGIN"
   },
   "data": {
     "people": "http://swapi.co/api/people/",
