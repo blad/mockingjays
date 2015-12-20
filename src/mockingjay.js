@@ -59,7 +59,6 @@ Mockingjay.prototype._okToCache = function (responseType) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
-  console.log(request);
   var self = this;
   var shouldRepeat = this.knows(request) && !this.options.refresh;
   var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
