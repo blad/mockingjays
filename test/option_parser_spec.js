@@ -49,19 +49,11 @@ describe('Option Parser', function() {
 
     it('should detect when the we should serve',function(){
       expect(OptionParser.shouldServe({'serve': true})).to.be.true;
+      expect(OptionParser.shouldServe({'otherOption': true})).to.be.true;
+      expect(OptionParser.shouldServe({})).to.be.false; // Should display help when empty
       expect(OptionParser.shouldServe({'rehash': true})).to.be.false;
       expect(OptionParser.shouldServe({'version': true})).to.be.false;
       expect(OptionParser.shouldServe({'help': true})).to.be.false;
-      expect(OptionParser.shouldServe({})).to.be.false;
-    });
-
-
-    it('should detect when a primary function is not defined',function(){
-      var exampleInvalidOptions = {invalid: true}
-      expect(OptionParser.shouldRehash(exampleInvalidOptions)).to.be.false;
-      expect(OptionParser.shouldServe(exampleInvalidOptions)).to.be.false;
-      expect(OptionParser.shouldDisplayVersion(exampleInvalidOptions)).to.be.false;
-      expect(OptionParser.shouldDisplayHelp(exampleInvalidOptions)).to.be.false;
     });
   });
 });

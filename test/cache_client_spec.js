@@ -9,12 +9,16 @@ describe('CacheClient', function() {
   };
   var requests = [
     {
-      url: 'http://swapi.co/api/',
+      hostname: 'swapi.co',
+      path: '/api/',
+      port: 80,
       headers: {authorization: 'Bearer 12345'},
       body: {}
     },
     {
-      url: 'http://swapi.co/api/people/1',
+      hostname: 'swapi.co',
+      path: '/api/people/1/',
+      port: 80,
       headers: {authorization: 'Bearer 12345'},
       body: {}
     }
@@ -30,8 +34,8 @@ describe('CacheClient', function() {
 
   describe('path', function() {
     it('should return the complete file path for a request', function() {
-      expect(client.path(requests[0])).to.equal('/Users/home/fixtures/api/3385f89ac8994f375b343ee36cab17126bf4179f')
-      expect(client.path(requests[1])).to.equal('/Users/home/fixtures/api/people/1/770b063cb919261e5855c66140e2bd3eaed54eff')
+      expect(client.path(requests[0])).to.equal('/Users/home/fixtures/api/8846cfb1475fa4c43e2886c339b16a842bf1c6c3')
+      expect(client.path(requests[1])).to.equal('/Users/home/fixtures/api/people/1/4515f2389c8e553ab5706c6e9c72b34470bdf749')
     })
   })
 })

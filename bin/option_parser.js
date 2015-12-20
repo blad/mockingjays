@@ -42,7 +42,7 @@ OptionsParser.shouldServe = function (options) {
   var displayVersionNumber = OptionsParser.shouldDisplayVersion(options);
   var rehash = OptionsParser.shouldRehash(options);
 
-  return Boolean(options['serve'] && !displayHelpMenu && !displayVersionNumber && !rehash);
+  return !displayHelpMenu && !displayVersionNumber && !rehash;
 }
 
 

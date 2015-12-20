@@ -4,13 +4,17 @@ var RequestHash = require('../src/request_hash');
 
 describe('RequestHash with Empty Body', function() {
   var exampleRequestA = {
-    url: 'http://swapi.co/api/',
+    hostname: 'swapi.co',
+    path: '/api/',
+    port: 80,
     headers: {'authorization': '12345', 'content-type': 'application/json'},
     body: ''
   }
 
   var exampleRequestB = {
-    url: 'http://swapi.co/api/people1',
+    hostname: 'swapi.co',
+    path: '/api/people/1/',
+    port: 80,
     headers: {'authorization': '98745', 'content-type': 'application/json'},
     body: ''
   }
@@ -54,13 +58,25 @@ describe('RequestHash with Empty Body', function() {
     it('should be filter all headers out', function () {
       var cacheHeaders = []
       var hashA = new RequestHash(exampleRequestA, cacheHeaders);
-      expect(hashA._filteredAttributes()).to.deep.equal({url: 'http://swapi.co/api/', body: '', headers: {}});
+      expect(hashA._filteredAttributes()).to.deep.equal({
+        hostname: 'swapi.co',
+        path: '/api/',
+        port: 80,
+        body: '',
+        headers: {}
+      });
     });
 
     it('should be keep defined headers headers', function () {
       var cacheHeaders = ['content-type']
       var hashA = new RequestHash(exampleRequestA, cacheHeaders);
-      expect(hashA._filteredAttributes()).to.deep.equal({url: 'http://swapi.co/api/', body: '', headers: {'content-type': 'application/json'}});
+      expect(hashA._filteredAttributes()).to.deep.equal({
+        hostname: 'swapi.co',
+        path: '/api/',
+        port: 80,
+        body: '',
+        headers: {'content-type': 'application/json'}
+      });
     });
   });
 });
