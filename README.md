@@ -139,6 +139,10 @@ If you have questions about the use of Mockingjays please leave a message in the
 
 [![Gitter](https://badges.gitter.im/blad/mockingjays.svg)](https://gitter.im/blad/mockingjays?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+# ChangeLog
+
+For a list of changes between versions please see the [CHANGELOG](./CHANGELOG.md) file.
+
 # License: Apache 2.0
 Copyright 2015 Bladymir Tellez\<btellez@gmail.com\>
 
