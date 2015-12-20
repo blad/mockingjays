@@ -1,5 +1,6 @@
 var url = require('url')
 var HeaderUtil = require('./header_util');
+var Util = require('./util');
 
 var HttpClient = function() {}
 
@@ -71,7 +72,7 @@ HttpClient.prototype._accumulateResponse = function (res, options, resolve, reje
       status: statusCode,
       type: contentType,
       headers: res.headers,
-      data: options.method == 'OPTIONS' ? responseData : (isJson ? JSON.parse(responseData) : responseData)
+      data: options.method == 'OPTIONS' ? responseData : (isJson ? Util.parseJSON(responseData) : responseData)
     });
   });
 
