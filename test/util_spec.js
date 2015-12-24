@@ -4,6 +4,22 @@ var Util = require('../src/util');
 
 describe('Util Functions', function() {
 
+  describe('determinePort', function() {
+
+    it('should be 80 when not https and no port is defined', function () {
+      expect(Util.determinePort({protocol: 'http:'})).to.equal(80)
+    });
+
+    it('should be 443 when https and no port is defined', function () {
+      expect(Util.determinePort({protocol: 'https:'})).to.equal(443)
+    });
+
+    it('should be the port defined in the URL regardless of protocol', function () {
+      expect(Util.determinePort({port: 8080, protocol: 'http'})).to.equal(8080)
+      expect(Util.determinePort({port: 8080, protocol: 'https'})).to.equal(8080)
+    });
+  });
+
   describe('parseJSON', function () {
     it('should parse valid json', function () {
       var exampleString = '{"example": "string value", "example2": 1, "example": [1, "abc"]}';

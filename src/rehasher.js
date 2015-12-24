@@ -68,11 +68,10 @@ Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
 
   // Update Base Server URL
   var urlInfo = Url.parse(this.options.serverBaseUrl);
-  var isHttps = urlInfo.protocol === 'https:'
 
   cacheContent.request.hostname = urlInfo.hostname;
-  cacheContent.request.port = parseInt(urlInfo.port) || isHttps ? 443 : 80;
   cacheContent.request.headers = filteredHeaders;
+  cacheContent.request.port = Util.determinePort(urlInfo);
 }
 
 Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {

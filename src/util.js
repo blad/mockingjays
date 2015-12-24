@@ -1,4 +1,9 @@
 Util = {};
+Util.determinePort = function (urlInfo) {
+  var isHttps = urlInfo.protocol === 'https:'
+  return parseInt(urlInfo.port) || (isHttps ? 443 : 80);
+}
+
 
 Util.stringify = function (inputObject) {
   var jsonObject = inputObject || '';
