@@ -84,7 +84,7 @@ Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCached
     cacheClient
       .record(cacheContent.request, cacheContent)
       .then(function() {
-        cacheClient.remove(originalCachedContents.request);
+        cacheClient.remove(originalCachedContents.request, filePath);
       });
   }
 }

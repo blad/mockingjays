@@ -27,8 +27,8 @@ describe('CacheClient', function() {
 
   describe('directory', function() {
     it('should return the complete directory path for a request', function() {
-      expect(client.directory(requests[0])).to.equal('/Users/home/fixtures/api')
-      expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1')
+      expect(client.directory(requests[0])).to.equal('/Users/home/fixtures/api/')
+      expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1/')
     })
   })
 

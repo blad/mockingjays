@@ -1,4 +1,5 @@
 var FileSystem = require('fs');
+var path = require('path');
 var url = require('url')
 var FileSystemHelper = require('./filesystem_helper');
 var RequestHash = require('./request_hash');
@@ -61,14 +62,15 @@ CacheClient.prototype.record = function (request, response) {
 }
 
 
-CacheClient.prototype.remove = function (request) {
+CacheClient.prototype.remove = function (request, originalFilename) {
   var self = this;
   return new Promise(function(resolve, reject) {
     var directory = self.directory(request);
     if (FileSystemHelper.directoryExists(directory)) {
-      FileSystem.unlink(self.path(request), function(error) {
+      var filePath = originalFilename ? originalFilename : self.path(request);
+      FileSystem.unlink(filePath, function(error) {
         if (error) {
-          var message = 'Unable to Delete File: ' + self.path(request);
+          var message = 'Unable to Delete File: ' + filePath;
           console.log(message, error);
           reject(error)
         } else {
@@ -83,17 +85,19 @@ CacheClient.prototype.remove = function (request) {
 }
 
 CacheClient.prototype.directory = function (request) {
-  var path = request.path || '';
-  var pathEndsSlash = path.lastIndexOf('/') == path.length - 1
-  path = pathEndsSlash ? path.substr(0, path.length - 1) : path;
-  return this.cacheDir + path;
+  var requestPath = request.path || '';
+  var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
+  requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
+
+  return path.join(this.cacheDir, requestPath);
 }
 
 
 CacheClient.prototype.path = function (request) {
   var requestHash = new RequestHash(request, this.cacheHeaders).toString();
   var directory = this.directory(request);
-  return directory + '/' + requestHash;
+
+  return path.join(directory, requestHash);
 }
 
 module.exports = CacheClient
