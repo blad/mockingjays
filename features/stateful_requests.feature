@@ -9,7 +9,7 @@ Feature: Stateful Requests Options
       | cacheDir      | ./temp/         |
       | serverBaseUrl | http://swapi.co |
       | logLevel      | warn            |
-    And I provide the following transition definitions
+    And I provide the following transition config
       """
       {
         "/api/": {

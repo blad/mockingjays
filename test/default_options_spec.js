@@ -60,7 +60,8 @@ describe('DefaultOptions', function() {
         refresh: false,
         cacheHeaders: [],
         responseHeaderBlacklist: [],
-        logLevel: 'info'
+        logLevel: 'info',
+        transitionConfig: {}
       };
 
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);

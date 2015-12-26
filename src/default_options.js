@@ -1,6 +1,9 @@
 var net = require('net');
+var FileSystem = require('fs');
 var FileSystemHelper = require('./filesystem_helper');
 var Logger = require('./logger');
+var Util = require('./util');
+
 var logger = new Logger();
 
 /**
@@ -16,7 +19,8 @@ DefaultOptions.prototype.options = {
   refresh: false,
   cacheHeaders: [],
   responseHeaderBlacklist: [],
-  logLevel: 'info'
+  logLevel: 'info',
+  transitionConfig: {}
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -33,6 +37,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handleCacheHeaders(options);
   this._handleResponseHeaders(options);
   this._handleLogLevel(options);
+  this._handletransitionConfig(options);
   return options;
 }
 
@@ -109,6 +114,17 @@ DefaultOptions.prototype._handleLogLevel = function (options) {
   var defaults = this.options;
   if (!options.logLevel) {
     options.logLevel = defaults.logLevel;
+  }
+}
+
+DefaultOptions.prototype._handletransitionConfig = function (options) {
+  var defaults = this.options;
+  if (!options.transitionConfig) {
+    options.transitionConfig = defaults.transitionConfig;
+  } else {
+    if (typeof(options.transitionConfig) === 'string') {
+      options.transitionConfig = Util.parseJSON(FileSystem.readFileSync(options.transitionConfig, {encoding: 'utf-8'}));
+    }
   }
 }
 

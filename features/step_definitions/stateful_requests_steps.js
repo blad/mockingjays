@@ -1,7 +1,7 @@
 var http = require('http');
 module.exports = function() {
 
-  this.Given(/^I provide the following transition definitions$/, function (string, done) {
+  this.Given(/^I provide the following transition config$/, function (string, done) {
     try {
       this.options.transitionConfig = JSON.parse(string);
       done();

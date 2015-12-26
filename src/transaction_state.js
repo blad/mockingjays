@@ -19,10 +19,14 @@ TransactionState.prototype.isStateful = function(path, method) {
 
 TransactionState.prototype.set = function (statefulPath, method, transactionKey) {
   var self = this;
-  var affectedPaths = this.options[statefulPath].links;
-  affectedPaths.forEach(function (pathOptions) {
-    self.transactionMap[pathOptions.path + pathOptions.method] = transactionKey;
-  });
+  if(!this.options[statefulPath]) {
+    return;
+  } else {
+    var affectedPaths = this.options[statefulPath].links;
+    affectedPaths.forEach(function (pathOptions) {
+      self.transactionMap[pathOptions.path + pathOptions.method] = transactionKey;
+    });
+  }
 }
 
 module.exports = TransactionState

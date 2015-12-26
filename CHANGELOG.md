@@ -1,10 +1,16 @@
 # Change log
 
-## Unpublished Changes
+## v1.10.0 (12/26/2015)
 
+- Add support for defining a transition configuration to track stateful requests.
 - Add Support for Integration Tests to Repository
 - Add LogLevel Flag to specify log levels.
 - Gracefully Handle HTTP Client Errors.
+
+## v1.9.0 (12/24/2015)
+
+- Bug Fix: Correctly Remove Old Files When Rehashing
+- Bug Fix: Correctly Detect Port When Rehashing
 
 ## v1.8.0 (12/20/2015)
 

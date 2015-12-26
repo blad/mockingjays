@@ -4,7 +4,7 @@ var TransactionState = require('../src/transaction_state');
 
 describe('TransactionState', function() {
 
-  describe('get and set', function() {
+  describe('state with populated configuration', function() {
     var transactionConfig = {
       "/api/": {
         "method": "GET",
@@ -42,6 +42,34 @@ describe('TransactionState', function() {
       expect(transactionState.get('/api/people/1/', 'GET')).to.equal(expectedKey);
       expect(transactionState.get('/api/people/1/', 'POST')).to.equal('');
 
+      expect(transactionState.get('/unlisted/path', 'GET')).to.equal('');
+      expect(transactionState.get('/unlisted/path')).to.equal('');
+    });
+
+  });
+
+
+  describe('state with empty configuration', function() {
+    var transactionState = new TransactionState({});
+
+    it('should identify stateful transaction', function () {
+      expect(transactionState.isStateful('/api/', 'GET')).to.be.false;
+      expect(transactionState.isStateful('/api/', 'POST')).to.be.false;
+      expect(transactionState.isStateful('/api/', 'PUT')).to.be.false;
+      expect(transactionState.isStateful('/api/', 'DELETE')).to.be.false;
+    });
+
+    it('should return an empty value when no value is set', function () {
+      expect(transactionState.get('/api/', 'GET')).to.equal('');
+      expect(transactionState.get('/api/people/1/', 'GET')).to.equal('');
+      expect(transactionState.get('/unlisted/path', 'GET')).to.equal('');
+    });
+
+    it('should return the key for a stateful transaction', function () {
+      var expectedKey = 'abcd1234beef';
+      transactionState.set('/api/', 'GET', expectedKey); // Should have no effect
+      expect(transactionState.get('/api/people/1/', 'GET')).to.equal('');
+      expect(transactionState.get('/api/people/1/', 'POST')).to.equal('');
       expect(transactionState.get('/unlisted/path', 'GET')).to.equal('');
       expect(transactionState.get('/unlisted/path')).to.equal('');
     });

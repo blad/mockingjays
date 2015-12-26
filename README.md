@@ -70,6 +70,8 @@ new Mockingjays().start({
   - *Default: false*
 - **responseHeaderBlacklist** - Indicates headers that should not be recorded to the cache file. Things like date or fields that may change the file during refreshes are ideal candidates.
   - *Default: []* (Record all headers)
+- **transitionConfig** - Path or Object to the transition config Object. The transition config defined a mapping between requests that cause state changes, and the requests that are affected. [See Feature File for Example](features/stateful_requests.feature)
+  - *Default: {}* (Consider All Operations Non-Stateful)
 
 
 
@@ -107,7 +109,8 @@ Example Response:
     "path": "/api/",
     "method": "GET",
     "headers": {},
-    "body": ""
+    "body": "",
+    "transaction": ""
   },
   "status": 200,
   "type": "application/json",
