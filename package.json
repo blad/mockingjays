@@ -4,6 +4,7 @@
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
   "main": "mockingjays.js",
   "scripts": {
+    "test": "npm run test:unit && npm run test:feature",
     "test:unit": "mocha ./test/.",
     "test:feature": "cucumber.js --format=pretty"
   },
