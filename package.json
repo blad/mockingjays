@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run test:unit && npm run test:feature",
     "test:unit": "mocha ./test/.",
-    "test:feature": "cucumber.js --format=pretty"
+    "test:feature": "./node_modules/cucumber/bin/cucumber.js --format=pretty"
   },
   "repository": {
     "type": "git",
