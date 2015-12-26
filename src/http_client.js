@@ -2,7 +2,10 @@ var url = require('url')
 var HeaderUtil = require('./header_util');
 var Util = require('./util');
 
-var HttpClient = function() {}
+var HttpClient = function (options) {
+  this.options = options;
+  this.logger = options.logger;
+}
 
 HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
   var self = this;
@@ -14,7 +17,7 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
       if (HeaderUtil.isText(res.headers['content-type'])) {
         self._accumulateResponse(res, requestOptions, resolve, reject);
       } else {
-        console.log('Non Textual Content-Type Detected...Piping Response from Source Server.');
+        self.logger.warn('Non Textual Content-Type Detected...Piping Response from Source Server.');
         self._pipeResonse(res, outputBuffer, resolve, reject);
       }
     });
@@ -27,9 +30,9 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     req.on('error', function (error) {
       switch (error.code) {
         case 'ENOTFOUND':
-          console.log('Unable to Connect to Host.');
-          console.log('Check the Domain Spelling and Try Again.');
-          console.log('No Data Saved for Request.');
+          self.logger.error('Unable to Connect to Host.');
+          self.logger.error('Check the Domain Spelling and Try Again.');
+          self.logger.error('No Data Saved for Request.');
           break;
       }
       reject(error);
@@ -60,7 +63,7 @@ HttpClient.prototype._accumulateResponse = function (res, options, resolve, reje
   });
 
   res.on('end', function() {
-    var isJson = contentType === 'application/json'
+    var isJson = contentType === 'application/json';
     resolve({
       request: options,
       status: statusCode,

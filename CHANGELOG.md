@@ -1,5 +1,11 @@
 # Change log
 
+## Unpublished Changes
+
+- Add Support for Integration Tests to Repository
+- Add LogLevel Flag to specify log levels.
+- Gracefully Handle HTTP Client Errors.
+
 ## v1.8.0 (12/20/2015)
 
 - Add `serve` and `rehash` subcommands to the CLI interface.

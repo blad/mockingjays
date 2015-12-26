@@ -60,6 +60,8 @@ new Mockingjays().start({
   - ***Required***
 - **cacheHeader** - Headers that should be considered as part of the cache signature. By default all headers are ignored in the cache signature.
   - *Default: ''*
+- **logLevel** - The Level of Logging information that should be displayed to the console. Available options: `error`(least info, error only), `warn`, `info`, `debug` (most info).
+  - *Default: info*
 - **port** - Port that the proxy server should bind to.
   - *Default: 9000*
 - **ignoreContentType** - Comma separated list of content-types that should be skipped. This can include a `*` which will be a wildcard match equivalent to the `.*` RegEx. No File Types Ignored by default.

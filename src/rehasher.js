@@ -6,12 +6,13 @@ var HeaderUtil = require('./header_util');
 var CacheClient = require('./cache_client');
 
 var Rehashser = function (options) {
+  this.logger = options.logger;
   this.options = options;
 
   if (!FileSystemHelper.directoryExists(options.cacheDir)) {
-    console.warn('\nSorry, Looks like the cache directory does not exist!\n');
-    console.log('We can not rehash if there are no cache files available. Check the path and try again.');
-    console.log('Remember to use an absolute path to the cache directory.');
+    this.logger.warn('Sorry, Looks like the cache directory does not exist!');
+    this.logger.warn('We can not rehash if there are no cache files available. Check the path and try again.');
+    this.logger.warn('Remember to use an absolute path to the cache directory.');
     process.exit(1);
   }
 
@@ -77,10 +78,10 @@ Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
 Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {
   var cacheClient = this.cacheClient;
   if (cacheClient.isCached(cacheContent.request)) {
-    console.log('Updating Contents for for File:', filePath);
+    this.logger.info('Updating Contents for for File:', filePath);
     cacheClient.record(cacheContent.request, cacheContent);
   } else {
-    console.log('Hash Changed for Request. Renaming File for Request: ', cacheContent.request.path);
+    this.logger.info('Hash Changed for Request. Renaming File for Request: ', cacheContent.request.path);
     cacheClient
       .record(cacheContent.request, cacheContent)
       .then(function() {

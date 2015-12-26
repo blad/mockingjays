@@ -2,17 +2,23 @@
  * Core that determines wether to fetch a fresh copy from the source or
  * fetch a cached copy of the data.
  */
-
+var Color = require('./colorize');
 var CacheClient = require('./cache_client');
 var HttpClient = require('./http_client');
 var HeaderUtil = require('./header_util');
+var Logger = require('./logger');
 var Util = require('./util');
 var url = require('url');
 
+var logger = new Logger();
+
 var Mockingjay = function(options) {
   this.options = options;
+  this.options.logger = logger;
+  logger.setLevel(options.logLevel);
+
   this.cacheClient = new CacheClient(options);
-  this.httpClient = new HttpClient();
+  this.httpClient = new HttpClient(options);
 }
 
 /**
@@ -26,7 +32,7 @@ Mockingjay.prototype.knows = function(request) {
  * Fetch a Request form cache.
  */
 Mockingjay.prototype.repeat = function(request) {
-  console.log("\033[1;33mRepeating:\033[0m: ", JSON.stringify(request));
+  logger.info(Color.yellow('Repeating'), JSON.stringify(request));
   return this.cacheClient.fetch(request);
 };
 
@@ -34,7 +40,7 @@ Mockingjay.prototype.repeat = function(request) {
  * Fetch a Request form the Source.
  */
 Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
-  console.log("\033[1;31mLearning:\033[0m: ", JSON.stringify(request));
+  logger.info(Color.red('Learning'), JSON.stringify(request));
   var self = this;
   var responsePromise = this.httpClient.fetch(request, outputBuffer);
   return responsePromise.then(function (response) {
@@ -65,17 +71,17 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
   var shouldRepeat = this.knows(request) && !this.options.refresh;
   var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
   responsePromise.then(function(response) {
-    console.log("\nResponding: ", response.status, response.type);
+    logger.info('Responding:', response.status, response.type);
     if (!response.piped) {
-      var responseString = typeof(response.data) === 'string' ? response.data : JSON.stringify(response.data);
+      var responseString = typeof(response.data) === 'string' ? response.data : Util.stringify(response.data);
       if (HeaderUtil.isText(response.type)) {
-        console.log(responseString);
+        logger.info(responseString);
       }
       outputBuffer.writeHead(response.status, {'Content-Type': response.type});
       outputBuffer.end(responseString);
     }
   }, function (error) {
-    console.log(error.toString());
+    logger.error(error.toString());
     outputBuffer.writeHead(500, {'Content-Type': 'text/plain'});
     outputBuffer.end('Network Error Occurred while Contacting Source Server');
   });
@@ -85,7 +91,7 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
  * Callback that is called when the server recieves a request.
  */
 Mockingjay.prototype.onRequest = function(request, response) {
-  console.log("\n\033[1;32mRequest Recieved:\033[0m", request.url, request.method);
+  logger.info(Color.green('Request Recieved'), request.url, request.method);
 
   var self = this;
   var simplifiedRequest = this.simplify(request);

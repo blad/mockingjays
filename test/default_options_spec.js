@@ -34,6 +34,7 @@ describe('DefaultOptions', function() {
         serverBaseUrl: 'http://swapi.co',
         ignoreContentType: 'image/*,text/html',
         refresh: true,
+        logLevel: 'debug',
         cacheHeader: 'authorization,content-length',
         responseHeaderBlacklist: ['date']
       };
@@ -58,7 +59,8 @@ describe('DefaultOptions', function() {
         ignoreContentType: [],
         refresh: false,
         cacheHeaders: [],
-        responseHeaderBlacklist: []
+        responseHeaderBlacklist: [],
+        logLevel: 'info'
       };
 
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);

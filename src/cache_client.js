@@ -6,9 +6,11 @@ var RequestHash = require('./request_hash');
 var Util = require('./util');
 
 var CacheClient = function(options) {
+  this.logger = options.logger;
   this.cacheDir = options.cacheDir;
   this.cacheHeaders = options.cacheHeaders;
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
+  FileSystemHelper.logger = options.logger;
 }
 
 CacheClient.prototype.isCached = function (request) {
@@ -71,14 +73,14 @@ CacheClient.prototype.remove = function (request, originalFilename) {
       FileSystem.unlink(filePath, function(error) {
         if (error) {
           var message = 'Unable to Delete File: ' + filePath;
-          console.log(message, error);
+          this.logger.error(message, error);
           reject(error)
         } else {
           resolve();
         }
       });
     } else {
-      console.log('Path does not exist for request. Skipping action.');
+      this.logger.info('Path does not exist for request. Skipping action.');
       resolve();
     }
   });

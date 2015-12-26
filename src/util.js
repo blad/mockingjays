@@ -1,4 +1,9 @@
-Util = {};
+var Logger = require('./logger');
+
+var Util = {
+  logger: new Logger()
+};
+
 Util.determinePort = function (urlInfo) {
   var isHttps = urlInfo.protocol === 'https:'
   return parseInt(urlInfo.port) || (isHttps ? 443 : 80);
@@ -20,7 +25,7 @@ Util.stringify = function (inputObject) {
         return jsonObject.toString();
     }
   } catch (error) {
-    console.warn('Error While Stringifying Object: ', error);
+    Util.logger.warn('Error While Stringifying Object: ', error);
     return jsonObject.toString();
   }
 }

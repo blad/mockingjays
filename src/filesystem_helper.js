@@ -1,8 +1,11 @@
 var FileSystem = require('fs');
 var path = require('path');
+var Logger = require('./logger');
 var joinArray = function (acc, next) {return acc.concat(next);};
 
-var FileSystemHelper = {};
+var FileSystemHelper = {
+  logger: new Logger()
+};
 
 FileSystemHelper.directoryExists = function (path) {
   try {
@@ -17,10 +20,10 @@ FileSystemHelper.createDirectory = function (path) {
     FileSystemHelper.createDirectoryParent(path, function (error) {
       if (error) {
         var errorMessage = 'Failed to Create Directory: ' + path;
-        console.warn('Failed to Create Directory: ' + path, error);
+        FileSystemHelper.logger.error('Failed to Create Directory: ' + path, error);
         reject('Failed to Create Directory: ' + path);
       } else {
-        console.log('Successfully Created Directory: ' + path);
+        FileSystemHelper.logger.info('Successfully Created Directory: ' + path);
         resolve();
       }
     });

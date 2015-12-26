@@ -1,5 +1,7 @@
 var net = require('net');
 var FileSystemHelper = require('./filesystem_helper');
+var Logger = require('./logger');
+var logger = new Logger();
 
 /**
  * Provides default values and verifies that requied values are set.
@@ -13,7 +15,8 @@ DefaultOptions.prototype.options = {
   ignoreContentType: '',
   refresh: false,
   cacheHeaders: [],
-  responseHeaderBlacklist: []
+  responseHeaderBlacklist: [],
+  logLevel: 'info'
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -29,6 +32,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handleBaseUrlDefault(options);
   this._handleCacheHeaders(options);
   this._handleResponseHeaders(options);
+  this._handleLogLevel(options);
   return options;
 }
 
@@ -62,8 +66,8 @@ DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extra
   }
 
   if (!FileSystemHelper.directoryExists(options.cacheDir) && extras.attemptToCreateCacheDir) {
-    console.warn('Cache Directory Does not Exists.')
-    console.warn('Attempting to Create: ', options.cacheDir);
+    logger.warn('Cache Directory Does not Exists.')
+    logger.warn('Attempting to Create: ', options.cacheDir);
     FileSystemHelper
       .createDirectory(options.cacheDir)
       .catch(function() {
@@ -98,6 +102,13 @@ DefaultOptions.prototype._handleResponseHeaders = function (options) {
     options.responseHeaderBlacklist = options.responseHeaderBlacklist.split(',');
   } else {
     options.responseHeaderBlacklist = defaults.responseHeaderBlacklist;
+  }
+}
+
+DefaultOptions.prototype._handleLogLevel = function (options) {
+  var defaults = this.options;
+  if (!options.logLevel) {
+    options.logLevel = defaults.logLevel;
   }
 }
 
