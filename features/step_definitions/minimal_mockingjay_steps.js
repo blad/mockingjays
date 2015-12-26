@@ -18,7 +18,7 @@ module.exports = function () {
 
   this.When(/^I serve$/, function (done) {
     try {
-      new Mockingjays().start(this.options);
+      this.mockingjay = new Mockingjays().start(this.options);
     } catch (error) {
       this.error = error;
     }

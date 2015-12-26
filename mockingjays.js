@@ -18,7 +18,12 @@ var Mockingjays = function() {}
   var defaultOptions = new DefaultOptions();
   var finalOptions = defaultOptions.merge(options);
   var mockingjay = new Mockingjay(finalOptions);
-  Server.listen(finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
+  this.server = Server.listen(finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
+  return this;
+}
+
+Mockingjays.prototype.close = function() {
+  this.server.close();
 }
 
 /**
