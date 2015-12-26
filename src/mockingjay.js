@@ -43,6 +43,8 @@ Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
     } else {
       return Promise.resolve(response);
     }
+  }, function (error) {
+    return Promise.reject(error);
   });
 };
 
@@ -72,6 +74,10 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
       outputBuffer.writeHead(response.status, {'Content-Type': response.type});
       outputBuffer.end(responseString);
     }
+  }, function (error) {
+    console.log(error.toString());
+    outputBuffer.writeHead(500, {'Content-Type': 'text/plain'});
+    outputBuffer.end('Network Error Occurred while Contacting Source Server');
   });
 };
 

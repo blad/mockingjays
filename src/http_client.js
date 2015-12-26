@@ -23,6 +23,17 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
       req.write(requestOptions.body);
     }
     req.end()
+
+    req.on('error', function (error) {
+      switch (error.code) {
+        case 'ENOTFOUND':
+          console.log('Unable to Connect to Host.');
+          console.log('Check the Domain Spelling and Try Again.');
+          console.log('No Data Saved for Request.');
+          break;
+      }
+      reject(error);
+    });
   });
 }
 
