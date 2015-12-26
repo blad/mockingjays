@@ -21,7 +21,8 @@ describe('Mockingjay', function () {
         path: '/query',
         method: 'GET',
         body: '',
-        headers: {authorization: 'Basic 12334'}
+        headers: {authorization: 'Basic 12334'},
+        transaction: ''
       });
     });
   });

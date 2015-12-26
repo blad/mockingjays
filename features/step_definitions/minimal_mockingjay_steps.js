@@ -1,4 +1,5 @@
 Mockingjays = require('../../mockingjays');
+path = require('path');
 
 module.exports = function () {
 

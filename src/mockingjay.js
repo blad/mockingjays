@@ -7,6 +7,7 @@ var CacheClient = require('./cache_client');
 var HttpClient = require('./http_client');
 var HeaderUtil = require('./header_util');
 var Logger = require('./logger');
+var TransactionState = require('./transaction_state.js');
 var Util = require('./util');
 var url = require('url');
 
@@ -19,6 +20,7 @@ var Mockingjay = function(options) {
 
   this.cacheClient = new CacheClient(options);
   this.httpClient = new HttpClient(options);
+  this.transactionState = new TransactionState(options.transitionConfig);
 }
 
 /**
@@ -79,6 +81,11 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
       }
       outputBuffer.writeHead(response.status, {'Content-Type': response.type});
       outputBuffer.end(responseString);
+
+      if (self.transactionState.isStateful(request.path, request.method)) {
+        logger.info('Stateful Transaction Detected. Saving Key for Defined Requests');
+        self.transactionState.set(request.path, request.method, self.cacheClient.requestHash(request));
+      }
     }
   }, function (error) {
     logger.error(error.toString());
@@ -112,7 +119,6 @@ Mockingjay.prototype.onRequest = function(request, response) {
 
 
 Mockingjay.prototype.simplify = function (req) {
-  var self = this;
   var urlSplit = url.parse(this.options.serverBaseUrl + req.url);
   var isHttps = urlSplit.protocol === 'https:'
   var options = {
@@ -121,7 +127,8 @@ Mockingjay.prototype.simplify = function (req) {
     path: urlSplit.path,
     body: '',
     method: req.method,
-    headers: HeaderUtil.standardize(req.headers)
+    headers: HeaderUtil.standardize(req.headers),
+    transaction: this.transactionState.get(urlSplit.path, req.method)
   };
   return options;
 };

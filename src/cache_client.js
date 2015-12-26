@@ -96,10 +96,14 @@ CacheClient.prototype.directory = function (request) {
 
 
 CacheClient.prototype.path = function (request) {
-  var requestHash = new RequestHash(request, this.cacheHeaders).toString();
+  var requestHash = this.requestHash(request);
   var directory = this.directory(request);
 
   return path.join(directory, requestHash);
+}
+
+CacheClient.prototype.requestHash = function (request) {
+  return new RequestHash(request, this.cacheHeaders).toString();
 }
 
 module.exports = CacheClient
