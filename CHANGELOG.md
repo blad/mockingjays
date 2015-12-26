@@ -1,5 +1,9 @@
 # Change log
 
+## v1.10.1 (12/26/2015)
+
+- Remove Leftover Debugging Log Statement
+
 ## v1.10.0 (12/26/2015)
 
 - Add support for defining a transition configuration to track stateful requests.
