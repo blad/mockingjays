@@ -6,4 +6,5 @@ dependencies:
   cache_directories:
     - "node_modules"
   override:
+    - npm install -g npm
     - npm install --dev
