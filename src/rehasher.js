@@ -74,6 +74,7 @@ Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
   cacheContent.request.hostname = urlInfo.hostname;
   cacheContent.request.headers = filteredHeaders;
   cacheContent.request.port = Util.determinePort(urlInfo);
+  cacheContent.request.transaction = cacheContent.request.transaction || '';
 }
 
 Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {
