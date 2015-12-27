@@ -34,8 +34,8 @@ describe('CacheClient', function() {
 
   describe('path', function() {
     it('should return the complete file path for a request', function() {
-      expect(client.path(requests[0])).to.equal('/Users/home/fixtures/api/8846cfb1475fa4c43e2886c339b16a842bf1c6c3')
-      expect(client.path(requests[1])).to.equal('/Users/home/fixtures/api/people/1/4515f2389c8e553ab5706c6e9c72b34470bdf749')
+      expect(client.path(requests[0])).to.equal('/Users/home/fixtures/api/6ecbc953b1c177653aa5223b39af99d2381c9136')
+      expect(client.path(requests[1])).to.equal('/Users/home/fixtures/api/people/1/5496e5424f8dbd30a96c9da868ba46669388da4b')
     })
   })
 })

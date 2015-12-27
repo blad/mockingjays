@@ -1,5 +1,10 @@
 # Change log
 
+## v1.10.2 (12/26/2015)
+
+- Bug Fix: Account for Key Ordering when Rehashing Existing Responses with Transaction Key
+- Bug Fix: Add Transaction Key when Rehashing Pre-Existing Responses
+
 ## v1.10.1 (12/26/2015)
 
 - Remove Leftover Debugging Log Statement
