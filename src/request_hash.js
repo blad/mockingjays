@@ -11,7 +11,7 @@ var RequestHash = function (request, cacheHeaders) {
 RequestHash.prototype.toString = function () {
   var request = this._filteredAttributes();
   var shasum = crypto.createHash('sha1');
-  shasum.update(JSON.stringify(request));
+  shasum.update(JSON.stringify(Util.sortObjectKeys(request)));
   return shasum.digest('hex');
 };
 

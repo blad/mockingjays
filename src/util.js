@@ -53,4 +53,23 @@ Util.regExArrayContains = function (regExArray, value) {
   return regExArray.reduce(inList, false);
 }
 
+
+Util.sortObjectKeys = function (originalObject) {
+  // Sort the keys to get predictable order in object keys.
+  var keys = [];
+  for (var key in originalObject) {
+    keys.push(key);
+  }
+  keys.sort();
+
+  // Copy the Keys in order:
+  var resultObject = {};
+  keys.forEach(function(key) {
+    // Standardize the key to be lowercase:
+    resultObject[key.toLowerCase()] = originalObject[key];
+  });
+
+  return resultObject;
+};
+
 module.exports = Util

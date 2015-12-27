@@ -41,6 +41,7 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
+    response.request.headers = HeaderUtil.filterHeaders(self.cacheHeaders, response.request.headers);
     response.headers = HeaderUtil.removeHeaders(self.responseHeaderBlacklist, response.headers);
     var responseString = Util.stringify(response) + "\n";
 

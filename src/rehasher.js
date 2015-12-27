@@ -66,10 +66,7 @@ Rehashser.prototype.updateResponseWithOptions = function(cacheContent) {
 
 Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
   var filteredHeaders =  HeaderUtil.filterHeaders(this.options.cacheHeaders, cacheContent.request.headers);
-  cacheContent.request.headers = filteredHeaders;
-
-  // Update Base Server URL
-  var urlInfo = Url.parse(this.options.serverBaseUrl);
+  var urlInfo = Url.parse(this.options.serverBaseUrl); // Update Base Server URL
 
   cacheContent.request.hostname = urlInfo.hostname;
   cacheContent.request.headers = filteredHeaders;
