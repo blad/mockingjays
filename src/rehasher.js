@@ -4,9 +4,10 @@ var Url = require('url');
 var Util = require('./util');
 var HeaderUtil = require('./header_util');
 var CacheClient = require('./cache_client');
+var Logger = require('./logger');
 
 var Rehashser = function (options) {
-  this.logger = options.logger;
+  this.logger = new Logger();
   this.options = options;
 
   if (!FileSystemHelper.directoryExists(options.cacheDir)) {
