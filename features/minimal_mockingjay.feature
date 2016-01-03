@@ -15,6 +15,13 @@ Feature: Minimal Mockingjay Instance
     When I serve
     Then I see an error asking me to specify missing options
 
+  Scenario: Serving without a cache directory URL
+    Given I want to create a Mockingjay instance with the following options
+      | OPTION        | VALUE           |
+      | serverBaseUrl | http://swapi.co |
+    When I serve
+    Then I see an error asking me to specify missing options
+
   Scenario: Serving with Required Options
     Given I want to create a Mockingjay instance with the following options
       | OPTION        | VALUE           |
