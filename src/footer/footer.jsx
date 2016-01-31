@@ -25,17 +25,19 @@ let Footer = React.createClass({
 
   render() {
     return (
-      <div className='footer'>
-        <ul>
-          {this.props.links.map((link, index) => {
-            return (
-              <li key={`link-${index}`}>
-                <a href={link.link}>
-                  <img src={link.icon}/>{link.displayName}
-                </a>
-              </li>)
-          })}
-        </ul>
+      <div className='footer light-section'>
+        <div className='content'> 
+          <ul>
+            {this.props.links.map((link, index) => {
+              return (
+                <li key={`link-${index}`}>
+                  <a href={link.link}>
+                    <img src={link.icon}/>{link.displayName}
+                  </a>
+                </li>)
+            })}
+          </ul>
+        </div>
       </div>
     );
   }
