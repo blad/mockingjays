@@ -35,11 +35,23 @@ describe('DefaultOptions', function() {
         ignoreContentType: 'image/*,text/html',
         refresh: true,
         logLevel: 'debug',
-        cacheHeader: 'authorization,content-length',
+        cacheHeaders: 'authorization,content-length',
         responseHeaderBlacklist: ['date']
       };
 
-      expect(defaults.merge(userProvidedOptions)).to.deep.equal(userProvidedOptions);
+      var expectedParsedOptions = {
+        port: 9123,
+        cacheDir: '/var/app/fixtures',
+        serverBaseUrl: 'http://swapi.co',
+        ignoreContentType: ["image/.*", "text/html"],
+        refresh: true,
+        logLevel: 'debug',
+        cacheHeaders: ['authorization','content-length'],
+        responseHeaderBlacklist: ['date'],
+        transitionConfig: {}
+      };
+
+      expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedParsedOptions);
     })
 
 

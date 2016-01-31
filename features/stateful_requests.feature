@@ -3,11 +3,18 @@ Feature: Stateful Requests Options
   I want to be able to define a set of routes that have sideffects
   So that I can accurately mock a stateful http interaction
 
+  Background:
+    Given I have a source server running on:
+      | HOST      | PORT |
+      | localhost | 9001 |
+    And I have a cache directory at "./temp/"
+
   @TestServer
   Scenario: Serving with Required Options
     Given I want to create a Mockingjay instance with the following options
       | OPTION        | VALUE                 |
       | cacheDir      | ./temp/               |
+      | port          | 9000                  |
       | serverBaseUrl | http://localhost:9001 |
       | logLevel      | warn                  |
     And I provide the following transition config

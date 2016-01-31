@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var net = require('net');
 var FileSystem = require('fs');
 var FileSystemHelper = require('./filesystem_helper');
@@ -27,7 +28,8 @@ DefaultOptions.prototype.defaultExtras = {
   attemptToCreateCacheDir: true
 }
 
-DefaultOptions.prototype.merge = function(options, extraOptions) {
+DefaultOptions.prototype.merge = function(inputOptions, extraOptions) {
+  var options = _.extend({}, inputOptions);
   var extras = extraOptions || this.defaultExtras;
   this._handlePortDefault(options);
   this._handleRefreshDefault(options);
@@ -43,7 +45,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
 
 DefaultOptions.prototype._handleRefreshDefault = function (options) {
   var defaults = this.options;
-  var value = options.refresh == 'true';
+  var value = options.refresh == 'true' || options.refresh;
   options.refresh = value || defaults.refresh;
 }
 
@@ -95,6 +97,8 @@ DefaultOptions.prototype._handleCacheHeaders = function (options) {
   var defaults = this.options;
   if (options.cacheHeaders && typeof(options.cacheHeaders) == 'string') {
     options.cacheHeaders = options.cacheHeaders.split(',');
+  } else if (options.cacheHeaders && typeof(options.cacheHeaders) == 'object') {
+    options.cacheHeaders = options.cacheHeaders;
   } else {
     options.cacheHeaders = defaults.cacheHeaders;
   }
@@ -105,6 +109,8 @@ DefaultOptions.prototype._handleResponseHeaders = function (options) {
   var defaults = this.options;
   if (options.responseHeaderBlacklist && typeof(options.responseHeaderBlacklist) == 'string') {
     options.responseHeaderBlacklist = options.responseHeaderBlacklist.split(',');
+  } else if (options.responseHeaderBlacklist && typeof(options.responseHeaderBlacklist) == 'object') {
+    options.responseHeaderBlacklist = options.responseHeaderBlacklist;
   } else {
     options.responseHeaderBlacklist = defaults.responseHeaderBlacklist;
   }

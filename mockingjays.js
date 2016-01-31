@@ -1,3 +1,4 @@
+_ = require('lodash');
 Server = require('./src/server');
 Mockingjay = require('./src/mockingjay');
 Rehasher = require('./src/rehasher');
@@ -16,14 +17,22 @@ var Mockingjays = function() {}
  */
  Mockingjays.prototype.start = function(options) {
   var defaultOptions = new DefaultOptions();
-  var finalOptions = defaultOptions.merge(options);
-  var mockingjay = new Mockingjay(finalOptions);
-  this.server = Server.listen(finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
+  this.finalOptions = defaultOptions.merge(options);
+
+  var mockingjay = new Mockingjay(this.finalOptions);
+  this.server = Server.listen(this.finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
   return this;
 }
 
+
+Mockingjays.prototype.getOptions = function() {
+  return _.extend({}, this.finalOptions);
+}
+
 Mockingjays.prototype.close = function() {
-  this.server.close();
+  if (this.server) {
+    this.server.close();
+  }
 }
 
 /**

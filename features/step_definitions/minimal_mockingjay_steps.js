@@ -13,17 +13,19 @@ module.exports = function () {
     optionsTable.rows().forEach(function (row) {
       return options[row[0]] = row[1];
     });
-    this.options = options;
+    this.inputOptions = options;
     done();
   });
 
   this.When(/^I serve$/, function (done) {
     try {
-      this.mockingjay = new Mockingjays().start(this.options);
+      this.mockingjay = new Mockingjays();
+      this.mockingjay.start(this.inputOptions);
+      this.parsedOptions = this.mockingjay.getOptions();
     } catch (error) {
       this.error = error;
     }
-    done()
+    done(); // Error Assertion is made in other steps.
   });
 
   this.When(/^I see an error asking me to specify missing options$/, function (done) {
