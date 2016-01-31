@@ -14,7 +14,7 @@ TestServer.prototype.addRoute = function (path, method, handler) {
   this.server.route({
       method: method,
       path: path,
-      handler: handler.bind(this)
+      handler: handler
   });
 
   return this;
@@ -30,7 +30,7 @@ TestServer.prototype.stop = function () {
 
 TestServer.prototype.start = function () {
   var self = this;
-  this.server.start((err) => {
+  this.server.start(function (err) {
     if (err) {
       throw err;
     }
