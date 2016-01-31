@@ -1,5 +1,10 @@
 # Change log
 
+## vWIP
+
+- Bug Fix: Clone Options Object, Rather Than Mutate in Place
+- Add `getOptions` method to JS API to fetch the parsed options
+
 ## v1.10.2 (12/26/2015)
 
 - Bug Fix: Account for Key Ordering when Rehashing Existing Responses with Transaction Key
