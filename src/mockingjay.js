@@ -4,10 +4,11 @@
  */
 var Color = require('./colorize');
 var CacheClient = require('./cache_client');
+var FormDataHandler = require('./form_data');
 var HttpClient = require('./http_client');
 var HeaderUtil = require('./header_util');
 var Logger = require('./logger');
-var TransactionState = require('./transaction_state.js');
+var TransactionState = require('./transaction_state');
 var Util = require('./util');
 var url = require('url');
 
@@ -113,22 +114,25 @@ Mockingjay.prototype.onRequest = function(request, response) {
   });
 
   request.on('end', function() {
+    if (FormDataHandler.isFormData(simplifiedRequest.headers)) {
+      simplifiedRequest = FormDataHandler.updateBoundary(simplifiedRequest);
+    }
     self.echo(simplifiedRequest, response);
   });
 };
 
 
-Mockingjay.prototype.simplify = function (req) {
-  var urlSplit = url.parse(this.options.serverBaseUrl + req.url);
+Mockingjay.prototype.simplify = function (request) {
+  var urlSplit = url.parse(this.options.serverBaseUrl + request.url);
   var isHttps = urlSplit.protocol === 'https:'
   var options = {
     hostname: urlSplit.hostname,
     port: parseInt(urlSplit.port) || (isHttps ? 443 : 80),
     path: urlSplit.path,
     body: '',
-    method: req.method,
-    headers: HeaderUtil.standardize(req.headers),
-    transaction: this.transactionState.get(urlSplit.path, req.method)
+    method: request.method,
+    headers: HeaderUtil.standardize(request.headers),
+    transaction: this.transactionState.get(urlSplit.path, request.method)
   };
   return options;
 };
