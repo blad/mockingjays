@@ -39,7 +39,18 @@ describe('DefaultOptions', function() {
         responseHeaderBlacklist: ['date']
       };
 
-      expect(defaults.merge(userProvidedOptions)).to.deep.equal(userProvidedOptions);
+      var expectedOptionsOutput = {
+        cacheDir: '/var/app/fixtures',
+        serverBaseUrl: 'http://swapi.co',
+        port: 9123,
+        ignoreContentType: ['image/.*','text/html'],
+        refresh: true,
+        cacheHeader: ['authorization', 'content-length'],
+        responseHeaderBlacklist: ['date'],
+        logLevel: 'debug',
+        transitionConfig: {}
+      };
+      expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);
     })
 
 
@@ -58,7 +69,7 @@ describe('DefaultOptions', function() {
         port: 9000,
         ignoreContentType: [],
         refresh: false,
-        cacheHeaders: [],
+        cacheHeader: [],
         responseHeaderBlacklist: [],
         logLevel: 'info',
         transitionConfig: {}

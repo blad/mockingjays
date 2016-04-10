@@ -17,7 +17,7 @@ DefaultOptions.prototype.options = {
   serverBaseUrl: null,
   ignoreContentType: '',
   refresh: false,
-  cacheHeaders: [],
+  cacheHeader: [],
   responseHeaderBlacklist: [],
   logLevel: 'info',
   transitionConfig: {}
@@ -43,7 +43,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
 
 DefaultOptions.prototype._handleRefreshDefault = function (options) {
   var defaults = this.options;
-  var value = options.refresh == 'true';
+  var value = options.refresh == 'true' || options.refresh;
   options.refresh = value || defaults.refresh;
 }
 
@@ -93,10 +93,10 @@ DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
 
 DefaultOptions.prototype._handleCacheHeaders = function (options) {
   var defaults = this.options;
-  if (options.cacheHeaders && typeof(options.cacheHeaders) == 'string') {
-    options.cacheHeaders = options.cacheHeaders.split(',');
+  if (options.cacheHeader && typeof(options.cacheHeader) === 'string') {
+    options.cacheHeader = options.cacheHeader.split(',');
   } else {
-    options.cacheHeaders = defaults.cacheHeaders;
+    options.cacheHeader = options.cacheHeader || defaults.cacheHeader;
   }
 }
 
@@ -106,7 +106,7 @@ DefaultOptions.prototype._handleResponseHeaders = function (options) {
   if (options.responseHeaderBlacklist && typeof(options.responseHeaderBlacklist) == 'string') {
     options.responseHeaderBlacklist = options.responseHeaderBlacklist.split(',');
   } else {
-    options.responseHeaderBlacklist = defaults.responseHeaderBlacklist;
+    options.responseHeaderBlacklist = options.responseHeaderBlacklist || defaults.responseHeaderBlacklist;
   }
 }
 

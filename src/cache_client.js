@@ -8,7 +8,7 @@ var Util = require('./util');
 var CacheClient = function(options) {
   this.logger = options.logger;
   this.cacheDir = options.cacheDir;
-  this.cacheHeaders = options.cacheHeaders;
+  this.cacheHeader = options.cacheHeader;
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
   FileSystemHelper.logger = options.logger;
 }
@@ -41,7 +41,7 @@ CacheClient.prototype.fetch = function (request) {
 CacheClient.prototype.record = function (request, response) {
   var self = this;
   return new Promise(function(resolve, reject) {
-    response.request.headers = HeaderUtil.filterHeaders(self.cacheHeaders, response.request.headers);
+    response.request.headers = HeaderUtil.filterHeaders(self.cacheHeader, request.headers);
     response.headers = HeaderUtil.removeHeaders(self.responseHeaderBlacklist, response.headers);
     var responseString = Util.stringify(response) + "\n";
 
