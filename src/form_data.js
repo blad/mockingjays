@@ -17,12 +17,13 @@ FormDataHandler.isFormData = function (headers) {
 
 
 FormDataHandler.getBoundary = function (contentType) {
-  var matches = contentType.match(/.*boundary="(.*)".*/);
+  var matches = contentType.match(/.*boundary="?([^"]*)"?.*/);
   return matches[1] || '';
 }
 
 
 FormDataHandler.getBodySignature = function (boundary, body) {
+  console.log('boundary', boundary);
   var strippedBody = body.replace(new RegExp(boundary, 'g'), '-');
   var signature = FormDataHandler.boundaryHash(strippedBody);
 
@@ -32,6 +33,7 @@ FormDataHandler.getBodySignature = function (boundary, body) {
 
 FormDataHandler.boundaryHash = function (string) {
   var shasum = crypto.createHash('sha1');
+  console.log('boundary', string);
   shasum.update(string);
   return '----mockingjays' + shasum.digest('hex');
 };

@@ -26,7 +26,7 @@ describe('Form Data Handler', function () {
     it('should update the boundary for a form content-type', function () {
       var request = {
         headers:{
-          'content-type': "multipart/form-data; boundary=\"--test123\""
+          'content-type': "multipart/form-data; boundary=\"----test123\""
         },
         body: "----test123\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n----test123--\r\n"
       }
@@ -35,11 +35,31 @@ describe('Form Data Handler', function () {
 
       expect(newRequest).to.deep.equal({
         headers: {
-          "content-type": "multipart/form-data; boundary=\"----mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4\""
+          "content-type": "multipart/form-data; boundary=\"----mockingjaysfab375ff1a91ed0cbb274812f35df27e53e6be49\""
         },
-        body: "------mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n------mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4--\r\n"
+        body: "----mockingjaysfab375ff1a91ed0cbb274812f35df27e53e6be49\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n----mockingjaysfab375ff1a91ed0cbb274812f35df27e53e6be49--\r\n"
       });
     });
+
+
+    it('should update the boundary for a form content-type without quotes', function () {
+      var request = {
+        headers:{
+          'content-type': "multipart/form-data; boundary=----quoteless123"
+        },
+        body: "----quoteless123\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n----quoteless123--\r\n"
+      }
+
+      var newRequest = FormDataHandler.updateBoundary(request);
+
+      expect(newRequest).to.deep.equal({
+        headers: {
+          "content-type": "multipart/form-data; boundary=----mockingjaysfab375ff1a91ed0cbb274812f35df27e53e6be49"
+        },
+        body: "----mockingjaysfab375ff1a91ed0cbb274812f35df27e53e6be49\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n----mockingjaysfab375ff1a91ed0cbb274812f35df27e53e6be49--\r\n"
+      });
+    });
+
 
     it('should not update the boundary for a form content-type', function () {
       var request = {
