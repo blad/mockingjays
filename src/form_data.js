@@ -23,7 +23,6 @@ FormDataHandler.getBoundary = function (contentType) {
 
 
 FormDataHandler.getBodySignature = function (boundary, body) {
-  console.log('boundary', boundary);
   var strippedBody = body.replace(new RegExp(boundary, 'g'), '-');
   var signature = FormDataHandler.boundaryHash(strippedBody);
 
@@ -33,7 +32,6 @@ FormDataHandler.getBodySignature = function (boundary, body) {
 
 FormDataHandler.boundaryHash = function (string) {
   var shasum = crypto.createHash('sha1');
-  console.log('boundary', string);
   shasum.update(string);
   return '----mockingjays' + shasum.digest('hex');
 };
