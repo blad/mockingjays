@@ -22,8 +22,8 @@ var Mockingjays = function() {}
   return this;
 }
 
-Mockingjays.prototype.close = function() {
-  this.server.close();
+Mockingjays.prototype.close = function(done) {
+  this.server.close(done || function() {});
 }
 
 /**
