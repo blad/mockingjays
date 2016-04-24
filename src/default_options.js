@@ -43,8 +43,22 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
 
 DefaultOptions.prototype._handleRefreshDefault = function (options) {
   var defaults = this.options;
-  var value = options.refresh == 'true' || options.refresh;
-  options.refresh = value || defaults.refresh;
+  // Handle Boolean Values:
+  if (options.refresh == true || options.refresh == false) {
+    options.refresh = options.refresh;
+  }
+
+  // Handle String Values
+  if (options.refresh && options.refresh != true && options.refresh != false) {
+    var isTrueString = options.refresh.toLowerCase() == 'true';
+    var isFalseString = options.refresh.toLowerCase() == 'false';
+
+    options.refresh = isTrueString && !isFalseString;
+  }
+
+  if (options.refresh === undefined) {
+    options.refresh = defaults.refresh
+  }
 }
 
 DefaultOptions.prototype._handlePortDefault = function (options) {
