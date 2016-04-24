@@ -7,6 +7,7 @@ var TestServer = function(options){
 
   this.state = {};
   this.server = new Hapi.Server();
+  this.server.register(require('inert'), function (err){});
   this.server.connection({host: userHost, port: userPort});
 };
 

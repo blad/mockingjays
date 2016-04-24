@@ -4,6 +4,9 @@ var fs = require('fs');
 module.exports = function() {
   var self = this;
 
+  this.When(/^I wait$/, function (done) {});
+
+
   this.When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
     var options = {
       hostname: 'localhost',
@@ -39,7 +42,7 @@ module.exports = function() {
     }
     var generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
     var hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
-    
+
     done(!hasUpdatedBoundary ? 'Missing Mockingjays Boundary in Form Data': null);
   });
 };

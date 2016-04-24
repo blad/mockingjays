@@ -16,6 +16,12 @@ module.exports = function () {
       res('incremented');
     });
 
+    self.server.addRoute('/image', 'GET', function(req, res) {
+      res
+        .file(__dirname + '/test.png')
+        .type('image/png');
+    });
+
     self.server.start();
   });
 

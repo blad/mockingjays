@@ -62,6 +62,9 @@ Logger.prototype.warn = function () {
 Logger.prototype.log = function () {
   var level = arguments[0];
   var messages = Array.prototype.slice.call(arguments, 1);
+  if (messages.length == 1 && messages[0] === 'false') {
+    return;
+  }
   if (level <= this.level) {
     switch (level) {
       case Level.ERROR:

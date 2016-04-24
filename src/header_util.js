@@ -1,4 +1,5 @@
 HEADER_WHITE_LIST = [
+  'accept',
   'authorization',
   'content-length',
   'content-type'

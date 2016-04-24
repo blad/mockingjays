@@ -7,6 +7,10 @@ var HttpClient = function (options) {
   this.logger = options.logger;
 }
 
+HttpClient.prototype.isIgnoredType = function(contentType) {
+  return Util.regExArrayContains(this.options.ignoreContentType, contentType);
+}
+
 HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
   var self = this;
   var http = require(requestOptions.port == 443 ? 'https' : 'http');
@@ -17,7 +21,9 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
       if (HeaderUtil.isText(res.headers['content-type'])) {
         self._accumulateResponse(res, requestOptions, resolve, reject);
       } else {
-        self.logger.warn('Non Textual Content-Type Detected...Piping Response from Source Server.');
+        if (!self.isIgnoredType(requestOptions.headers.accept)) {
+          self.logger.warn('Non Textual Content-Type Detected...Piping Response from Source Server.');
+        }
         self._pipeResonse(res, outputBuffer, resolve, reject);
       }
     });
@@ -28,14 +34,21 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     req.end()
 
     req.on('error', function (error) {
+      var isIgnoredContentType = self.isIgnoredType(requestOptions.headers.accept)
       switch (error.code) {
         case 'ENOTFOUND':
-          self.logger.error('Unable to Connect to Host.');
-          self.logger.error('Check the Domain Spelling and Try Again.');
-          self.logger.error('No Data Saved for Request.');
+          if (!isIgnoredContentType) {
+            self.logger.error('Unable to Connect to Host.');
+            self.logger.error('Check the Domain Spelling and Try Again.');
+            self.logger.error('No Data Saved for Request.');
+          }
           break;
       }
-      reject(error);
+      if (!isIgnoredContentType) {
+        reject(error);
+      } else {
+        reject(false);
+      }
     });
   });
 }
@@ -49,6 +62,7 @@ HttpClient.prototype._pipeResonse = function (res, outputBuffer, resolve, reject
   resolve({
     status: statusCode,
     type: contentType,
+    headers: res.headers,
     piped: true
   });
 }
