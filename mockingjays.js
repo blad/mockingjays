@@ -13,12 +13,16 @@ var Mockingjays = function() {}
  *          :cacheDir - Path to cache storage.
  *          :port - Port that Mockingjays should bind to.
  *          :serverBaseUrl - Base URL for the source server.
+ * @param onReady - A {Function} to be called when the proxy is ready. [Optional]
  */
- Mockingjays.prototype.start = function(options) {
+ Mockingjays.prototype.start = function(options, onReady) {
   var defaultOptions = new DefaultOptions();
   var finalOptions = defaultOptions.merge(options);
   var mockingjay = new Mockingjay(finalOptions);
-  this.server = Server.listen(finalOptions, function(req, res){ mockingjay.onRequest(req, res)});
+  var requestHandler =  function(req, res) {
+    mockingjay.onRequest(req, res);
+  };
+  this.server = Server.listen(finalOptions, requestHandler, onReady);
   return this;
 }
 
