@@ -27,7 +27,7 @@ var Mockingjays = function() {}
 }
 
 Mockingjays.prototype.close = function(done) {
-  this.server.close(done || function() {});
+  this.server.shutdown(done || function() {});
 }
 
 /**
