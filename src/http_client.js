@@ -81,7 +81,7 @@ HttpClient.prototype._accumulateResponse = function (res, options, resolve, reje
     resolve({
       request: options,
       status: statusCode,
-      type: contentType,
+      type: contentType || 'text/plain',
       headers: res.headers,
       data: options.method == 'OPTIONS' ? responseData : (isJson ? Util.parseJSON(responseData) : responseData)
     });

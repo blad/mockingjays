@@ -47,7 +47,7 @@ Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
   var self = this;
   var responsePromise = this.httpClient.fetch(request, outputBuffer);
   return responsePromise.then(function (response) {
-    if (self._okToCache(response.headers['content-type'])) {
+    if (request.method == 'OPTIONS' || self._okToCache(response.headers['content-type'])) {
       return self.cacheClient.record(request, response);
     } else {
       return Promise.resolve(response);
@@ -80,7 +80,11 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
       if (HeaderUtil.isText(response.type)) {
         logger.info(responseString);
       }
-      outputBuffer.writeHead(response.status, {'Content-Type': response.type});
+
+      if (response.type) {
+        outputBuffer.writeHead(response.status, {'Content-Type': response.type});
+      }
+
       outputBuffer.end(responseString);
 
       if (self.transactionState.isStateful(request.path, request.method)) {

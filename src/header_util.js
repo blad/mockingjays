@@ -24,7 +24,8 @@ KNOWN_TEXTUAL_CONTENT_TYPES = [
 // Helper Reduction Function that take the cu
 var getTextualContentTypeReducer = function (contentType) {
   return function (isTextual, current) {
-    return isTextual || contentType.indexOf(current) != -1;
+    // Treating a missing content type as a textual type.
+    return isTextual || !contentType || contentType.indexOf(current) != -1;
   }
 }
 
