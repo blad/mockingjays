@@ -4,7 +4,7 @@ var fs = require('fs');
 module.exports = function() {
   var self = this;
 
-  this.When(/^I wait$/, function (done) {});
+  this.When(/^I wait$/, {timeout: 10 * 60 * 1000}, function (done) {});
 
 
   this.When(/^I make a form data request to "([^"]*)"$/, function (path, done) {

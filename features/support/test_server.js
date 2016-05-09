@@ -2,20 +2,28 @@ var Hapi = require('hapi');
 
 var TestServer = function(options){
   options = options || {};
-  var userHost = options.host || 'localhost';
+  var userHost = options.host || '0.0.0.0';
   var userPort = options.port || 9001;
 
   this.state = {};
   this.server = new Hapi.Server();
   this.server.register(require('inert'), function (err){});
-  this.server.connection({host: userHost, port: userPort});
+  this.server.connection({
+    host: userHost,
+    port: userPort,
+    routes: {cors: true}
+  });
 };
 
 TestServer.prototype.addRoute = function (path, method, handler) {
+  console.log(path, method)
   this.server.route({
       method: method,
       path: path,
-      handler: handler.bind(this)
+      handler: handler,
+      config: {
+        cors: true
+      }
   });
 
   return this;

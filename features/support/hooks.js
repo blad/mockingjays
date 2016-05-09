@@ -7,6 +7,10 @@ module.exports = function () {
   this.Before('@TestServer', '@TestServer', function (scenario) {
     self.server = new TestServer();
 
+    self.server.addRoute('/aPostEndpoint', 'POST', function(req, res) {
+      res('post-request received');
+    });
+
     self.server.addRoute('/getCount', 'GET', function(req, res) {
       res(self.serverState.count);
     });
