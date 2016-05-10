@@ -2,7 +2,11 @@ HEADER_WHITE_LIST = [
   'accept',
   'authorization',
   'content-length',
-  'content-type'
+  'content-type',
+  // OPTIONS Headers
+  'origin',
+  'access-control-request-method',
+  'access-control-request-headers'
 ];
 
 var isInWhiteList = function(key, headers) {

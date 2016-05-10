@@ -121,7 +121,10 @@ describe('Header Util', function () {
       var exampleHeaders = {
         'authorization': 'Basic 12345',
         'content-length': '123',
-        'content-type': 'application/json'
+        'content-type': 'application/json',
+        'origin': '*',
+        'access-control-request-method': '*',
+        'access-control-request-headers': '*'
       }
 
       var actual = HeaderUtil.standardize(exampleHeaders);
