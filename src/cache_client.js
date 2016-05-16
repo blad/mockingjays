@@ -1,3 +1,4 @@
+var Color = require('./colorize');
 var FileSystem = require('fs');
 var path = require('path');
 var url = require('url')
@@ -32,6 +33,7 @@ CacheClient.prototype.fetch = function (request) {
       if (err) {
         reject(err);
       } else {
+        self.logger.debug(Color.blue('Serving'), self.path(request));
         resolve(Util.parseJSON(data));
       }
     });
