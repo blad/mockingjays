@@ -28,10 +28,11 @@ CacheClient.prototype.isCached = function (request) {
 
 CacheClient.prototype.fetch = function (request) {
   var self = this;
-  self.logger.debug(Color.blue('Serving'), self.path(request));
+  var filePath = self.path(request);
+  self.logger.debug(Color.blue('Serving'), filePath);
 
   return new Promise(function(resolve, reject) {
-    FileSystem.readFile(self.path(request), function (err, data) {
+    FileSystem.readFile(filePath, function (err, data) {
       if (err) {
         reject(err);
       } else {
