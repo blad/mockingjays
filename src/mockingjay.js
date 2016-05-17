@@ -103,7 +103,7 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
  * Callback that is called when the server recieves a request.
  */
 Mockingjay.prototype.onRequest = function(request, response) {
-  logger.info(Color.green('Request Recieved'), request.url, request.method);
+  logger.info(Color.green('Request Received'), request.url, request.method);
 
   var self = this;
   var simplifiedRequest = this.simplify(request);
