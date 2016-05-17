@@ -95,7 +95,10 @@ CacheClient.prototype.directory = function (request) {
   var requestPath = request.path || '';
   var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
   requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
-
+  requestPath = requestPath.split('/').map(function(directoryName) {
+    var illegalCharacters = /[<>:"/\|?\*]+/g
+    return directoryName.replace(illegalCharacters, '_');
+  }).join('/');
   return path.join(this.cacheDir, requestPath);
 }
 

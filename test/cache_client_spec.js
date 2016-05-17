@@ -21,14 +21,22 @@ describe('CacheClient', function() {
       port: 80,
       headers: {authorization: 'Bearer 12345'},
       body: {}
+    },
+    {
+      hostname: 'swapi.co',
+      path: '/api/people/1/?abc=123&other-illegal=<>:"\|?*',
+      port: 80,
+      headers: {authorization: 'Bearer 12345'},
+      body: {}
     }
   ]
   var client = new CacheClient(userOptions);
 
   describe('directory', function() {
     it('should return the complete directory path for a request', function() {
-      expect(client.directory(requests[0])).to.equal('/Users/home/fixtures/api/')
-      expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1/')
+      expect(client.directory(requests[0])).to.equal('/Users/home/fixtures/api/');
+      expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1/');
+      expect(client.directory(requests[2])).to.equal('/Users/home/fixtures/api/people/1/_abc=123&other-illegal=_');
     })
   })
 
