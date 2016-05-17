@@ -104,7 +104,7 @@ CacheClient.prototype.path = function (request) {
 }
 
 CacheClient.prototype.requestHash = function (request) {
-  return new RequestHash(request, this.cacheHeaders).toString();
+  return new RequestHash(request, this.cacheHeader).toString();
 }
 
 module.exports = CacheClient
