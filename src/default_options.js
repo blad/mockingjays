@@ -108,7 +108,7 @@ DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
 DefaultOptions.prototype._handleCacheHeaders = function (options) {
   var defaults = this.options;
   if (options.cacheHeader && typeof(options.cacheHeader) === 'string') {
-    options.cacheHeader = options.cacheHeader.split(',');
+    options.cacheHeader = options.cacheHeader.split(',').map(function(header) { return header.toLowerCase() });
   } else {
     options.cacheHeader = options.cacheHeader || defaults.cacheHeader;
   }
