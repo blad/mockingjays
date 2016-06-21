@@ -7,8 +7,9 @@ Mockingjays
 
 *Mockingjays* is a proxying tool that responds to requests with responses that have been previously observed.
 
-
-![Mockingjays](https://www.dropbox.com/s/srlu5oev0t3dof1/Mockingjays.png?dl=1)
+<center>
+![Mockingjays](http://www.mockingjays.io/dist/images/mockingjays-logo.png)
+</center>
 
 *Mockingjays* acts as a mock server for previously seen requests and captures new request for future use.
 
@@ -67,6 +68,8 @@ new Mockingjays().start({
 - **ignoreContentType** - Comma separated list of content-types that should be skipped. This can include a `*` which will be a wildcard match equivalent to the `.*` RegEx. No File Types Ignored by default.
   - *Default: []*
 - **refresh** - Indicates if the request/response cache should be updated unconditionally.
+  - *Default: false*
+- **passthrough** - Indicates if the request/response cache should be ignored. Each request will passthrough the proxy, but not read/write to any cache files.
   - *Default: false*
 - **responseHeaderBlacklist** - Indicates headers that should not be recorded to the cache file. Things like date or fields that may change the file during refreshes are ideal candidates.
   - *Default: []* (Record all headers)

@@ -20,7 +20,8 @@ DefaultOptions.prototype.options = {
   cacheHeader: [],
   responseHeaderBlacklist: [],
   logLevel: 'info',
-  transitionConfig: {}
+  transitionConfig: {},
+  passthrough: false
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -38,6 +39,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handleResponseHeaders(options);
   this._handleLogLevel(options);
   this._handletransitionConfig(options);
+  this._handlePassthrough(options);
   return options;
 }
 
@@ -139,6 +141,26 @@ DefaultOptions.prototype._handletransitionConfig = function (options) {
     if (typeof(options.transitionConfig) === 'string') {
       options.transitionConfig = Util.parseJSON(FileSystem.readFileSync(options.transitionConfig, {encoding: 'utf-8'}));
     }
+  }
+}
+
+
+DefaultOptions.prototype._handlePassthrough = function (options) {
+  var defaults = this.options;
+  if (typeof(options.passthrough) === 'undefined') {
+    options.passthrough = defaults.passthrough;
+    return
+  }
+
+  if (options.passthrough == true || options.passthrough == false) {
+    options.passthrough = options.passthrough;
+  }
+
+  if (typeof(options.passthrough) === 'string') {
+    var isTrueString = options.passthrough.toLowerCase() == 'true';
+    var isFalseString = options.passthrough.toLowerCase() == 'false';
+
+    options.passthrough = isTrueString && !isFalseString;
   }
 }
 

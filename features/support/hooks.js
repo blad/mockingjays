@@ -1,3 +1,4 @@
+var fs = require('fs');
 var TestServer = require('./test_server');
 
 module.exports = function () {

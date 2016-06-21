@@ -8,6 +8,7 @@ var Util = require('./util');
 
 var CacheClient = function(options) {
   this.logger = options.logger;
+  this.passthrough = options.passthrough;
   this.cacheDir = options.cacheDir;
   this.cacheHeader = options.cacheHeader;
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
@@ -15,6 +16,8 @@ var CacheClient = function(options) {
 }
 
 CacheClient.prototype.isCached = function (request) {
+  if (this.passthrough) { return false; }
+
   var self = this;
   var mode = FileSystem.F_OK | FileSystem.R_OK | FileSystem.W_OK;
   var error;
@@ -50,6 +53,10 @@ CacheClient.prototype.record = function (request, response) {
     var responseString = Util.stringify(response) + "\n";
 
     var writeToFile = function() {
+      if (self.passthrough) {
+        return resolve(response);
+      }
+
       FileSystem.writeFile(self.path(request), responseString, function (err) {
         if (err) {
           reject(err);
