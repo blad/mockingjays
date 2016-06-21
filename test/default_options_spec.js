@@ -34,6 +34,7 @@ describe('DefaultOptions', function() {
         serverBaseUrl: 'http://swapi.co',
         ignoreContentType: 'image/*,text/html',
         refresh: true,
+        passthrough: false,
         logLevel: 'debug',
         cacheHeader: 'authorization,content-length',
         responseHeaderBlacklist: ['date']
@@ -45,6 +46,7 @@ describe('DefaultOptions', function() {
         port: 9123,
         ignoreContentType: ['image/.*','text/html'],
         refresh: true,
+        passthrough: false,
         cacheHeader: ['authorization', 'content-length'],
         responseHeaderBlacklist: ['date'],
         logLevel: 'debug',
@@ -69,6 +71,7 @@ describe('DefaultOptions', function() {
         port: 9000,
         ignoreContentType: [],
         refresh: false,
+        passthrough: false,
         cacheHeader: [],
         responseHeaderBlacklist: [],
         logLevel: 'info',
