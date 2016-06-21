@@ -104,10 +104,9 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
  */
 Mockingjay.prototype.onRequest = function(request, response) {
   logger.info(Color.green('Request Received'), request.url, request.method);
-
   var self = this;
   var simplifiedRequest = this.simplify(request);
-  var corsHeaders = HeaderUtil.getCorsHeaders();
+  var corsHeaders = HeaderUtil.getCorsHeaders(request.headers.origin);
 
   for (var corsHeader in corsHeaders) {
     response.setHeader(corsHeader, corsHeaders[corsHeader]);

@@ -155,7 +155,27 @@ describe('Header Util', function () {
     it('should return an object of headers', function() {
       var actual = HeaderUtil.getCorsHeaders();
       expect(actual).to.be.ok;
-      expect(actual).to.not.deep.equal({}); // Non-Empty Object
+      expect(actual).to.deep.equal({
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Headers": "X-Requested-With,Content-Type,Accept,Origin,Authorization",
+        "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,PUT,POST,DELETE",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Max-Age": "1800"
+      });
+    });
+
+
+    it('should return an object with the origin of the request', function() {
+      var origin = 'http://example.com'
+      var actual = HeaderUtil.getCorsHeaders(origin);
+      expect(actual).to.be.ok;
+      expect(actual).to.deep.equal({
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Headers": "X-Requested-With,Content-Type,Accept,Origin,Authorization",
+        "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,PUT,POST,DELETE",
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Max-Age": "1800"
+      });
     });
   });
 });
