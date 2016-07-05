@@ -11,6 +11,14 @@ describe('RequestHash with Empty Body', function() {
     body: ''
   }
 
+  var exampleRequestADomainB = {
+    hostname: 'notarealdomain.com',
+    path: '/api/',
+    port: 8080,
+    headers: {'authorization': '12345', 'content-type': 'application/json'},
+    body: ''
+  }
+
   var exampleRequestB = {
     hostname: 'swapi.co',
     path: '/api/people/1/',
@@ -34,6 +42,21 @@ describe('RequestHash with Empty Body', function() {
       var hashB = new RequestHash(exampleRequestB, cacheHeaders);
 
       expect(hashA.toString()).to.not.equal(hashB.toString());
+    });
+
+
+    it('should hash to a different value with a white label flag', function () {
+      var cacheHeaders = []
+      var hashAWhiteLabel = new RequestHash(exampleRequestA, cacheHeaders, true);
+      var hashA = new RequestHash(exampleRequestA, cacheHeaders);
+      expect(hashAWhiteLabel.toString()).to.not.equal(hashA.toString());
+    });
+
+    it('should hash to the same value with a white label flag', function () {
+      var cacheHeaders = []
+      var hashA = new RequestHash(exampleRequestA, cacheHeaders, true);
+      var hashB = new RequestHash(exampleRequestADomainB, cacheHeaders, true);
+      expect(hashA.toString()).to.equal(hashB.toString());
     });
   });
 

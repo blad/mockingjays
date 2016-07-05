@@ -12,6 +12,7 @@ var CacheClient = function(options) {
   this.cacheDir = options.cacheDir;
   this.cacheHeader = options.cacheHeader;
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
+  this.whiteLabel = options.whiteLabel;
   FileSystemHelper.logger = options.logger;
 }
 
@@ -118,7 +119,7 @@ CacheClient.prototype.path = function (request) {
 }
 
 CacheClient.prototype.requestHash = function (request) {
-  return new RequestHash(request, this.cacheHeader).toString();
+  return new RequestHash(request, this.cacheHeader, this.whiteLabel).toString();
 }
 
 module.exports = CacheClient

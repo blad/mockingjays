@@ -75,7 +75,8 @@ new Mockingjays().start({
   - *Default: []* (Record all headers)
 - **transitionConfig** - Path or Object to the transition config Object. The transition config defined a mapping between requests that cause state changes, and the requests that are affected. [See Feature File for Example](features/stateful_requests.feature)
   - *Default: {}* (Consider All Operations Non-Stateful)
-
+- **whiteLabel** - When set to true, the hostname and port number are not included as part of the request hash.
+  - *Default: false* (Consider hostname and port for cache)
 
 
 ## Cached Responses

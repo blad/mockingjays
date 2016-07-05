@@ -21,7 +21,8 @@ DefaultOptions.prototype.options = {
   responseHeaderBlacklist: [],
   logLevel: 'info',
   transitionConfig: {},
-  passthrough: false
+  passthrough: false,
+  whiteLabel: false
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -40,6 +41,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handleLogLevel(options);
   this._handletransitionConfig(options);
   this._handlePassthrough(options);
+  this._handleWhiteLabel(options);
   return options;
 }
 
@@ -164,4 +166,23 @@ DefaultOptions.prototype._handlePassthrough = function (options) {
   }
 }
 
+
+DefaultOptions.prototype._handleWhiteLabel = function (options) {
+  var defaults = this.options;
+  if (typeof(options.whiteLabel) === 'undefined') {
+    options.whiteLabel = defaults.whiteLabel;
+    return
+  }
+
+  if (options.whiteLabel == true || options.whiteLabel == false) {
+    options.whiteLabel = options.whiteLabel;
+  }
+
+  if (typeof(options.whiteLabel) === 'string') {
+    var isTrueString = options.whiteLabel.toLowerCase() == 'true';
+    var isFalseString = options.whiteLabel.toLowerCase() == 'false';
+
+    options.whiteLabel = isTrueString && !isFalseString;
+  }
+}
 module.exports = DefaultOptions

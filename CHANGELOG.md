@@ -1,5 +1,14 @@
 # Change log
 
+## v1.15.0 (7/5/2016)
+
+- Add `whiteLabel` to exclude hostname and port from hash
+
+## v1.14.0 & v1.14.1 (6/21/2016)
+
+- Bug Fix: CORS Forward `Origin` header
+- Add `passthrough` option to allow proxy to forward request without refreshing the fixtures
+
 ## v1.10.2 (12/26/2015)
 
 - Bug Fix: Account for Key Ordering when Rehashing Existing Responses with Transaction Key

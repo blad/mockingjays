@@ -37,7 +37,8 @@ describe('DefaultOptions', function() {
         passthrough: false,
         logLevel: 'debug',
         cacheHeader: 'authorization,content-length',
-        responseHeaderBlacklist: ['date']
+        responseHeaderBlacklist: ['date'],
+        whiteLabel: true
       };
 
       var expectedOptionsOutput = {
@@ -50,7 +51,8 @@ describe('DefaultOptions', function() {
         cacheHeader: ['authorization', 'content-length'],
         responseHeaderBlacklist: ['date'],
         logLevel: 'debug',
-        transitionConfig: {}
+        transitionConfig: {},
+        whiteLabel: true
       };
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);
     })
@@ -75,7 +77,8 @@ describe('DefaultOptions', function() {
         cacheHeader: [],
         responseHeaderBlacklist: [],
         logLevel: 'info',
-        transitionConfig: {}
+        transitionConfig: {},
+        whiteLabel: false
       };
 
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);
