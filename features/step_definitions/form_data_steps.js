@@ -16,7 +16,7 @@ module.exports = function() {
         'content-type': 'multipart/form-data; boundary="---TestBoundaryXYZ123"'
       },
       method: 'POST'
-    }
+    };
 
     var postData = '---TestBoundaryXYZ123\r\nContent-Type: application/octet-stream\r\n\r\nHello World\r\n---TestBoundaryXYZ123--\r\n'
 
@@ -44,5 +44,30 @@ module.exports = function() {
     var hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
 
     done(!hasUpdatedBoundary ? 'Missing Mockingjays Boundary in Form Data': null);
+  });
+
+  this.When(/^I make a POST request to "([^"]*)" with the JSON body:$/, function (path, postData, done) {
+    var options = {
+      hostname: 'localhost',
+      port: this.options.port,
+      path: path,
+      headers: {
+        'content-type': 'application/json'
+      },
+      method: 'POST'
+    }
+
+    var req = http.request(options, function(response) {
+      var str = '';
+      response.on('data', function(chunk) {str += chunk;});
+      response.on('end', function() {
+        self.result = str;
+        done(str ? undefined : 'Empty Response');
+      });
+      response.on('error', function(){ done('Error during request.')});
+    });
+    req.on('error', function(){ done('Error during request.')});
+    req.write(JSON.stringify(JSON.parse(postData)));
+    req.end();
   });
 };

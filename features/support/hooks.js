@@ -17,6 +17,10 @@ module.exports = function () {
       res('incremented');
     });
 
+    self.server.addRoute('/jsonRequest', 'POST', function(req, res) {
+      res({status: 'success'});
+    });
+
     self.server.addRoute('/image', 'GET', function(req, res) {
       res
         .file(__dirname + '/test.png')

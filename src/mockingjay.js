@@ -120,6 +120,11 @@ Mockingjay.prototype.onRequest = function(request, response) {
     if (FormDataHandler.isFormData(simplifiedRequest.headers)) {
       simplifiedRequest = FormDataHandler.updateBoundary(simplifiedRequest);
     }
+
+    if (simplifiedRequest.headers['content-type'] === 'application/json') {
+      simplifiedRequest.body = Util.parseJSON(simplifiedRequest.body);
+    }
+
     self.echo(simplifiedRequest, response);
   });
 };

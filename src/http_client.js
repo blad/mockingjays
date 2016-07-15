@@ -29,7 +29,7 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     });
 
     if (requestOptions.body) {
-      req.write(requestOptions.body);
+      req.write(Util.stringify(requestOptions.body));
     }
     req.end()
 

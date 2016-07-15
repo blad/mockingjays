@@ -22,7 +22,8 @@ DefaultOptions.prototype.options = {
   logLevel: 'info',
   transitionConfig: {},
   passthrough: false,
-  whiteLabel: false
+  whiteLabel: false,
+  ignoreJsonBodyPath: []
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -42,6 +43,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handletransitionConfig(options);
   this._handlePassthrough(options);
   this._handleWhiteLabel(options);
+  this._handleIgnoreJsonBodyPath(options);
   return options;
 }
 
@@ -185,4 +187,14 @@ DefaultOptions.prototype._handleWhiteLabel = function (options) {
     options.whiteLabel = isTrueString && !isFalseString;
   }
 }
+
+DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
+  var defaults = this.options;
+  if (options.ignoreJsonBodyPath && typeof(options.ignoreJsonBodyPath) == 'string') {
+    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath.split(',');
+  } else {
+    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath || defaults.ignoreJsonBodyPath;
+  }
+}
+
 module.exports = DefaultOptions

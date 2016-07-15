@@ -101,5 +101,40 @@ describe('RequestHash with Empty Body', function() {
         headers: {'content-type': 'application/json'}
       });
     });
+
+    it('should be keep defined headers headers', function () {
+      var exampleRequestJSONBody = {
+        hostname: 'swapi.co',
+        path: '/api/',
+        port: 80,
+        headers: {'authorization': '98745', 'content-type': 'application/json'},
+        body: {
+          a: {
+            b: {
+              c: 'hide-me'
+            },
+            d: 'keep-me'
+          },
+          e: 'another-keeper'
+        }
+      };
+
+      var hashA = new RequestHash(exampleRequestJSONBody, null, null, ['a.b.c']);
+      expect(hashA._filteredAttributes()).to.deep.equal({
+        hostname: 'swapi.co',
+        path: '/api/',
+        port: 80,
+        body: {
+          a: {
+            b: {
+              c: '---omitted-by-proxy---'
+            },
+            d: 'keep-me'
+          },
+          e: 'another-keeper'
+        },
+        headers: {},
+      });
+    });
   });
 });

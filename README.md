@@ -77,7 +77,9 @@ new Mockingjays().start({
   - *Default: {}* (Consider All Operations Non-Stateful)
 - **whiteLabel** - When set to true, the hostname and port number are not included as part of the request hash.
   - *Default: false* (Consider hostname and port for cache)
-
+- *ignoreJsonBodyPath* - The path of a JSON request body to ignore in uniqueness signature. By default no paths will be ignored. eg: `a.b.c` to ignore property `c` inside nested objects `a` and `b`.
+  - CLI: Comma separated list of paths to ignore.
+  - JS: Use Array of paths to ignore.
 
 ## Cached Responses
 

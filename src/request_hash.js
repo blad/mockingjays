@@ -1,11 +1,13 @@
 var crypto = require('crypto');
 var Util = require('./util');
 var HeaderUtil = require('./header_util');
+var _ = require('lodash');
 
-var RequestHash = function (request, cacheHeaders, whiteLabel) {
+var RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPath) {
   this.request = request;
   this.cacheHeaders = cacheHeaders;
   this.whiteLabel = whiteLabel;
+  this.ignoreJsonBodyPath = ignoreJsonBodyPath;
 };
 
 
@@ -24,6 +26,13 @@ RequestHash.prototype._filteredAttributes = function () {
     filteredAttributes.hostname = 'example.com';
     filteredAttributes.port = 80;
   }
+
+  if (this.ignoreJsonBodyPath && this.ignoreJsonBodyPath.length && _.isPlainObject(filteredAttributes.body)) {
+    this.ignoreJsonBodyPath.map(function(path) {
+      _.set(filteredAttributes.body, path, '---omitted-by-proxy---');
+    });
+  }
+
   return filteredAttributes;
 }
 
