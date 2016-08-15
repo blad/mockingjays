@@ -46,6 +46,7 @@ describe('DefaultOptions', function() {
         serverBaseUrl: 'http://swapi.co',
         port: 9123,
         ignoreContentType: ['image/.*','text/html'],
+        ignoreJsonBodyPath: [],
         refresh: true,
         passthrough: false,
         cacheHeader: ['authorization', 'content-length'],
@@ -73,6 +74,7 @@ describe('DefaultOptions', function() {
         // Expected Defaults:
         port: 9000,
         ignoreContentType: [],
+        ignoreJsonBodyPath: [],
         refresh: false,
         passthrough: false,
         cacheHeader: [],
