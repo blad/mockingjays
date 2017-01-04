@@ -1,6 +1,8 @@
 Mockingjays
 ========================
 
+[![Join the chat at https://gitter.im/blad/mockingjays](https://badges.gitter.im/blad/mockingjays.svg)](https://gitter.im/blad/mockingjays?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Circle CI Build Status](https://circleci.com/gh/blad/mockingjays.png?circle-token=a4bd29bc70058220eb8e663e848ff4448231d79a)](https://circleci.com/gh/blad/mockingjays)
 [![npm version](https://badge.fury.io/js/mockingjays.svg)](https://www.npmjs.com/package/mockingjays)
 [![Gitter](https://badges.gitter.im/blad/mockingjays.svg)](https://gitter.im/blad/mockingjays?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
