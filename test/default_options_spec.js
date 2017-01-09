@@ -51,6 +51,7 @@ describe('DefaultOptions', function() {
         cacheHeader: ['authorization', 'content-length'],
         responseHeaderBlacklist: ['date'],
         logLevel: 'debug',
+	ignoreJsonBodyPath: [],
         transitionConfig: {},
         whiteLabel: true
       };
@@ -78,6 +79,7 @@ describe('DefaultOptions', function() {
         responseHeaderBlacklist: [],
         logLevel: 'info',
         transitionConfig: {},
+	ignoreJsonBodyPath: [],
         whiteLabel: false
       };
 
