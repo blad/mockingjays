@@ -28,6 +28,13 @@ describe('CacheClient', function() {
       port: 80,
       headers: {authorization: 'Bearer 12345'},
       body: {}
+    },
+    {
+      hostname: 'swapi.co',
+      path: '/api/people/1/test?abc=123&other-illegal=<>:"\|?*',
+      port: 80,
+      headers: {authorization: 'Bearer 12345'},
+      body: {}
     }
   ]
   var client = new CacheClient(userOptions);
@@ -36,22 +43,25 @@ describe('CacheClient', function() {
     it('should return the complete directory path for a request', function() {
       expect(client.directory(requests[0])).to.equal('/Users/home/fixtures/api/');
       expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1/');
-      expect(client.directory(requests[2])).to.equal('/Users/home/fixtures/api/people/1/_abc=123&other-illegal=_');
+      expect(client.directory(requests[2])).to.equal('/Users/home/fixtures/api/people/1/');
+      expect(client.directory(requests[3])).to.equal('/Users/home/fixtures/api/people/1/test');
     })
   })
 
   describe('path', function() {
     it('should return the complete file path for a request', function() {
-      expect(client.path(requests[0])).to.equal('/Users/home/fixtures/api/085f0240e1ea628f1dcddf45eb05039bdbcbb112')
-      expect(client.path(requests[1])).to.equal('/Users/home/fixtures/api/people/1/53a5e4d278c369b43fe7c1c1d3e95a9846ff4311')
+      expect(client.requestPath(requests[0])).to.equal('/Users/home/fixtures/api/085f0240e1.json');
+      expect(client.requestPath(requests[1])).to.equal('/Users/home/fixtures/api/people/1/53a5e4d278.json');
+      expect(client.requestPath(requests[2])).to.equal('/Users/home/fixtures/api/people/1/f9e15eed28.json');
+      expect(client.requestPath(requests[3])).to.equal('/Users/home/fixtures/api/people/1/test/0b0728a0a1.json');
     })
   })
 
 
   describe('requestHash', function() {
     it('should return the correct hash for each request', function() {
-      expect(client.requestHash(requests[0])).to.equal('085f0240e1ea628f1dcddf45eb05039bdbcbb112')
-      expect(client.requestHash(requests[1])).to.equal('53a5e4d278c369b43fe7c1c1d3e95a9846ff4311')
+      expect(client.requestHash(requests[0])).to.equal('085f0240e1');
+      expect(client.requestHash(requests[1])).to.equal('53a5e4d278');
     })
 
     it('should return the different hash for identical requests with different headers', function() {

@@ -1,10 +1,13 @@
 var Color = require('./colorize');
-var FileSystem = require('fs');
+var fs = require('fs');
 var path = require('path');
 var url = require('url')
 var FileSystemHelper = require('./filesystem_helper');
 var RequestHash = require('./request_hash');
 var Util = require('./util');
+
+const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
+const EXT = '.json';
 
 var CacheClient = function(options) {
   this.logger = options.logger;
@@ -18,13 +21,10 @@ var CacheClient = function(options) {
 }
 
 CacheClient.prototype.isCached = function (request) {
-  if (this.passthrough) { return false; }
+  if (this.passthrough) {return false;}
 
-  var self = this;
-  var mode = FileSystem.F_OK | FileSystem.R_OK | FileSystem.W_OK;
-  var error;
   try {
-    error = FileSystem.accessSync(self.path(request), mode);
+    fs.accessSync(this.requestPath(request), RW_MODE);
     return true;
   } catch (error) {
     return false;
@@ -32,66 +32,54 @@ CacheClient.prototype.isCached = function (request) {
 }
 
 CacheClient.prototype.fetch = function (request) {
-  var self = this;
-  var filePath = self.path(request);
-  self.logger.debug(Color.blue('Serving'), filePath);
-
-  return new Promise(function(resolve, reject) {
-    FileSystem.readFile(filePath, function (err, data) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(Util.parseJSON(data));
-      }
+  var filePath = this.requestPath(request);
+  this.logger.debug(Color.blue('Serving'), filePath);
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, (err, data) => {
+      if (err) {return reject(err);}
+      resolve(Util.parseJSON(data));
     });
   });
 }
 
 CacheClient.prototype.record = function (request, response) {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    response.request.headers = HeaderUtil.filterHeaders(self.cacheHeader, request.headers);
-    response.headers = HeaderUtil.removeHeaders(self.responseHeaderBlacklist, response.headers);
+  return new Promise((resolve, reject) => {
+    response.request.headers = HeaderUtil.filterHeaders(this.cacheHeader, request.headers);
+    response.headers = HeaderUtil.removeHeaders(this.responseHeaderBlacklist, response.headers);
     var responseString = Util.stringify(response) + "\n";
 
-    var writeToFile = function() {
-      if (self.passthrough) {
-        return resolve(response);
-      }
+    var writeToFile = () => {
+      if (this.passthrough) {return resolve(response);}
 
-      FileSystem.writeFile(self.path(request), responseString, function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(response);
-        }
+      fs.writeFile(this.requestPath(request), responseString, (err) => {
+        if (err) {return reject(err);}
+        resolve(response);
       });
     };
 
-    var directory = self.directory(request);
+    var directory = this.directory(request);
     if (!FileSystemHelper.directoryExists(directory)) {
-      FileSystemHelper.createDirectory(directory).then(writeToFile);
-    } else {
-      writeToFile();
+      return FileSystemHelper.createDirectory(directory).then(writeToFile);
     }
+
+    writeToFile();
   });
 }
 
 
 CacheClient.prototype.remove = function (request, originalFilename) {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-    var directory = self.directory(request);
+  return new Promise((resolve, reject) => {
+    var directory = this.directory(request);
     if (FileSystemHelper.directoryExists(directory)) {
-      var filePath = originalFilename ? originalFilename : self.path(request);
-      FileSystem.unlink(filePath, function(error) {
-        if (error) {
-          var message = 'Unable to Delete File: ' + filePath;
-          this.logger.error(message, error);
-          reject(error)
-        } else {
-          resolve();
+      var filePath = originalFilename ? originalFilename : this.requestPath(request);
+      fs.unlink(filePath, (error) => {
+        if (!error) {
+          return resolve();
         }
+
+        var message = 'Unable to Delete File: ' + filePath;
+        this.logger.error(message, error);
+        return reject(error)
       });
     } else {
       this.logger.info('Path does not exist for request. Skipping action.');
@@ -105,22 +93,25 @@ CacheClient.prototype.directory = function (request) {
   var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
   requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
   requestPath = requestPath.split('/').map(function(directoryName) {
-    var illegalCharacters = /[<>:"/\|?\*]+/g
-    return directoryName.replace(illegalCharacters, '_');
+    var queryParamStartIndex = directoryName.indexOf('?');
+    if (queryParamStartIndex == -1){return directoryName;}
+    return directoryName.substr(0, queryParamStartIndex);
   }).join('/');
   return path.join(this.cacheDir, requestPath);
 }
 
 
-CacheClient.prototype.path = function (request) {
+CacheClient.prototype.requestPath = function (request) {
   var requestHash = this.requestHash(request);
   var directory = this.directory(request);
 
-  return path.join(directory, requestHash);
+  return path.join(directory, requestHash) + EXT;
 }
 
 CacheClient.prototype.requestHash = function (request) {
-  return new RequestHash(request, this.cacheHeader, this.whiteLabel, this.ignoreJsonBodyPath).toString();
+  return new RequestHash(request, this.cacheHeader, this.whiteLabel, this.ignoreJsonBodyPath)
+    .toString()
+    .substr(0,10);
 }
 
 module.exports = CacheClient
