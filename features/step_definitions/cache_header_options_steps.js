@@ -1,7 +1,7 @@
-Mockingjays = require('../../mockingjays');
-fs = require('fs');
-http = require('http');
-path = require('path');
+var Mockingjays = require('../../mockingjays');
+var fs = require('fs');
+var http = require('http');
+var path = require('path');
 
 
 module.exports = function () {
@@ -19,7 +19,38 @@ module.exports = function () {
       path: path,
       method: method,
       headers: headers
-    }
+    };
+
+    var req = http.request(options, function(response) {
+      var str = '';
+      response.on('data', function (chunk) {str += chunk;});
+      response.on('end', function() {
+        self.result = str;
+        done(str ? undefined : 'Empty Response');
+      });
+      response.on('error', function(){ done('Error during request.')});
+    });
+    req.on('error', function(){ done('Error during request.')});
+    req.end();
+  });
+
+
+  this.When(/^I make a GET request to "([^"]*)" with the query strings:$/, function (path, table, done) {
+    var first = true;
+    var queryString = table.hashes().reduce(function(qs, current) {
+      var key = current.KEY;
+      var val = current.VALUE;
+      qs += (first ? '' : '&') + key + '=' + (isNaN(val) ? val : parseInt(val, 10));
+      first = false;
+      return qs;
+    }, '?');
+
+    var options = {
+      hostname: 'localhost',
+      port: this.options.port,
+      path: path + queryString,
+      method: 'GET'
+    };
 
     var req = http.request(options, function(response) {
       var str = '';
