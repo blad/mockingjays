@@ -22,7 +22,6 @@ var CacheClient = function(options) {
 
 CacheClient.prototype.isCached = function (request) {
   if (this.passthrough) {return false;}
-
   try {
     fs.accessSync(this.requestPath(request), RW_MODE);
     return true;

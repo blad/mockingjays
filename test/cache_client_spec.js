@@ -46,7 +46,29 @@ describe('CacheClient', function() {
       expect(client.directory(requests[2])).to.equal('/Users/home/fixtures/api/people/1/');
       expect(client.directory(requests[3])).to.equal('/Users/home/fixtures/api/people/1/test');
     })
-  })
+  });
+
+
+  describe('isCached', function() {
+    it('should return false for files that do not exist', function() {
+      temp = client.requestPath;
+      client.requestPath = () => __filename + '.404'; // stub of file path we know exists does Not exist
+
+      expect(client.isCached(requests[0])).to.be.false;
+
+      client.requestPath = temp; // Restore original method
+    });
+
+    it('should return true for files that do exist', function() {
+      temp = client.requestPath;
+      client.requestPath = () => __filename; // stub of file path we know exists
+
+      expect(client.isCached(requests[1])).to.be.true
+
+      client.requestPath = temp; // Restore original method
+    });
+  });
+
 
   describe('path', function() {
     it('should return the complete file path for a request', function() {
@@ -55,7 +77,7 @@ describe('CacheClient', function() {
       expect(client.requestPath(requests[2])).to.equal('/Users/home/fixtures/api/people/1/f9e15eed28.json');
       expect(client.requestPath(requests[3])).to.equal('/Users/home/fixtures/api/people/1/test/0b0728a0a1.json');
     })
-  })
+  });
 
 
   describe('requestHash', function() {
@@ -80,6 +102,6 @@ describe('CacheClient', function() {
       var newClient = new CacheClient({cacheDir: '/Users/home/fixtures'});
       expect(newClient.requestHash(requests[0])).to.equal(newClient.requestHash(copyRequest))
 
-    })
-  })
+    });
+  });
 })
