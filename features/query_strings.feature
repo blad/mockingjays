@@ -38,4 +38,4 @@ Feature: Form Data Proxy
     And I make a GET request to "/queryStringRequest" with the query strings:
       | KEY      | VALUE    |
       | testKey2 | 234      |
-    Then I can see 1 cache files for "/queryStringRequest"
+    Then I can see 2 cache files for "/queryStringRequest"
