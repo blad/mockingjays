@@ -1,20 +1,17 @@
+var parseArgs = require('minimist');
+var _ = require('lodash');
 var OptionsParser = {}
 
-OptionsParser.parse = function(processArgs) {
-  var userArgs = processArgs.slice(2);
-  var result = {};
-  userArgs.map(function(arg) {
-    if (arg.indexOf('--') == -1) {
-      if (arg != 'serve' && arg != 'rehash') {
-        console.log('\nUnknown Command:', arg, '\n');
-      }
-    }
-    return arg.replace('--','').split('=');
-  }).forEach(function(pair) {
-    result[pair[0]] = pair[1] || true;
-  });
+var hasCommand = (arg) => arg == 'serve' || arg == 'rehash'
 
-  return result;
+OptionsParser.parse = function(processArgs) {
+  var userArgs = parseArgs(processArgs.slice(2));
+  var command = _.find(userArgs._, hasCommand)
+  if (!command) {
+    console.error('\nUnknown Command:', arg, '\n');
+  }
+  delete userArgs._ // Argument are parse. Done Extracting Values
+  return _.extend(userArgs, {command: command})
 }
 
 
@@ -23,17 +20,17 @@ OptionsParser.shouldDisplayHelp = function (options) {
   for (var key in options) {
     argCount++;
   }
-  return Boolean(options['help'] || argCount == 0);
+  return options.command == 'help' || argCount == 0;
 }
 
 
 OptionsParser.shouldDisplayVersion = function (options) {
-  return Boolean(options['version']);
+  return options.command == 'version';
 }
 
 
 OptionsParser.shouldRehash = function (options) {
-  return Boolean(options['rehash']);
+  return options.command = 'rehash';
 }
 
 

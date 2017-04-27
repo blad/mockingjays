@@ -15,7 +15,7 @@ describe('Option Parser', function() {
       ]
 
       var expectedOptions = {
-        serve: true,
+        command: 'serve',
         baseServerUrl: 'http://google.com',
         cacheDir: '/var/temp/fixtures'
       };
@@ -24,36 +24,36 @@ describe('Option Parser', function() {
 
 
     it('should detect when the help menu should be displayed',function(){
-      expect(OptionParser.shouldDisplayHelp({})).to.be.true;
-      expect(OptionParser.shouldDisplayHelp({'help': true})).to.be.true;
-      expect(OptionParser.shouldDisplayHelp({'serve': true})).to.be.false;
-      expect(OptionParser.shouldDisplayHelp({'version': true})).to.be.false;
+      expect(OptionParser.shouldDisplayHelp({})).to.be.truthy;
+      expect(OptionParser.shouldDisplayHelp({command: 'help'})).to.be.truthy;
+      expect(OptionParser.shouldDisplayHelp({command: 'serve'})).to.be.falsey;
+      expect(OptionParser.shouldDisplayHelp({command: 'version'})).to.be.falsey;
     });
 
 
     it('should detect when the version number should be displayed',function(){
-      expect(OptionParser.shouldDisplayVersion({'version': true})).to.be.true;
-      expect(OptionParser.shouldDisplayVersion({'serve': true})).to.be.false;
-      expect(OptionParser.shouldDisplayVersion({})).to.be.false;
+      expect(OptionParser.shouldDisplayVersion({command: 'version'})).to.be.truthy;
+      expect(OptionParser.shouldDisplayVersion({command: 'serve'})).to.be.falsey;
+      expect(OptionParser.shouldDisplayVersion({})).to.be.falsey;
     });
 
 
     it('should detect when the we should rehash',function(){
-      expect(OptionParser.shouldRehash({'rehash': true})).to.be.true;
-      expect(OptionParser.shouldRehash({'serve': true})).to.be.false;
-      expect(OptionParser.shouldRehash({'version': true})).to.be.false;
-      expect(OptionParser.shouldRehash({'help': true})).to.be.false;
-      expect(OptionParser.shouldRehash({})).to.be.false;
+      expect(OptionParser.shouldRehash({command: 'rehash'})).to.be.truthy;
+      expect(OptionParser.shouldRehash({command: 'serve'})).to.be.falsey;
+      expect(OptionParser.shouldRehash({command: 'version'})).to.be.falsey;
+      expect(OptionParser.shouldRehash({command: 'help'})).to.be.falsey;
+      expect(OptionParser.shouldRehash({})).to.be.falsey;
     });
 
 
     it('should detect when the we should serve',function(){
-      expect(OptionParser.shouldServe({'serve': true})).to.be.true;
-      expect(OptionParser.shouldServe({'otherOption': true})).to.be.true;
-      expect(OptionParser.shouldServe({})).to.be.false; // Should display help when empty
-      expect(OptionParser.shouldServe({'rehash': true})).to.be.false;
-      expect(OptionParser.shouldServe({'version': true})).to.be.false;
-      expect(OptionParser.shouldServe({'help': true})).to.be.false;
+      expect(OptionParser.shouldServe({command: 'serve'})).to.be.truthy;
+      expect(OptionParser.shouldServe({command: 'otherOption'})).to.be.truthy;
+      expect(OptionParser.shouldServe({})).to.be.falsey; // Should display help when empty
+      expect(OptionParser.shouldServe({command: 'rehash'})).to.be.falsey;
+      expect(OptionParser.shouldServe({command: 'version'})).to.be.falsey;
+      expect(OptionParser.shouldServe({command: 'help'})).to.be.falsey;
     });
   });
 });
