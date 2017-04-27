@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var CacheClient = require('../src/cache_client');
-
+var path = require('path');
 
 describe('CacheClient', function() {
   var userOptions = {
@@ -45,6 +45,20 @@ describe('CacheClient', function() {
       expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1/');
       expect(client.directory(requests[2])).to.equal('/Users/home/fixtures/api/people/1/');
       expect(client.directory(requests[3])).to.equal('/Users/home/fixtures/api/people/1/test');
+    })
+  });
+
+
+  describe('fetch', function() {
+    it('should resolve to the file contents', function() {
+      temp = client.requestPath;
+      client.logger = {debug: () => {}}
+      client.requestPath = () => path.dirname(__filename) + '/fixture/sample.json'
+
+      return client.fetch('some-request-object').then((data) => {
+        expect(data).to.deep.equal({test: 'passing'})
+        client.requestPath = temp;
+      });
     })
   });
 
