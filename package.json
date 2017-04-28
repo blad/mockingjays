@@ -1,6 +1,6 @@
 {
   "name": "mockingjays",
-  "version": "1.16.0",
+  "version": "2.0.0-alpha.1",
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
   "main": "mockingjays.js",
   "scripts": {
@@ -33,14 +33,14 @@
     "chai": "^3.4.1",
     "cucumber": "^0.9.2",
     "hapi": "^11.1.4",
-    "immutable": "^3.8.1",
     "inert": "^3.2.0",
-    "lodash": "^4.0.0",
     "mocha": "^2.3.4",
     "sinon": "^1.17.3"
   },
   "dependencies": {
     "http-shutdown": "^1.0.3",
+    "immutable": "^3.8.1",
+    "lodash": "^4.0.0",
     "minimist": "^1.2.0",
     "qs": "^6.4.0"
   }
