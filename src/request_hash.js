@@ -13,6 +13,10 @@ var RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPat
 
 RequestHash.prototype.toString = function () {
   var request = this._filteredAttributes();
+  if (request.body) {
+    // Backward Compatability Hash with Existing Fixture Files
+    request.body = JSON.stringify(request.body);
+  }
   var shasum = crypto.createHash('sha1');
   shasum.update(JSON.stringify(Util.sortObjectKeys(request)));
   return shasum.digest('hex');

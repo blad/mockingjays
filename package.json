@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "http-shutdown": "^1.0.3",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "qs": "^6.4.0"
   }
 }
