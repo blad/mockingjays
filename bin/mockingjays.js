@@ -4,7 +4,6 @@ var HelpMenu = require('./help_menu');
 var OptionParser = require('./option_parser');
 var userOptions = OptionParser.parse(process.argv);
 
-
 switch (true) {
   case OptionParser.shouldDisplayHelp(userOptions):
     HelpMenu();
