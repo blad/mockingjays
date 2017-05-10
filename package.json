@@ -38,7 +38,7 @@
     "sinon": "^1.17.3"
   },
   "dependencies": {
-    "http-shutdown": "^1.0.3",
+    "http-shutdown": "^1.2.0",
     "immutable": "^3.8.1",
     "lodash": "^4.0.0",
     "minimist": "^1.2.0",
