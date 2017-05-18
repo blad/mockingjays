@@ -17,11 +17,29 @@ var CacheClient = function(options) {
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
   this.whiteLabel = options.whiteLabel;
   this.ignoreJsonBodyPath = options.ignoreJsonBodyPath;
+  this.baseCacheDir = options.baseCacheDir;
   FileSystemHelper.logger = options.logger;
 }
 
 CacheClient.prototype.isCached = function (request) {
   if (this.passthrough) {return false;}
+  return this.isInBaseCached(request) || this.isInCached(request);
+}
+
+CacheClient.prototype.isInBaseCached = function (request) {
+  if (!this.baseCacheDir) {
+    return false;
+  }
+
+  try {
+    fs.accessSync(this.requestPathBase(request), RW_MODE);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+CacheClient.prototype.isInCached = function (request) {
   try {
     fs.accessSync(this.requestPath(request), RW_MODE);
     return true;
@@ -30,8 +48,16 @@ CacheClient.prototype.isCached = function (request) {
   }
 }
 
+CacheClient.prototype.getFileName = function (request) {
+  if (this.isInBaseCached(request)) {
+    return this.requestPathBase(request);
+  }
+
+  return this.requestPath(request);
+}
+
 CacheClient.prototype.fetch = function (request) {
-  var filePath = this.requestPath(request);
+  var filePath = this.getFileName(request);
   this.logger.debug(Color.blue('Serving'), filePath);
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {
@@ -49,8 +75,7 @@ CacheClient.prototype.record = function (request, response) {
 
     var writeToFile = () => {
       if (this.passthrough) {return resolve(response);}
-
-      fs.writeFile(this.requestPath(request), responseString, (err) => {
+      fs.writeFile(this.getFileName(request), responseString, (err) => {
         if (err) {return reject(err);}
         resolve(response);
       });
@@ -70,7 +95,7 @@ CacheClient.prototype.remove = function (request, originalFilename) {
   return new Promise((resolve, reject) => {
     var directory = this.directory(request);
     if (FileSystemHelper.directoryExists(directory)) {
-      var filePath = originalFilename ? originalFilename : this.requestPath(request);
+      var filePath = originalFilename ? originalFilename : this.getFileName(request);
       fs.unlink(filePath, (error) => {
         if (!error) {
           return resolve();
@@ -87,7 +112,7 @@ CacheClient.prototype.remove = function (request, originalFilename) {
   });
 }
 
-CacheClient.prototype.directory = function (request) {
+CacheClient.prototype.directory = function (request, rootDir) {
   var requestPath = request.path || '';
   var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
   requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
@@ -96,13 +121,22 @@ CacheClient.prototype.directory = function (request) {
     if (queryParamStartIndex == -1){return directoryName;}
     return directoryName.substr(0, queryParamStartIndex);
   }).join('/');
-  return path.join(this.cacheDir, requestPath);
+
+  return path.join(rootDir, requestPath);
+}
+
+
+CacheClient.prototype.requestPathBase = function (request) {
+  var requestHash = this.requestHash(request);
+  var directory = this.directory(request, this.baseCacheDir);
+
+  return path.join(directory, requestHash) + EXT;
 }
 
 
 CacheClient.prototype.requestPath = function (request) {
   var requestHash = this.requestHash(request);
-  var directory = this.directory(request);
+  var directory = this.directory(request, this.cacheDir);
 
   return path.join(directory, requestHash) + EXT;
 }

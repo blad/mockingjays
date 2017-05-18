@@ -12,6 +12,7 @@ var logger = new Logger();
 var DefaultOptions = function() {}
 
 DefaultOptions.prototype.options = {
+  baseCacheDir: null,
   cacheDir: null,
   port: process.env.MOCKINGJAYS_PORT || 9000,
   serverBaseUrl: null,
@@ -35,6 +36,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handlePortDefault(options);
   this._handleRefreshDefault(options);
   this._handleContentTypeDefault(options);
+  this._handleBaseCacheDirectoryDefault(options);
   this._handleCacheDirectoryDefault(options, extras);
   this._handleBaseUrlDefault(options);
   this._handleCacheHeaders(options);
@@ -81,6 +83,28 @@ DefaultOptions.prototype._handleContentTypeDefault = function (options) {
     .map(function (type) {return type.replace(/\*/g, '.*')});
   options.ignoreContentType = blacklist;
 }
+
+
+DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, extras) {
+  var defaults = this.options;
+  // Directory where the cache files can be read from:
+  options.baseCacheDir = options.baseCacheDir || defaults.baseCacheDir;
+
+  if (!options.baseCacheDir) {
+    return; // No Base Cache Directory Provided
+  }
+
+  if (!FileSystemHelper.directoryExists(options.baseCacheDir)) {
+    logger.warn('Base Cache Directory Does not Exists.')
+    logger.warn('Attempting to Create: ', options.baseCacheDir);
+    FileSystemHelper
+      .createDirectory(options.baseCacheDir)
+      .catch(function() {
+        throw Error("Please Use a Writable Location for the Base Cache Directory.");
+      });
+  }
+}
+
 
 DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extras) {
   var defaults = this.options;

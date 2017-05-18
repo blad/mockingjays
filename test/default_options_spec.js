@@ -29,9 +29,10 @@ describe('DefaultOptions', function() {
 
     it('merges successuflly when ALL options are provided', function () {
       var userProvidedOptions = {
-        port: 9123,
+        baseCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
+        port: 9123,
         ignoreContentType: 'image/*,text/html',
         refresh: true,
         passthrough: false,
@@ -42,6 +43,7 @@ describe('DefaultOptions', function() {
       };
 
       var expectedOptionsOutput = {
+        baseCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
         port: 9123,
@@ -52,7 +54,7 @@ describe('DefaultOptions', function() {
         cacheHeader: ['authorization', 'content-length'],
         responseHeaderBlacklist: ['date'],
         logLevel: 'debug',
-	ignoreJsonBodyPath: [],
+	      ignoreJsonBodyPath: [],
         transitionConfig: {},
         whiteLabel: true
       };
@@ -69,6 +71,7 @@ describe('DefaultOptions', function() {
 
       var expectedOptionsOutput = {
         // Provided Values
+        baseCacheDir: null,
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
         // Expected Defaults:
@@ -81,7 +84,7 @@ describe('DefaultOptions', function() {
         responseHeaderBlacklist: [],
         logLevel: 'info',
         transitionConfig: {},
-	ignoreJsonBodyPath: [],
+	      ignoreJsonBodyPath: [],
         whiteLabel: false
       };
 

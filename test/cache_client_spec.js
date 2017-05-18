@@ -41,10 +41,10 @@ describe('CacheClient', function() {
 
   describe('directory', function() {
     it('should return the complete directory path for a request', function() {
-      expect(client.directory(requests[0])).to.equal('/Users/home/fixtures/api/');
-      expect(client.directory(requests[1])).to.equal('/Users/home/fixtures/api/people/1/');
-      expect(client.directory(requests[2])).to.equal('/Users/home/fixtures/api/people/1/');
-      expect(client.directory(requests[3])).to.equal('/Users/home/fixtures/api/people/1/test');
+      expect(client.directory(requests[0], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/');
+      expect(client.directory(requests[1], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/');
+      expect(client.directory(requests[2], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/');
+      expect(client.directory(requests[3], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/test');
     })
   });
 
@@ -84,7 +84,7 @@ describe('CacheClient', function() {
   });
 
 
-  describe('path', function() {
+  describe('requestPath', function() {
     it('should return the complete file path for a request', function() {
       expect(client.requestPath(requests[0])).to.equal('/Users/home/fixtures/api/5abade6469.json');
       expect(client.requestPath(requests[1])).to.equal('/Users/home/fixtures/api/people/1/d11fcbc62f.json');
