@@ -24,7 +24,8 @@ DefaultOptions.prototype.options = {
   transitionConfig: {},
   passthrough: false,
   whiteLabel: false,
-  ignoreJsonBodyPath: []
+  ignoreJsonBodyPath: [],
+  accessLogFile: null
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -33,6 +34,7 @@ DefaultOptions.prototype.defaultExtras = {
 
 DefaultOptions.prototype.merge = function(options, extraOptions) {
   var extras = extraOptions || this.defaultExtras;
+  this._handleAccessLogFile(options);
   this._handlePortDefault(options);
   this._handleRefreshDefault(options);
   this._handleContentTypeDefault(options);
@@ -47,6 +49,11 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handleWhiteLabel(options);
   this._handleIgnoreJsonBodyPath(options);
   return options;
+}
+
+DefaultOptions.prototype._handleAccessLogFile = function (options) {
+  var defaults = this.options;
+  options.accessLogFile = options.accessLogFile || defaults.accessLogFile;
 }
 
 DefaultOptions.prototype._handleRefreshDefault = function (options) {

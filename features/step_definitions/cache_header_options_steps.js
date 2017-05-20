@@ -21,16 +21,16 @@ module.exports = function () {
       headers: headers
     };
 
-    var req = http.request(options, function(response) {
+    var req = http.request(options, (response) => {
       var str = '';
-      response.on('data', function (chunk) {str += chunk;});
-      response.on('end', function() {
+      response.on('data', (chunk) => str += chunk);
+      response.on('end', () => {
         self.result = str;
         done(str ? undefined : 'Empty Response');
       });
-      response.on('error', function(){ done('Error during request.')});
+      response.on('error', () => { done('Error during request.')});
     });
-    req.on('error', function(){ done('Error during request.')});
+    req.on('error', () => { done('Error during request.')});
     req.end();
   });
 

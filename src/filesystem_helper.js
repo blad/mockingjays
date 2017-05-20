@@ -1,4 +1,4 @@
-var FileSystem = require('fs');
+var fs = require('fs');
 var path = require('path');
 var Logger = require('./logger');
 var joinArray = function (acc, next) {return acc.concat(next);};
@@ -7,34 +7,34 @@ var FileSystemHelper = {
   logger: new Logger()
 };
 
-FileSystemHelper.directoryExists = function (path) {
+FileSystemHelper.directoryExists = function (filePath) {
   try {
-    return FileSystem.statSync(path).isDirectory();
+    return fs.statSync(filePath).isDirectory();
   } catch (e) {
     return false;
   }
 }
 
-FileSystemHelper.createDirectory = function (path) {
+FileSystemHelper.createDirectory = function (directoryPath) {
   return new Promise(function (resolve, reject) {
-    FileSystemHelper.createDirectoryParent(path, function (error) {
+    FileSystemHelper.createDirectoryParent(directoryPath, function (error) {
       if (error) {
-        var errorMessage = 'Failed to Create Directory: ' + path;
-        FileSystemHelper.logger.error('Failed to Create Directory: ' + path, error);
-        reject('Failed to Create Directory: ' + path);
+        var errorMessage = 'Failed to Create Directory: ' + directoryPath;
+        FileSystemHelper.logger.error('Failed to Create Directory: ' + directoryPath, error);
+        reject('Failed to Create Directory: ' + directoryPath);
       } else {
-        FileSystemHelper.logger.info('Successfully Created Directory: ' + path);
+        FileSystemHelper.logger.info('Successfully Created Directory: ' + directoryPath);
         resolve();
       }
     });
   });
 }
 
-FileSystemHelper.createDirectoryParent = function (dirPath, callback) {
-  FileSystem.mkdir(dirPath, function (error) {
+FileSystemHelper.createDirectoryParent = function (directoryPath, callback) {
+  fs.mkdir(directoryPath, (error) => {
     if (error && error.code === 'ENOENT') {
-      FileSystemHelper.createDirectoryParent(path.dirname(dirPath),
-        FileSystemHelper.createDirectoryParent.bind(this, dirPath, callback));
+      FileSystemHelper.createDirectoryParent(path.dirname(directoryPath),
+        FileSystemHelper.createDirectoryParent.bind(this, directoryPath, callback));
     } else if (callback) {
       callback(error);
     }
@@ -44,18 +44,19 @@ FileSystemHelper.createDirectoryParent = function (dirPath, callback) {
 FileSystemHelper.findFileType = function (root, typePredicate) {
   var formattedRoot = root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
 
-  return FileSystem
-  .readdirSync(formattedRoot)
-  .filter(function (file) { return file != '.' && file != '..';})
-  .map(function (file) { return formattedRoot + file;})
-  .filter(typePredicate);
+  return fs
+    .readdirSync(formattedRoot)
+    .filter((file) => file != '.' && file != '..')
+    .map((file)  => formattedRoot + file)
+    .filter(typePredicate);
 }
 
 
 FileSystemHelper.findDirectories = function (root) {
-  return FileSystemHelper.findFileType(root, FileSystemHelper.directoryExists)
-  .map(function (dir) {return FileSystemHelper.findDirectories(dir);})
-  .reduce(joinArray, [root]);
+  return FileSystemHelper
+    .findFileType(root, FileSystemHelper.directoryExists)
+    .map(function (dir) {return FileSystemHelper.findDirectories(dir);})
+    .reduce(joinArray, [root]);
 }
 
 

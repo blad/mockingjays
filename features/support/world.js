@@ -4,7 +4,7 @@ var path = require('path');
 function World() {
   this.cacheFiles = function(cacheDir, endpoint) {
     var cwd = process.cwd();
-    var isFile = function (path) { return !FileSystemHelper.directoryExists(path); };
+    var isFile = function (filePath) { return !FileSystemHelper.directoryExists(filePath); };
     return FileSystemHelper.findFileType(path.join(cwd, cacheDir, endpoint), isFile);
   }
 }

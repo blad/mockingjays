@@ -18,12 +18,13 @@ var CacheClient = function(options) {
   this.whiteLabel = options.whiteLabel;
   this.ignoreJsonBodyPath = options.ignoreJsonBodyPath;
   this.baseCacheDir = options.baseCacheDir;
+  this.accessLogFile = options.accessLogFile;
   FileSystemHelper.logger = options.logger;
 }
 
 CacheClient.prototype.isCached = function (request) {
   if (this.passthrough) {return false;}
-  return this.isInBaseCached(request) || this.isInCached(request);
+  return this.isInCached(request) || this.isInBaseCached(request);
 }
 
 CacheClient.prototype.isInBaseCached = function (request) {
@@ -49,6 +50,10 @@ CacheClient.prototype.isInCached = function (request) {
 }
 
 CacheClient.prototype.getFileName = function (request) {
+  if (this.isInCached(request)) {
+    return this.requestPath(request);
+  }
+
   if (this.isInBaseCached(request)) {
     return this.requestPathBase(request);
   }
@@ -56,9 +61,19 @@ CacheClient.prototype.getFileName = function (request) {
   return this.requestPath(request);
 }
 
+CacheClient.prototype.writeToAccessFile = function (filePath) {
+  if (!this.accessLogFile) {
+    return;
+  }
+  fs.appendFile(this.accessLogFile, filePath + '\n', (err) => {
+    if (err) throw err;
+  });
+}
+
 CacheClient.prototype.fetch = function (request) {
   var filePath = this.getFileName(request);
   this.logger.debug(Color.blue('Serving'), filePath);
+  this.writeToAccessFile(filePath);
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {
       if (err) {return reject(err);}
@@ -75,17 +90,18 @@ CacheClient.prototype.record = function (request, response) {
 
     var writeToFile = () => {
       if (this.passthrough) {return resolve(response);}
-      fs.writeFile(this.getFileName(request), responseString, (err) => {
+      var targetFile = this.getFileName(request);
+      this.writeToAccessFile(targetFile);
+      fs.writeFile(targetFile, responseString, (err) => {
         if (err) {return reject(err);}
         resolve(response);
       });
     };
 
-    var directory = this.directory(request);
+    var directory = this.directory(request, this.cacheDir);
     if (!FileSystemHelper.directoryExists(directory)) {
       return FileSystemHelper.createDirectory(directory).then(writeToFile);
     }
-
     writeToFile();
   });
 }
@@ -93,7 +109,7 @@ CacheClient.prototype.record = function (request, response) {
 
 CacheClient.prototype.remove = function (request, originalFilename) {
   return new Promise((resolve, reject) => {
-    var directory = this.directory(request);
+    var directory = this.directory(request, this.cacheDir);
     if (FileSystemHelper.directoryExists(directory)) {
       var filePath = originalFilename ? originalFilename : this.getFileName(request);
       fs.unlink(filePath, (error) => {

@@ -43,6 +43,7 @@ describe('DefaultOptions', function() {
       };
 
       var expectedOptionsOutput = {
+        accessLogFile: null,
         baseCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
@@ -75,6 +76,7 @@ describe('DefaultOptions', function() {
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
         // Expected Defaults:
+        accessLogFile: null,
         port: 9000,
         ignoreContentType: [],
         ignoreJsonBodyPath: [],
