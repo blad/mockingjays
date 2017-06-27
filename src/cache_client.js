@@ -24,7 +24,7 @@ var CacheClient = function(options) {
 
 CacheClient.prototype.isCached = function (request) {
   if (this.passthrough) {return false;}
-  return this.isInCached(request) || this.isInOverrideCache(request);
+  return this.isInOverrideCache(request) || this.isInCached(request);
 }
 
 CacheClient.prototype.isInOverrideCache = function (request) {
@@ -49,15 +49,22 @@ CacheClient.prototype.isInCached = function (request) {
   }
 }
 
-CacheClient.prototype.getFileName = function (request) {
-  if (this.isInCached(request)) {
-    return this.requestPath(request);
-  }
-
+CacheClient.prototype.getReadFileName = function (request) {
   if (this.isInOverrideCache(request)) {
     return this.requestPathOverride(request);
   }
 
+  if (this.isInCached(request)) {
+    return this.requestPath(request);
+  }
+
+  return this.requestPath(request);
+}
+
+CacheClient.prototype.getWriteFileName = function (request) {
+  if (this.overrideCacheDir) {
+    return this.requestPathOverride(request);
+  }
   return this.requestPath(request);
 }
 
@@ -71,7 +78,7 @@ CacheClient.prototype.writeToAccessFile = function (filePath) {
 }
 
 CacheClient.prototype.fetch = function (request) {
-  var filePath = this.getFileName(request);
+  var filePath = this.getReadFileName(request);
   this.logger.debug(Color.blue('Serving'), filePath);
   this.writeToAccessFile(filePath);
   return new Promise((resolve, reject) => {
@@ -90,7 +97,7 @@ CacheClient.prototype.record = function (request, response) {
 
     var writeToFile = () => {
       if (this.passthrough) {return resolve(response);}
-      var targetFile = this.getFileName(request);
+      var targetFile = this.getWriteFileName(request);
       this.writeToAccessFile(targetFile);
       fs.writeFile(targetFile, responseString, (err) => {
         if (err) {return reject(err);}
@@ -111,7 +118,7 @@ CacheClient.prototype.remove = function (request, originalFilename) {
   return new Promise((resolve, reject) => {
     var directory = this.directory(request, this.cacheDir);
     if (FileSystemHelper.directoryExists(directory)) {
-      var filePath = originalFilename ? originalFilename : this.getFileName(request);
+      var filePath = originalFilename ? originalFilename : this.getReadFileName(request);
       fs.unlink(filePath, (error) => {
         if (!error) {
           return resolve();
