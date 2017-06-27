@@ -2,9 +2,9 @@ var expect = require('chai').expect;
 var CacheClient = require('../src/cache_client');
 var path = require('path');
 
-describe('CacheClient', function() {
-  context('simple options', function() {
-    beforeEach(function() {
+describe('CacheClient', () => {
+  context('simple options', () => {
+    beforeEach(() => {
       var userOptions = {
         cacheDir: '/Users/home/fixtures',
         cacheHeader: ['authorization']
@@ -42,8 +42,8 @@ describe('CacheClient', function() {
       this.client = new CacheClient(userOptions);
     });
 
-    describe('directory', function() {
-      it('should return the complete directory path for a request', function() {
+    describe('directory', () => {
+      it('should return the complete directory path for a request', () => {
         expect(this.client.directory(this.requests[0], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/');
         expect(this.client.directory(this.requests[1], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/');
         expect(this.client.directory(this.requests[2], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/');
@@ -52,8 +52,8 @@ describe('CacheClient', function() {
     });
 
 
-    describe('fetch', function() {
-      it('should resolve to the file contents', function() {
+    describe('fetch', () => {
+      it('should resolve to the file contents', () => {
         temp = this.client.requestPath;
         this.client.logger = {debug: () => {}}
         this.client.requestPath = () => path.dirname(__filename) + '/fixture/sample.json'
@@ -66,8 +66,8 @@ describe('CacheClient', function() {
     });
 
 
-    describe('isCached', function() {
-      it('should return false for files that do not exist', function() {
+    describe('isCached', () => {
+      it('should return false for files that do not exist', () => {
         temp = this.client.requestPath;
         this.client.requestPath = () => __filename + '.404'; // stub of file path we know exists does Not exist
 
@@ -76,7 +76,7 @@ describe('CacheClient', function() {
         this.client.requestPath = temp; // Restore original method
       });
 
-      it('should return true for files that do exist', function() {
+      it('should return true for files that do exist', () => {
         temp = this.client.requestPath;
         this.client.requestPath = () => __filename; // stub of file path we know exists
 
@@ -87,8 +87,8 @@ describe('CacheClient', function() {
     });
 
 
-    describe('requestPath', function() {
-      it('should return the complete file path for a request', function() {
+    describe('requestPath', () => {
+      it('should return the complete file path for a request', () => {
         expect(this.client.requestPath(this.requests[0])).to.equal('/Users/home/fixtures/api/5abade6469.json');
         expect(this.client.requestPath(this.requests[1])).to.equal('/Users/home/fixtures/api/people/1/d11fcbc62f.json');
         expect(this.client.requestPath(this.requests[2])).to.equal('/Users/home/fixtures/api/people/1/5dfce70c03.json');
@@ -97,13 +97,13 @@ describe('CacheClient', function() {
     });
 
 
-    describe('requestHash', function() {
-      it('should return the correct hash for each request', function() {
+    describe('requestHash', () => {
+      it('should return the correct hash for each request', () => {
         expect(this.client.requestHash(this.requests[0])).to.equal('5abade6469');
         expect(this.client.requestHash(this.requests[1])).to.equal('d11fcbc62f');
       })
 
-      it('should return the different hash for identical requests with different headers', function() {
+      it('should return the different hash for identical requests with different headers', () => {
         var copyRequest = {
           hostname: 'swapi.co',
           path: '/api/',
@@ -123,8 +123,8 @@ describe('CacheClient', function() {
     });
   });
 
-  context('with override cache dir options', function() {
-    beforeEach(function() {
+  context('with override cache dir options', () => {
+    beforeEach(() => {
       this.client = new CacheClient({
         overrideCacheDir: '/Users/home/fixtures/override',
         cacheDir: '/Users/home/fixtures',
@@ -140,40 +140,40 @@ describe('CacheClient', function() {
         }
     });
 
-    describe('getWriteFileName', function() {
-      beforeEach(function() {
+    describe('getWriteFileName', () => {
+      beforeEach(() => {
         this.result = this.client.getWriteFileName(this.request)
       });
-      it('should return the override path when override path is provided', function() {
+      it('should return the override path when override path is provided', () => {
         expect(this.result).to.equal('/Users/home/fixtures/override/api/0bfd6ce9f4.json')
       })
     });
 
-    describe('getReadFileName', function() {
-      context('when no override cachedir is set', function() {
-        beforeEach(function() {
+    describe('getReadFileName', () => {
+      context('when no override cachedir is set', () => {
+        beforeEach(() => {
           this.client.overrideCacheDir = null;
           this.result = this.client.getReadFileName(this.request);
         })
 
-        it('should return the override path when override path is provided', function() {
+        it('should return the override path when override path is provided', () => {
           expect(this.result).to.equal('/Users/home/fixtures/api/0bfd6ce9f4.json')
         })
       });
 
 
-      context('when an override cachedir is set, but file does not exist', function() {
-        beforeEach(function() {
+      context('when an override cachedir is set, but file does not exist', () => {
+        beforeEach(() => {
           this.result = this.client.getReadFileName(this.request);
         });
 
-        it('should return the override path when override path is provided', function() {
+        it('should return the override path when override path is provided', () => {
           expect(this.result).to.equal('/Users/home/fixtures/api/0bfd6ce9f4.json')
         })
       });
 
-      context('when an override cachedir is set, and file *does* exist', function() {
-        beforeEach(function() {
+      context('when an override cachedir is set, and file *does* exist', () => {
+        beforeEach(() => {
           this.client = new CacheClient({
               overrideCacheDir: '/Users/home/fixtures/override',
               cacheDir: '/Users/home/fixtures',
@@ -183,7 +183,7 @@ describe('CacheClient', function() {
           this.result = this.client.getReadFileName(this.request);
         });
 
-        it('should return the override path when override path is provided', function() {
+        it('should return the override path when override path is provided', () => {
           expect(this.result).to.equal('/Users/home/fixtures/override/api/0bfd6ce9f4.json')
         })
       });
