@@ -24,16 +24,16 @@ var CacheClient = function(options) {
 
 CacheClient.prototype.isCached = function (request) {
   if (this.passthrough) {return false;}
-  return this.isInCached(request) || this.isInBaseCached(request);
+  return this.isInCached(request) || this.isInOverrideCache(request);
 }
 
-CacheClient.prototype.isInBaseCached = function (request) {
+CacheClient.prototype.isInOverrideCache = function (request) {
   if (!this.overrideCacheDir) {
     return false;
   }
 
   try {
-    fs.accessSync(this.requestPathBase(request), RW_MODE);
+    fs.accessSync(this.requestPathOverride(request), RW_MODE);
     return true;
   } catch (error) {
     return false;
@@ -54,8 +54,8 @@ CacheClient.prototype.getFileName = function (request) {
     return this.requestPath(request);
   }
 
-  if (this.isInBaseCached(request)) {
-    return this.requestPathBase(request);
+  if (this.isInOverrideCache(request)) {
+    return this.requestPathOverride(request);
   }
 
   return this.requestPath(request);
@@ -142,7 +142,7 @@ CacheClient.prototype.directory = function (request, rootDir) {
 }
 
 
-CacheClient.prototype.requestPathBase = function (request) {
+CacheClient.prototype.requestPathOverride = function (request) {
   var requestHash = this.requestHash(request);
   var directory = this.directory(request, this.overrideCacheDir);
 
