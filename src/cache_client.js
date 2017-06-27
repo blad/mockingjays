@@ -17,7 +17,7 @@ var CacheClient = function(options) {
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
   this.whiteLabel = options.whiteLabel;
   this.ignoreJsonBodyPath = options.ignoreJsonBodyPath;
-  this.baseCacheDir = options.baseCacheDir;
+  this.overrideCacheDir = options.overrideCacheDir;
   this.accessLogFile = options.accessLogFile;
   FileSystemHelper.logger = options.logger;
 }
@@ -28,7 +28,7 @@ CacheClient.prototype.isCached = function (request) {
 }
 
 CacheClient.prototype.isInBaseCached = function (request) {
-  if (!this.baseCacheDir) {
+  if (!this.overrideCacheDir) {
     return false;
   }
 
@@ -144,7 +144,7 @@ CacheClient.prototype.directory = function (request, rootDir) {
 
 CacheClient.prototype.requestPathBase = function (request) {
   var requestHash = this.requestHash(request);
-  var directory = this.directory(request, this.baseCacheDir);
+  var directory = this.directory(request, this.overrideCacheDir);
 
   return path.join(directory, requestHash) + EXT;
 }

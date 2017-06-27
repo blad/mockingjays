@@ -29,7 +29,7 @@ describe('DefaultOptions', function() {
 
     it('merges successuflly when ALL options are provided', function () {
       var userProvidedOptions = {
-        baseCacheDir: '/var/base/fixtures',
+        overrideCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
         port: 9123,
@@ -44,7 +44,7 @@ describe('DefaultOptions', function() {
 
       var expectedOptionsOutput = {
         accessLogFile: null,
-        baseCacheDir: '/var/base/fixtures',
+        overrideCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
         port: 9123,
@@ -72,7 +72,7 @@ describe('DefaultOptions', function() {
 
       var expectedOptionsOutput = {
         // Provided Values
-        baseCacheDir: null,
+        overrideCacheDir: null,
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
         // Expected Defaults:

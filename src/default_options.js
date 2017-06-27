@@ -12,7 +12,7 @@ var logger = new Logger();
 var DefaultOptions = function() {}
 
 DefaultOptions.prototype.options = {
-  baseCacheDir: null,
+  overrideCacheDir: null,
   cacheDir: null,
   port: process.env.MOCKINGJAYS_PORT || 9000,
   serverBaseUrl: null,
@@ -95,17 +95,17 @@ DefaultOptions.prototype._handleContentTypeDefault = function (options) {
 DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, extras) {
   var defaults = this.options;
   // Directory where the cache files can be read from:
-  options.baseCacheDir = options.baseCacheDir || defaults.baseCacheDir;
+  options.overrideCacheDir = options.overrideCacheDir || defaults.overrideCacheDir;
 
-  if (!options.baseCacheDir) {
+  if (!options.overrideCacheDir) {
     return; // No Base Cache Directory Provided
   }
 
-  if (!FileSystemHelper.directoryExists(options.baseCacheDir)) {
+  if (!FileSystemHelper.directoryExists(options.overrideCacheDir)) {
     logger.warn('Base Cache Directory Does not Exists.')
-    logger.warn('Attempting to Create: ', options.baseCacheDir);
+    logger.warn('Attempting to Create: ', options.overrideCacheDir);
     FileSystemHelper
-      .createDirectory(options.baseCacheDir)
+      .createDirectory(options.overrideCacheDir)
       .catch(function() {
         throw Error("Please Use a Writable Location for the Base Cache Directory.");
       });
