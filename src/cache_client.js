@@ -105,7 +105,7 @@ CacheClient.prototype.record = function (request, response) {
       });
     };
 
-    var directory = this.directory(request, this.cacheDir);
+    var directory = this.directory(request, this.overrideCacheDir || this.cacheDir);
     if (!FileSystemHelper.directoryExists(directory)) {
       return FileSystemHelper.createDirectory(directory).then(writeToFile);
     }
