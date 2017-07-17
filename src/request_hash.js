@@ -32,8 +32,10 @@ RequestHash.prototype._filteredAttributes = function () {
   }
 
   if (this.ignoreJsonBodyPath && this.ignoreJsonBodyPath.length && _.isPlainObject(filteredAttributes.body)) {
-    this.ignoreJsonBodyPath.map(function(path) {
-      _.set(filteredAttributes.body, path, '---omitted-by-proxy---');
+    this.ignoreJsonBodyPath.forEach(function(path) {
+      if (_.has(filteredAttributes.body, path)) {
+        _.set(filteredAttributes.body, path, '---omitted-by-proxy---');
+      }
     });
   }
 

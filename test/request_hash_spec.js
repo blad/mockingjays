@@ -136,5 +136,33 @@ describe('RequestHash with Empty Body', function() {
         headers: {},
       });
     });
+
+
+    it('should be not add a key if not already present', function () {
+      var exampleRequestJSONBody = {
+        hostname: 'swapi.co',
+        path: '/api/',
+        port: 80,
+        headers: {'authorization': '98745', 'content-type': 'application/json'},
+        body: {
+          a: {
+            b: 'Example Value'
+          }
+        }
+      };
+
+      var hashA = new RequestHash(exampleRequestJSONBody, null, null, ['a.b.c']);
+      expect(hashA._filteredAttributes()).to.deep.equal({
+        hostname: 'swapi.co',
+        path: '/api/',
+        port: 80,
+        body: {
+          a: {
+            b: 'Example Value'
+          }
+        },
+        headers: {},
+      });
+    });
   });
 });
