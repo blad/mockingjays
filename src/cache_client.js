@@ -9,6 +9,16 @@ var Util = require('./util');
 const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
 const EXT = '.json';
 
+let replaceQueryParam = function(directoryName) {
+  var queryParamStartIndex = directoryName.indexOf('?');
+
+  if (queryParamStartIndex == -1){
+    return directoryName;
+  }
+
+  return directoryName.substr(0, queryParamStartIndex);
+}
+
 var CacheClient = function(options) {
   this.logger = options.logger;
   this.passthrough = options.passthrough;
@@ -139,11 +149,7 @@ CacheClient.prototype.directory = function (request, rootDir) {
   var requestPath = request.path || '';
   var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
   requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
-  requestPath = requestPath.split('/').map(function(directoryName) {
-    var queryParamStartIndex = directoryName.indexOf('?');
-    if (queryParamStartIndex == -1){return directoryName;}
-    return directoryName.substr(0, queryParamStartIndex);
-  }).join('/');
+  requestPath = requestPath.split('/').map(replaceQueryParam).join('/').toLowerCase();
 
   return path.join(rootDir, requestPath);
 }

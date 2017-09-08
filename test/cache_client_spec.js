@@ -10,6 +10,7 @@ describe('CacheClient', () => {
         cacheHeader: ['authorization']
       };
       this.requests = [
+        // Has a single word resource
         {
           hostname: 'swapi.co',
           path: '/api/',
@@ -17,6 +18,7 @@ describe('CacheClient', () => {
           headers: {authorization: 'Bearer 12345'},
           body: {}
         },
+        // Has a multiple word and / separated resource
         {
           hostname: 'swapi.co',
           path: '/api/people/1/',
@@ -24,6 +26,7 @@ describe('CacheClient', () => {
           headers: {authorization: 'Bearer 12345'},
           body: {}
         },
+        // has query param on directory
         {
           hostname: 'swapi.co',
           path: '/api/people/1/?abc=123&other-illegal=<>:"\|?*',
@@ -31,9 +34,18 @@ describe('CacheClient', () => {
           headers: {authorization: 'Bearer 12345'},
           body: {}
         },
+        // Has query params on last item
         {
           hostname: 'swapi.co',
           path: '/api/people/1/test?abc=123&other-illegal=<>:"\|?*',
+          port: 80,
+          headers: {authorization: 'Bearer 12345'},
+          body: {}
+        },
+        // Has Caps in the URL
+        {
+          hostname: 'swapi.co',
+          path: '/api/CAPS/PEOPLE/1/test?abc=123&other-illegal=<>:"\|?*',
           port: 80,
           headers: {authorization: 'Bearer 12345'},
           body: {}
@@ -48,6 +60,7 @@ describe('CacheClient', () => {
         expect(this.client.directory(this.requests[1], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/');
         expect(this.client.directory(this.requests[2], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/');
         expect(this.client.directory(this.requests[3], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/people/1/test');
+        expect(this.client.directory(this.requests[4], '/Users/home/fixtures')).to.equal('/Users/home/fixtures/api/caps/people/1/test');
       })
     });
 
