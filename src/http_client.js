@@ -38,9 +38,9 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
       switch (error.code) {
         case 'ENOTFOUND':
           if (!isIgnoredContentType) {
-            self.logger.error('Unable to Connect to Host.');
-            self.logger.error('Check the Domain Spelling and Try Again.');
-            self.logger.error('No Data Saved for Request.');
+            self.logger.debug('Unable to Connect to Host.');
+            self.logger.debug('Check the Domain Spelling and Try Again.');
+            self.logger.debug('No Data Saved for Request.');
           }
           break;
       }

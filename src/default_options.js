@@ -25,7 +25,8 @@ DefaultOptions.prototype.options = {
   passthrough: false,
   whiteLabel: false,
   ignoreJsonBodyPath: [],
-  accessLogFile: null
+  accessLogFile: null,
+  readOnly: false
 }
 
 DefaultOptions.prototype.defaultExtras = {
@@ -46,6 +47,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handleLogLevel(options);
   this._handletransitionConfig(options);
   this._handlePassthrough(options);
+  this._handleReadOnly(options);
   this._handleWhiteLabel(options);
   this._handleIgnoreJsonBodyPath(options);
   return options;
@@ -73,6 +75,26 @@ DefaultOptions.prototype._handleRefreshDefault = function (options) {
 
   if (options.refresh === undefined) {
     options.refresh = defaults.refresh
+  }
+}
+
+DefaultOptions.prototype._handleReadOnly = function (options) {
+  var defaults = this.options;
+  // Handle Boolean Values:
+  if (options.readOnly == true || options.readOnly == false) {
+    options.readOnly = options.readOnly;
+  }
+
+  // Handle String Values
+  if (options.readOnly && options.readOnly != true && options.readOnly != false) {
+    var isTrueString = options.readOnly.toLowerCase() == 'true';
+    var isFalseString = options.readOnly.toLowerCase() == 'false';
+
+    options.readOnly = isTrueString && !isFalseString;
+  }
+
+  if (options.readOnly === undefined) {
+    options.readOnly = defaults.readOnly
   }
 }
 

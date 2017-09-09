@@ -43,6 +43,10 @@ Mockingjay.prototype.repeat = function(request) {
  * Fetch a Request form the Source.
  */
 Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
+  if (this.options.readOnly) {
+    return Promise.reject('Read Only Mode. Missing Fixture for: \n' + JSON.stringify(request));
+  }
+
   logger.info(Color.red('Learning'), JSON.stringify(request));
   var self = this;
   var responsePromise = this.httpClient.fetch(request, outputBuffer);
@@ -93,9 +97,9 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
       }
     }
   }, function (error) {
-    logger.error(error.toString());
+    logger.debug(error.toString());
     outputBuffer.writeHead(500, {'Content-Type': 'text/plain'});
-    outputBuffer.end('Network Error Occurred while Contacting Source Server');
+    outputBuffer.end('See Mockingjays Log for Error');
   });
 };
 
