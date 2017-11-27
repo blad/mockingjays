@@ -13,7 +13,7 @@ Feature: Stateful Requests Options
       | readOnly      | true                  |
     And I serve
     When I make a "GET" request to "/getCount"
-    Then I see the result "See Mockingjays Log for Error"
+    Then I see the result "Error:Read Only Mode."
     And I can see 0 cache files for "/getCount"
 
 

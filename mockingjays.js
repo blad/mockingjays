@@ -1,7 +1,7 @@
-Server = require('./src/server');
-Mockingjay = require('./src/mockingjay');
-Rehasher = require('./src/rehasher');
-DefaultOptions = require('./src/default_options');
+var Server = require('./src/server');
+var Mockingjay = require('./src/mockingjay');
+var Rehasher = require('./src/rehasher');
+var DefaultOptions = require('./src/default_options');
 
 var Mockingjays = function() {}
 

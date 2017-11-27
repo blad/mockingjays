@@ -18,7 +18,6 @@ module.exports = function() {
       path: path,
       method: method
     }
-
     var req = http.request(options, function(response) {
       var str = '';
       response.on('data', function (chunk) {str += chunk;});
@@ -38,6 +37,12 @@ module.exports = function() {
   });
 
   this.Then(/^I see the result "([^"]*)"$/, function (result, done) {
-    done(self.result === result ? undefined : 'Expected Result Not Found');
+    var msg = [
+      'Expected Result Not Found',
+      'Expected: ' + result,
+      '\n',
+      'Found: ' + self.result
+    ].join('\n');
+    done(self.result.indexOf(result) > -1  ? undefined : msg);
   });
 }

@@ -4,6 +4,7 @@ var path = require('path');
 var url = require('url')
 var FileSystemHelper = require('./filesystem_helper');
 var RequestHash = require('./request_hash');
+var HeaderUtil = require('./header_util');
 var Util = require('./util');
 
 const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
