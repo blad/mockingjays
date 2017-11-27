@@ -7,6 +7,12 @@ function World() {
     var isFile = function (filePath) { return !FileSystemHelper.directoryExists(filePath); };
     return FileSystemHelper.findFileType(path.join(cwd, cacheDir, endpoint), isFile);
   }
+
+  this.logFile = function(cacheDir, logFile) {
+    var cwd = process.cwd();
+    var isFile = function (filePath) { return filePath.indexOf(logFile) > -1;};
+    return FileSystemHelper.findFileType(path.join(cwd, cacheDir), isFile);
+  }
 }
 
 module.exports = function() {

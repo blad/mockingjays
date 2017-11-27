@@ -10,6 +10,7 @@ var HeaderUtil = require('./header_util');
 var Logger = require('./logger');
 var TransactionState = require('./transaction_state');
 var Util = require('./util');
+var fs = require('fs');
 var url = require('url');
 
 var logger = new Logger();
@@ -79,6 +80,7 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
   var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
   responsePromise.then(function(response) {
     logger.info('Responding:', response.status, response.type);
+    self.recordToRequestResponseLog(request, response);
     if (!response.piped) {
       var responseString = typeof(response.data) === 'string' ? response.data : Util.stringify(response.data);
       if (HeaderUtil.isText(response.type)) {
@@ -102,6 +104,21 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
     outputBuffer.end('Error:' + error.toString());
   });
 };
+
+
+Mockingjay.prototype.recordToRequestResponseLog = function(request, response) {
+  if (!this.options.requestResponseLogFile) {
+    return;
+  }
+  var line = 'Hash: ' + this.cacheClient.requestHash(request) + '\n';
+  line += 'Request: ' + Util.stringify(request) + '\n';
+  line += 'Response: ' + Util.stringify(response) + '\n\n';
+
+  fs.appendFile(this.options.requestResponseLogFile, line, (err) => {
+    if (err) throw err;
+  });
+}
+
 
 /**
  * Callback that is called when the server recieves a request.
