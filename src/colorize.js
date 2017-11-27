@@ -1,4 +1,4 @@
-Colorize = {};
+var Colorize = {};
 
 Colorize.red = function(text) {
   return "\033[1;31m" + text + "\033[0m";
