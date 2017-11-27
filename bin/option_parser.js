@@ -7,9 +7,6 @@ var hasCommand = (arg) => arg == 'serve' || arg == 'rehash'
 OptionsParser.parse = function(processArgs) {
   var userArgs = parseArgs(processArgs.slice(2));
   var command = _.find(userArgs._, hasCommand)
-  if (!command) {
-    console.error('\nUnknown Command:', command, '\n');
-  }
   delete userArgs._ // Argument are parse. Done Extracting Values
   return _.extend(userArgs, {command: command})
 }
@@ -20,12 +17,12 @@ OptionsParser.shouldDisplayHelp = function (options) {
   for (var key in options) {
     argCount++;
   }
-  return options.command == 'help' || argCount === 0;
+  return options.command == 'help' || options.help || argCount == 0;
 }
 
 
 OptionsParser.shouldDisplayVersion = function (options) {
-  return options.command == 'version';
+  return options.command == 'version' || options.version;
 }
 
 
