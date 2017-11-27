@@ -1,6 +1,6 @@
 {
   "name": "mockingjays",
-  "version": "2.0.0-alpha.9",
+  "version": "2.0.0-alpha.10",
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
   "main": "index.js",
   "scripts": {
