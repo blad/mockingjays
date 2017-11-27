@@ -1,4 +1,4 @@
-var Mockingjays = require('../../mockingjays');
+var Mockingjays = require('../../index');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');

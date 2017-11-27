@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var Mockingjays = require('../mockingjays');
+var Mockingjays = require('../index');
 var HelpMenu = require('./help_menu');
 var OptionParser = require('./option_parser');
 var userOptions = OptionParser.parse(process.argv);

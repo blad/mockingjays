@@ -1,4 +1,4 @@
-Mockingjays = require('../../mockingjays');
+Mockingjays = require('../../index');
 path = require('path');
 
 module.exports = function () {

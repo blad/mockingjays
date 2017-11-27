@@ -2,7 +2,7 @@
   "name": "mockingjays",
   "version": "2.0.0-alpha.9",
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
-  "main": "mockingjays.js",
+  "main": "index.js",
   "scripts": {
     "clean": "rm -rf temp/",
     "test": "npm run test:unit && npm run test:feature",
