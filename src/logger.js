@@ -1,5 +1,5 @@
 var Color = require('./colorize');
-Level = {
+var Level = {
   ERROR: 1,
   WARN: 2,
   INFO: 3,

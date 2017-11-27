@@ -1,12 +1,12 @@
-crypto = require('crypto');
-Util = require('./util');
+var crypto = require('crypto');
+var Util = require('./util');
 
-FORM_MULTIPART = 'multipart/form-data'
-FORM_URL_ENCODED = 'application/x-www-form-urlencoded'
-CONTENT_TYPE = 'content-type'
+var FORM_MULTIPART = 'multipart/form-data'
+var FORM_URL_ENCODED = 'application/x-www-form-urlencoded'
+var CONTENT_TYPE = 'content-type'
 
 
-FormDataHandler = {}
+var FormDataHandler = {}
 
 
 FormDataHandler.isFormData = function (headers) {

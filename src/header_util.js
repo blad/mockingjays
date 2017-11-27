@@ -1,4 +1,4 @@
-HEADER_WHITE_LIST = [
+var HEADER_WHITE_LIST = [
   'accept',
   'authorization',
   'content-length',
@@ -19,7 +19,7 @@ var isInWhiteList = function(key, headers) {
 };
 
 
-KNOWN_TEXTUAL_CONTENT_TYPES = [
+var KNOWN_TEXTUAL_CONTENT_TYPES = [
   'application/json',
   'text/plain',
   'text/html'
@@ -34,8 +34,7 @@ var getTextualContentTypeReducer = function (contentType) {
 }
 
 
-
-HeaderUtil = {
+var HeaderUtil = {
   HEADER_WHITE_LIST: HEADER_WHITE_LIST,
   KNOWN_TEXTUAL_CONTENT_TYPES: KNOWN_TEXTUAL_CONTENT_TYPES
 };
