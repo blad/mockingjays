@@ -60,20 +60,20 @@ DefaultOptions.prototype.defaultExtras = {
 DefaultOptions.prototype.merge = function(options, extraOptions) {
   var extras = extraOptions || this.defaultExtras;
   this._handleAccessLogFile(options);
-  this._handlePortDefault(options);
-  this._handleRefreshDefault(options);
-  this._handleContentTypeDefault(options);
   this._handleBaseCacheDirectoryDefault(options);
-  this._handleCacheDirectoryDefault(options, extras);
   this._handleBaseUrlDefault(options);
+  this._handleCacheDirectoryDefault(options, extras);
   this._handleCacheHeaders(options);
-  this._handleResponseHeaders(options);
-  this._handleLogLevel(options);
-  this._handletransitionConfig(options);
-  this._handlePassthrough(options);
-  this._handleReadOnly(options);
-  this._handleWhiteLabel(options);
+  this._handleContentTypeDefault(options);
   this._handleIgnoreJsonBodyPath(options);
+  this._handleLogLevel(options);
+  this._handlePassthrough(options);
+  this._handlePortDefault(options);
+  this._handleReadOnly(options);
+  this._handleRefreshDefault(options);
+  this._handleResponseHeaders(options);
+  this._handleTransitionConfig(options);
+  this._handleWhiteLabel(options);
   return options;
 }
 
@@ -81,33 +81,6 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
 DefaultOptions.prototype._handleAccessLogFile = function (options) {
   var defaults = this.options;
   options.accessLogFile = options.accessLogFile || defaults.accessLogFile;
-}
-
-
-DefaultOptions.prototype._handleRefreshDefault = function (options) {
-  options.refresh = getBooleanValue(options.refresh, this.options.refresh)
-}
-
-
-DefaultOptions.prototype._handleReadOnly = function (options) {
-  options.readOnly = getBooleanValue(options.readOnly, this.options.readOnly)
-}
-
-
-DefaultOptions.prototype._handlePortDefault = function (options) {
-  var defaults = this.options;
-  options.port = options.port || defaults.port;
-}
-
-
-DefaultOptions.prototype._handleContentTypeDefault = function (options) {
-  var defaults = this.options;
-  var blacklist = (options.ignoreContentType || defaults.ignoreContentType)
-    .split(',')
-    .filter(function (type) {return type !== ''})
-    .map(function (type) {return type.trim();})
-    .map(function (type) {return type.replace(/\*/g, '.*')});
-  options.ignoreContentType = blacklist;
 }
 
 
@@ -132,6 +105,27 @@ DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, 
 }
 
 
+DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
+  var defaults = this.options;
+
+  // The base URL of the server to proxy requests to.
+  options.serverBaseUrl = options.serverBaseUrl || defaults.serverBaseUrl;
+  if (!options.serverBaseUrl) {
+    throw Error("serverBaseUrl is required! It can not be empty.");
+  };
+}
+
+
+DefaultOptions.prototype._handleCacheHeaders = function (options) {
+  var defaults = this.options;
+  if (options.cacheHeader && typeof(options.cacheHeader) === 'string') {
+    options.cacheHeader = options.cacheHeader.split(',').map(function(header) { return header.toLowerCase() });
+  } else {
+    options.cacheHeader = options.cacheHeader || defaults.cacheHeader;
+  }
+}
+
+
 DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extras) {
   var defaults = this.options;
   // Directory where the cache files can be read and written to:
@@ -151,23 +145,54 @@ DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extra
   }
 }
 
-DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
-  var defaults = this.options;
 
-  // The base URL of the server to proxy requests to.
-  options.serverBaseUrl = options.serverBaseUrl || defaults.serverBaseUrl;
-  if (!options.serverBaseUrl) {
-    throw Error("serverBaseUrl is required! It can not be empty.");
-  };
+DefaultOptions.prototype._handleContentTypeDefault = function (options) {
+  var defaults = this.options;
+  var blacklist = (options.ignoreContentType || defaults.ignoreContentType)
+    .split(',')
+    .filter(function (type) {return type !== ''})
+    .map(function (type) {return type.trim();})
+    .map(function (type) {return type.replace(/\*/g, '.*')});
+  options.ignoreContentType = blacklist;
 }
 
-DefaultOptions.prototype._handleCacheHeaders = function (options) {
+
+DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
   var defaults = this.options;
-  if (options.cacheHeader && typeof(options.cacheHeader) === 'string') {
-    options.cacheHeader = options.cacheHeader.split(',').map(function(header) { return header.toLowerCase() });
+  if (options.ignoreJsonBodyPath && typeof(options.ignoreJsonBodyPath) == 'string') {
+    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath.split(',');
   } else {
-    options.cacheHeader = options.cacheHeader || defaults.cacheHeader;
+    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath || defaults.ignoreJsonBodyPath;
   }
+}
+
+
+DefaultOptions.prototype._handleLogLevel = function (options) {
+  var defaults = this.options;
+  if (!options.logLevel) {
+    options.logLevel = defaults.logLevel;
+  }
+}
+
+
+DefaultOptions.prototype._handlePassthrough = function (options) {
+  options.passthrough = getBooleanValue(options.passthrough, this.options.passthrough)
+}
+
+
+DefaultOptions.prototype._handlePortDefault = function (options) {
+  var defaults = this.options;
+  options.port = options.port || defaults.port;
+}
+
+
+DefaultOptions.prototype._handleReadOnly = function (options) {
+  options.readOnly = getBooleanValue(options.readOnly, this.options.readOnly)
+}
+
+
+DefaultOptions.prototype._handleRefreshDefault = function (options) {
+  options.refresh = getBooleanValue(options.refresh, this.options.refresh)
 }
 
 
@@ -180,14 +205,8 @@ DefaultOptions.prototype._handleResponseHeaders = function (options) {
   }
 }
 
-DefaultOptions.prototype._handleLogLevel = function (options) {
-  var defaults = this.options;
-  if (!options.logLevel) {
-    options.logLevel = defaults.logLevel;
-  }
-}
 
-DefaultOptions.prototype._handletransitionConfig = function (options) {
+DefaultOptions.prototype._handleTransitionConfig = function (options) {
   var defaults = this.options;
   if (!options.transitionConfig) {
     options.transitionConfig = defaults.transitionConfig;
@@ -198,23 +217,9 @@ DefaultOptions.prototype._handletransitionConfig = function (options) {
   }
 }
 
-
-DefaultOptions.prototype._handlePassthrough = function (options) {
-  options.passthrough = getBooleanValue(options.passthrough, this.options.passthrough)
-}
-
-
 DefaultOptions.prototype._handleWhiteLabel = function (options) {
   options.whiteLabel = getBooleanValue(options.whiteLabel, this.options.whiteLabel)
 }
 
-DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
-  var defaults = this.options;
-  if (options.ignoreJsonBodyPath && typeof(options.ignoreJsonBodyPath) == 'string') {
-    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath.split(',');
-  } else {
-    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath || defaults.ignoreJsonBodyPath;
-  }
-}
 
 module.exports = DefaultOptions
