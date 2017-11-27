@@ -45,6 +45,7 @@ DefaultOptions.prototype.options = {
   port: process.env.MOCKINGJAYS_PORT || 9000,
   readOnly: false,
   refresh: false,
+  requestResponseLogFile: null,
   responseHeaderBlacklist: [],
   serverBaseUrl: null,
   transitionConfig: {},
@@ -71,6 +72,7 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   this._handlePortDefault(options);
   this._handleReadOnly(options);
   this._handleRefreshDefault(options);
+  this._handleRequestResponseLogFile(options);
   this._handleResponseHeaders(options);
   this._handleTransitionConfig(options);
   this._handleWhiteLabel(options);
@@ -193,6 +195,12 @@ DefaultOptions.prototype._handleReadOnly = function (options) {
 
 DefaultOptions.prototype._handleRefreshDefault = function (options) {
   options.refresh = getBooleanValue(options.refresh, this.options.refresh)
+}
+
+
+DefaultOptions.prototype._handleRequestResponseLogFile = function (options) {
+  var defaults = this.options;
+  options.requestResponseLogFile = options.requestResponseLogFile || defaults.requestResponseLogFile;
 }
 
 

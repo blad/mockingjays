@@ -38,6 +38,7 @@ describe('DefaultOptions', function() {
         passthrough: false,
         logLevel: 'debug',
         cacheHeader: 'authorization,content-length',
+        requestResponseLogFile: '/request/response.log',
         responseHeaderBlacklist: ['date'],
         whiteLabel: true
       };
@@ -56,6 +57,7 @@ describe('DefaultOptions', function() {
         responseHeaderBlacklist: ['date'],
         logLevel: 'debug',
         readOnly: false,
+        requestResponseLogFile: '/request/response.log',
 	      ignoreJsonBodyPath: [],
         transitionConfig: {},
         whiteLabel: true
@@ -85,6 +87,7 @@ describe('DefaultOptions', function() {
         passthrough: false,
         cacheHeader: [],
         responseHeaderBlacklist: [],
+        requestResponseLogFile: null,
         readOnly: false,
         logLevel: 'info',
         transitionConfig: {},
