@@ -74,10 +74,10 @@ Logger.prototype.log = function () {
         console.warn(Color.yellow('WARN:     '), this.formatLines(messages).join(' '));
         break;
       case Level.DEBUG:
-        console.warn('DEBUG:    ', this.formatLines(messages).join(' '));
+        console.warn(Color.blue('DEBUG:    '), this.formatLines(messages).join(' '));
         break;
       case Level.INFO:
-        console.log('INFO:     ', this.formatLines(messages).join(' '));
+        console.log(Color.blue('INFO:     '), this.formatLines(messages).join(' '));
         break;
     }
   }
