@@ -55,6 +55,7 @@ describe('DefaultOptions', function() {
         cacheHeader: ['authorization', 'content-length'],
         responseHeaderBlacklist: ['date'],
         logLevel: 'debug',
+        readOnly: false,
 	      ignoreJsonBodyPath: [],
         transitionConfig: {},
         whiteLabel: true
@@ -84,6 +85,7 @@ describe('DefaultOptions', function() {
         passthrough: false,
         cacheHeader: [],
         responseHeaderBlacklist: [],
+        readOnly: false,
         logLevel: 'info',
         transitionConfig: {},
 	      ignoreJsonBodyPath: [],

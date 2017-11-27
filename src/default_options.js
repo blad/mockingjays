@@ -6,6 +6,28 @@ var Util = require('./util');
 
 var logger = new Logger();
 
+var getBooleanValue = function(value, defaultValue) {
+  if (typeof value === 'undefined') {
+    return defaultValue;
+  }
+
+  // Handle Boolean Values:
+  if (value == true || value == false) {
+    return value;
+  }
+
+  // Handle String Values
+  if (typeof value === 'string') {
+    var isTrueString = value.toLowerCase() == 'true';
+    var isFalseString = value.toLowerCase() == 'false';
+
+    return isTrueString && !isFalseString;
+  }
+
+  return defaultValue
+};
+
+
 /**
  * Provides default values and verifies that requied values are set.
  */
@@ -29,9 +51,11 @@ DefaultOptions.prototype.options = {
   readOnly: false
 }
 
+
 DefaultOptions.prototype.defaultExtras = {
   attemptToCreateCacheDir: true
 }
+
 
 DefaultOptions.prototype.merge = function(options, extraOptions) {
   var extras = extraOptions || this.defaultExtras;
@@ -53,55 +77,28 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
   return options;
 }
 
+
 DefaultOptions.prototype._handleAccessLogFile = function (options) {
   var defaults = this.options;
   options.accessLogFile = options.accessLogFile || defaults.accessLogFile;
 }
 
+
 DefaultOptions.prototype._handleRefreshDefault = function (options) {
-  var defaults = this.options;
-  // Handle Boolean Values:
-  if (options.refresh == true || options.refresh == false) {
-    options.refresh = options.refresh;
-  }
-
-  // Handle String Values
-  if (options.refresh && options.refresh != true && options.refresh != false) {
-    var isTrueString = options.refresh.toLowerCase() == 'true';
-    var isFalseString = options.refresh.toLowerCase() == 'false';
-
-    options.refresh = isTrueString && !isFalseString;
-  }
-
-  if (options.refresh === undefined) {
-    options.refresh = defaults.refresh
-  }
+  options.refresh = getBooleanValue(options.refresh, this.options.refresh)
 }
+
 
 DefaultOptions.prototype._handleReadOnly = function (options) {
-  var defaults = this.options;
-  // Handle Boolean Values:
-  if (options.readOnly == true || options.readOnly == false) {
-    options.readOnly = options.readOnly;
-  }
-
-  // Handle String Values
-  if (options.readOnly && options.readOnly != true && options.readOnly != false) {
-    var isTrueString = options.readOnly.toLowerCase() == 'true';
-    var isFalseString = options.readOnly.toLowerCase() == 'false';
-
-    options.readOnly = isTrueString && !isFalseString;
-  }
-
-  if (options.readOnly === undefined) {
-    options.readOnly = defaults.readOnly
-  }
+  options.readOnly = getBooleanValue(options.readOnly, this.options.readOnly)
 }
+
 
 DefaultOptions.prototype._handlePortDefault = function (options) {
   var defaults = this.options;
   options.port = options.port || defaults.port;
 }
+
 
 DefaultOptions.prototype._handleContentTypeDefault = function (options) {
   var defaults = this.options;
@@ -203,42 +200,12 @@ DefaultOptions.prototype._handletransitionConfig = function (options) {
 
 
 DefaultOptions.prototype._handlePassthrough = function (options) {
-  var defaults = this.options;
-  if (typeof(options.passthrough) === 'undefined') {
-    options.passthrough = defaults.passthrough;
-    return
-  }
-
-  if (options.passthrough == true || options.passthrough == false) {
-    options.passthrough = options.passthrough;
-  }
-
-  if (typeof(options.passthrough) === 'string') {
-    var isTrueString = options.passthrough.toLowerCase() == 'true';
-    var isFalseString = options.passthrough.toLowerCase() == 'false';
-
-    options.passthrough = isTrueString && !isFalseString;
-  }
+  options.passthrough = getBooleanValue(options.passthrough, this.options.passthrough)
 }
 
 
 DefaultOptions.prototype._handleWhiteLabel = function (options) {
-  var defaults = this.options;
-  if (typeof(options.whiteLabel) === 'undefined') {
-    options.whiteLabel = defaults.whiteLabel;
-    return
-  }
-
-  if (options.whiteLabel == true || options.whiteLabel == false) {
-    options.whiteLabel = options.whiteLabel;
-  }
-
-  if (typeof(options.whiteLabel) === 'string') {
-    var isTrueString = options.whiteLabel.toLowerCase() == 'true';
-    var isFalseString = options.whiteLabel.toLowerCase() == 'false';
-
-    options.whiteLabel = isTrueString && !isFalseString;
-  }
+  options.whiteLabel = getBooleanValue(options.whiteLabel, this.options.whiteLabel)
 }
 
 DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
