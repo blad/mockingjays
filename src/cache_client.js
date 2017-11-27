@@ -32,10 +32,12 @@ var CacheClient = function(options) {
   FileSystemHelper.logger = options.logger;
 }
 
+
 CacheClient.prototype.isCached = function (request) {
   if (this.passthrough) {return false;}
   return this.isInOverrideCache(request) || this.isInCached(request);
 }
+
 
 CacheClient.prototype.isInOverrideCache = function (request) {
   if (!this.overrideCacheDir) {
@@ -50,6 +52,7 @@ CacheClient.prototype.isInOverrideCache = function (request) {
   }
 }
 
+
 CacheClient.prototype.isInCached = function (request) {
   try {
     fs.accessSync(this.requestPath(request), RW_MODE);
@@ -58,6 +61,7 @@ CacheClient.prototype.isInCached = function (request) {
     return false;
   }
 }
+
 
 CacheClient.prototype.getReadFileName = function (request) {
   if (this.isInOverrideCache(request)) {
@@ -71,12 +75,14 @@ CacheClient.prototype.getReadFileName = function (request) {
   return this.requestPath(request);
 }
 
+
 CacheClient.prototype.getWriteFileName = function (request) {
   if (this.overrideCacheDir) {
     return this.requestPathOverride(request);
   }
   return this.requestPath(request);
 }
+
 
 CacheClient.prototype.writeToAccessFile = function (filePath) {
   if (!this.accessLogFile) {
@@ -86,6 +92,7 @@ CacheClient.prototype.writeToAccessFile = function (filePath) {
     if (err) throw err;
   });
 }
+
 
 CacheClient.prototype.fetch = function (request) {
   var filePath = this.getReadFileName(request);
@@ -98,6 +105,7 @@ CacheClient.prototype.fetch = function (request) {
     });
   });
 }
+
 
 CacheClient.prototype.record = function (request, response) {
   return new Promise((resolve, reject) => {
@@ -145,6 +153,7 @@ CacheClient.prototype.remove = function (request, originalFilename) {
   });
 }
 
+
 CacheClient.prototype.directory = function (request, rootDir) {
   var requestPath = request.path || '';
   var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
@@ -169,6 +178,7 @@ CacheClient.prototype.requestPath = function (request) {
 
   return path.join(directory, requestHash) + EXT;
 }
+
 
 CacheClient.prototype.requestHash = function (request) {
   return new RequestHash(request, this.cacheHeader, this.whiteLabel, this.ignoreJsonBodyPath)
