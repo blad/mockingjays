@@ -99,7 +99,7 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
   }, function (error) {
     logger.debug(error.toString());
     outputBuffer.writeHead(500, {'Content-Type': 'text/plain'});
-    outputBuffer.end('See Mockingjays Log for Error');
+    outputBuffer.end('Error:' + error.toString());
   });
 };
 
