@@ -34,21 +34,21 @@ var getBooleanValue = function(value, defaultValue) {
 var DefaultOptions = function() {}
 
 DefaultOptions.prototype.options = {
-  overrideCacheDir: null,
-  cacheDir: null,
-  port: process.env.MOCKINGJAYS_PORT || 9000,
-  serverBaseUrl: null,
-  ignoreContentType: '',
-  refresh: false,
-  cacheHeader: [],
-  responseHeaderBlacklist: [],
-  logLevel: 'info',
-  transitionConfig: {},
-  passthrough: false,
-  whiteLabel: false,
-  ignoreJsonBodyPath: [],
   accessLogFile: null,
-  readOnly: false
+  cacheDir: null,
+  cacheHeader: [],
+  ignoreContentType: '',
+  ignoreJsonBodyPath: [],
+  logLevel: 'info',
+  overrideCacheDir: null,
+  passthrough: false,
+  port: process.env.MOCKINGJAYS_PORT || 9000,
+  readOnly: false,
+  refresh: false,
+  responseHeaderBlacklist: [],
+  serverBaseUrl: null,
+  transitionConfig: {},
+  whiteLabel: false
 }
 
 
