@@ -8,6 +8,10 @@ module.exports = function () {
   this.Before('@TestServer', '@TestServer', function (scenario) {
     self.server = new TestServer();
 
+    self.server.addRoute('/routeWith500', 'GET', function(req, res) {
+        throw Error('Expected Error');
+    });
+
     self.server.addRoute('/getCount', 'GET', function(req, res) {
       res(self.serverState.count);
     });
