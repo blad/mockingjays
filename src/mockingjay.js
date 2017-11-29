@@ -78,9 +78,11 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
   var self = this;
   var shouldRepeat = this.knows(request) && !this.options.refresh;
   var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
+  self.recordToRequestResponseLog('Hash', this.cacheClient.requestHash(request));
+  self.recordToRequestResponseLog('Request', Util.stringify(request));
   responsePromise.then(function(response) {
     logger.info('Responding:', response.status, response.type);
-    self.recordToRequestResponseLog(request, response);
+    self.recordToRequestResponseLog('Response', Util.stringify(response),  {end: true});
     if (!response.piped) {
       var responseString = typeof(response.data) === 'string' ? response.data : Util.stringify(response.data);
       if (HeaderUtil.isText(response.type)) {
@@ -100,20 +102,19 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
     }
   }, function (error) {
     logger.debug(error.toString());
+    self.recordToRequestResponseLog('Response', error.toString(), {end: true});
     outputBuffer.writeHead(500, {'Content-Type': 'text/plain'});
     outputBuffer.end('Error:' + error.toString());
   });
 };
 
 
-Mockingjay.prototype.recordToRequestResponseLog = function(request, response) {
+Mockingjay.prototype.recordToRequestResponseLog = function(key, value, additionalOptions) {
+  additionalOptions = additionalOptions || {end: false};
   if (!this.options.requestResponseLogFile) {
     return;
   }
-  var line = 'Hash: ' + this.cacheClient.requestHash(request) + '\n';
-  line += 'Request: ' + Util.stringify(request) + '\n';
-  line += 'Response: ' + Util.stringify(response) + '\n\n';
-
+  var line = key + ': ' + value + '\n' + (additionalOptions.end ? '\n' : '');
   fs.appendFile(this.options.requestResponseLogFile, line, (err) => {
     if (err) throw err;
   });
