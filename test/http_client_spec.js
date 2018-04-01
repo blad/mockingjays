@@ -13,7 +13,7 @@ describe('HttpClient', function () {
 
   describe('isIgnoredType', function() {
     it('should not log for ignored content-types', function() {
-      contentType = 'image/*;text/html;'
+      var contentType = 'image/*;text/html;'
       expect(this.http_client.isIgnoredType(contentType)).to.be.ok
     });
   });

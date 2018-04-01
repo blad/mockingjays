@@ -12,7 +12,7 @@ describe('Form Data Handler', function () {
     });
 
     it('should return false for non-form content types', function () {
-      actualResult = FormDataHandler.isFormData({
+      var actualResult = FormDataHandler.isFormData({
         'content-type': 'application/json'
       });
 
