@@ -1,4 +1,5 @@
-var Color = require('./colorize');
+import Colorize from './colorize';
+
 var Level = {
   ERROR: 1,
   WARN: 2,
@@ -68,16 +69,16 @@ Logger.prototype.log = function () {
   if (level <= this.level) {
     switch (level) {
       case Level.ERROR:
-        console.error(Color.red('ERROR:    '), this.formatLines(messages).join(' '));
+        console.error(Colorize.red('ERROR:    '), this.formatLines(messages).join(' '));
         break;
       case Level.WARN:
-        console.warn(Color.yellow('WARN:     '), this.formatLines(messages).join(' '));
+        console.warn(Colorize.yellow('WARN:     '), this.formatLines(messages).join(' '));
         break;
       case Level.DEBUG:
-        console.warn(Color.blue('DEBUG:    '), this.formatLines(messages).join(' '));
+        console.warn(Colorize.blue('DEBUG:    '), this.formatLines(messages).join(' '));
         break;
       case Level.INFO:
-        console.log(Color.blue('INFO:     '), this.formatLines(messages).join(' '));
+        console.log(Colorize.blue('INFO:     '), this.formatLines(messages).join(' '));
         break;
     }
   }
@@ -96,4 +97,4 @@ Logger.prototype.formatLines = function (lines) {
   return newLines;
 }
 
-module.exports = Logger
+export default Logger;

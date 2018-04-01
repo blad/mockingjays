@@ -1,8 +1,9 @@
-var net = require('net');
-var FileSystem = require('fs');
-var FileSystemHelper = require('./filesystem_helper');
-var Logger = require('./logger');
-var Util = require('./util');
+import net from 'net';
+import FileSystem from 'fs';
+
+import FileSystemHelper from './filesystem_helper';
+import Logger from './logger';
+import Util from './util';
 
 var logger = new Logger();
 
@@ -230,4 +231,4 @@ DefaultOptions.prototype._handleWhiteLabel = function (options) {
 }
 
 
-module.exports = DefaultOptions
+export default DefaultOptions;

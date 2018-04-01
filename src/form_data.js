@@ -1,9 +1,9 @@
-var crypto = require('crypto');
-var Util = require('./util');
+import crypto from 'crypto';
+import Util from './util';
 
-var FORM_MULTIPART = 'multipart/form-data'
-var FORM_URL_ENCODED = 'application/x-www-form-urlencoded'
-var CONTENT_TYPE = 'content-type'
+var FORM_MULTIPART = 'multipart/form-data';
+var FORM_URL_ENCODED = 'application/x-www-form-urlencoded';
+var CONTENT_TYPE = 'content-type';
 
 
 var FormDataHandler = {}

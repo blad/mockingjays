@@ -29,4 +29,4 @@ TransactionState.prototype.set = function (statefulPath, method, transactionKey)
   }
 }
 
-module.exports = TransactionState
+export default TransactionState;

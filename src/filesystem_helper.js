@@ -1,6 +1,7 @@
-var fs = require('fs');
-var path = require('path');
-var Logger = require('./logger');
+import fs from 'fs';
+import path from 'path';
+import Logger from './logger';
+
 var joinArray = function (acc, next) {return acc.concat(next);};
 
 var FileSystemHelper = {
@@ -64,4 +65,4 @@ FileSystemHelper.findDirectories = function (root) {
 
 
 
-module.exports = FileSystemHelper;
+export default FileSystemHelper;

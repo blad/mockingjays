@@ -1,4 +1,4 @@
-var Logger = require('./logger');
+import Logger from './logger';
 
 var Util = {
   logger: new Logger()
@@ -72,4 +72,4 @@ Util.sortObjectKeys = function (originalObject) {
   return resultObject;
 };
 
-module.exports = Util
+export default Util;

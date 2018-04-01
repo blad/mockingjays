@@ -1,11 +1,12 @@
-var Color = require('./colorize');
-var fs = require('fs');
-var path = require('path');
-var url = require('url')
-var FileSystemHelper = require('./filesystem_helper');
-var RequestHash = require('./request_hash');
-var HeaderUtil = require('./header_util');
-var Util = require('./util');
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
+
+import Colorize from './colorize';
+import FileSystemHelper from './filesystem_helper';
+import RequestHash from './request_hash';
+import HeaderUtil from './header_util';
+import Util from './util';
 
 const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
 const EXT = '.json';
@@ -97,7 +98,7 @@ CacheClient.prototype.writeToAccessFile = function (filePath) {
 
 CacheClient.prototype.fetch = function (request) {
   var filePath = this.getReadFileName(request);
-  this.logger.debug(Color.blue('Serving'), filePath);
+  this.logger.debug(Colorize.blue('Serving'), filePath);
   this.writeToAccessFile(filePath);
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {

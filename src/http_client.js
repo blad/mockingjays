@@ -1,6 +1,7 @@
-var url = require('url')
-var HeaderUtil = require('./header_util');
-var Util = require('./util');
+import url from 'url';
+
+import HeaderUtil from './header_util';
+import Util from './util';
 
 var HttpClient = function (options) {
   this.options = options;
@@ -92,4 +93,4 @@ HttpClient.prototype._accumulateResponse = function (res, options, resolve, reje
   });
 }
 
-module.exports = HttpClient
+export default HttpClient;

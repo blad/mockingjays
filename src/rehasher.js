@@ -1,10 +1,11 @@
-var FileSystemHelper = require('./filesystem_helper');
-var FileSystem = require('fs');
-var Url = require('url');
-var Util = require('./util');
-var HeaderUtil = require('./header_util');
-var CacheClient = require('./cache_client');
-var Logger = require('./logger');
+import FileSystem from 'fs';
+import Url from 'url';
+
+import CacheClient from './cache_client';
+import FileSystemHelper from './filesystem_helper';
+import HeaderUtil from './header_util';
+import Logger from './logger';
+import Util from './util';
 
 var Rehashser = function (options) {
   this.logger = new Logger();
@@ -89,4 +90,4 @@ Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCached
   }
 }
 
-module.exports = Rehashser;
+export default Rehashser;

@@ -1,7 +1,7 @@
-var crypto = require('crypto');
-var Util = require('./util');
-var HeaderUtil = require('./header_util');
-var _ = require('lodash');
+import _ from 'lodash';
+import crypto from 'crypto';
+import Util from './util';
+import HeaderUtil from './header_util';
 
 var RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPath) {
   this.request = request;
@@ -42,4 +42,4 @@ RequestHash.prototype._filteredAttributes = function () {
   return filteredAttributes;
 }
 
-module.exports = RequestHash;
+export default RequestHash;

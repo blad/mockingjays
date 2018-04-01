@@ -2,16 +2,17 @@
  * Core that determines wether to fetch a fresh copy from the source or
  * fetch a cached copy of the data.
  */
-var Color = require('./colorize');
-var CacheClient = require('./cache_client');
-var FormDataHandler = require('./form_data');
-var HttpClient = require('./http_client');
-var HeaderUtil = require('./header_util');
-var Logger = require('./logger');
-var TransactionState = require('./transaction_state');
-var Util = require('./util');
-var fs = require('fs');
-var url = require('url');
+import fs from 'fs';
+import url from 'url';
+
+import Colorize from './colorize';
+import CacheClient from './cache_client';
+import FormDataHandler from './form_data';
+import HttpClient from './http_client';
+import HeaderUtil from './header_util';
+import Logger from './logger';
+import TransactionState from './transaction_state';
+import Util from './util';
 
 var logger = new Logger();
 
@@ -36,7 +37,7 @@ Mockingjay.prototype.knows = function(request) {
  * Fetch a Request form cache.
  */
 Mockingjay.prototype.repeat = function(request) {
-  logger.info(Color.yellow('Repeating'), JSON.stringify(request));
+  logger.info(Colorize.yellow('Repeating'), JSON.stringify(request));
   return this.cacheClient.fetch(request);
 };
 
@@ -48,7 +49,7 @@ Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
     return Promise.reject('Read Only Mode. Missing Fixture for: \n' + JSON.stringify(request));
   }
 
-  logger.info(Color.red('Learning'), JSON.stringify(request));
+  logger.info(Colorize.red('Learning'), JSON.stringify(request));
   var self = this;
   var responsePromise = this.httpClient.fetch(request, outputBuffer);
   return responsePromise.then(function (response) {
@@ -125,7 +126,7 @@ Mockingjay.prototype.recordToRequestResponseLog = function(key, value, additiona
  * Callback that is called when the server recieves a request.
  */
 Mockingjay.prototype.onRequest = function(request, response) {
-  logger.info(Color.green('Request Received'), request.url, request.method);
+  logger.info(Colorize.green('Request Received'), request.url, request.method);
   var self = this;
   var simplifiedRequest = this.simplify(request);
   var corsHeaders = HeaderUtil.getCorsHeaders(request.headers.origin);

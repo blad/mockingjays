@@ -148,4 +148,4 @@ HeaderUtil.sortHeaders = function (requestHeaders) {
 };
 
 
-module.exports = HeaderUtil
+export default HeaderUtil;
