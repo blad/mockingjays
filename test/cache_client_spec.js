@@ -1,6 +1,6 @@
-var expect = require('chai').expect;
-var CacheClient = require('../src/cache_client');
-var path = require('path');
+import {expect} from 'chai';
+import path from 'path';
+import CacheClient from '../lib/cache_client';
 
 describe('CacheClient', () => {
   context('simple options', () => {

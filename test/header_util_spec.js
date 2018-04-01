@@ -1,6 +1,5 @@
-var expect = require('chai').expect;
-var HeaderUtil = require('../src/header_util');
-
+import {expect} from 'chai';
+import HeaderUtil from '../lib/header_util';
 
 describe('Header Util', function () {
 

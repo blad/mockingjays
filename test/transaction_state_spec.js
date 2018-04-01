@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var TransactionState = require('../src/transaction_state');
+import {expect} from 'chai';
+import TransactionState from '../lib/transaction_state';
 
 
 describe('TransactionState', function() {

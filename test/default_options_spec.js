@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var DefaultOptions = require('../src/default_options');
+import {expect} from 'chai';
+import DefaultOptions from '../lib/default_options';
 
 
 describe('DefaultOptions', function() {

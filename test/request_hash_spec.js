@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var RequestHash = require('../src/request_hash');
+import {expect} from 'chai';
+import RequestHash from '../lib/request_hash';
 
 
 describe('RequestHash with Empty Body', function() {

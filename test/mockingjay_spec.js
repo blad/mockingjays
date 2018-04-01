@@ -1,6 +1,5 @@
-var expect = require('chai').expect;
-var Mockingjay = require('../src/mockingjay');
-
+import {expect} from 'chai';
+import Mockingjay from '../lib/mockingjay';
 
 describe('Mockingjay', function () {
 

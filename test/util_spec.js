@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var Util = require('../src/util');
+import {expect} from 'chai';
+import Util from '../lib/util';
 
 
 describe('Util Functions', function() {

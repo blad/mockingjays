@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var OptionParser = require('../bin/option_parser');
+import {expect} from 'chai';
+import OptionParser from '../bin/option_parser';
 
 
 describe('Option Parser', function() {

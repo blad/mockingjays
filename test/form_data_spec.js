@@ -1,6 +1,5 @@
-var expect = require('chai').expect;
-var FormDataHandler = require('../src/form_data');
-
+import {expect} from 'chai';
+import FormDataHandler from '../lib/form_data';
 
 describe('Form Data Handler', function () {
 

@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var Logger = require('../src/logger');
+import {expect} from 'chai';
+import Logger from '../lib/logger';
 
 
 describe('Logger', function() {

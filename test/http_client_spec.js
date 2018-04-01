@@ -1,6 +1,6 @@
-var sinon = require('sinon');
-var expect = require('chai').expect;
-var HttpClient = require('../src/http_client');
+import sinon from 'sinon';
+import {expect} from 'chai';
+import HttpClient from '../lib/http_client';
 
 describe('HttpClient', function () {
 
