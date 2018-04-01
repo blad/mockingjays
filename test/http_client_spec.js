@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import {expect} from 'chai';
-import HttpClient from '../lib/http_client';
+import HttpClient from '../src/http_client';
 
 describe('HttpClient', function () {
 

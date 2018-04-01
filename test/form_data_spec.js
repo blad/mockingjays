@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import FormDataHandler from '../lib/form_data';
+import FormDataHandler from '../src/form_data';
 
 describe('Form Data Handler', function () {
 

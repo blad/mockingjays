@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import path from 'path';
-import CacheClient from '../lib/cache_client';
+import CacheClient from '../src/cache_client';
 
 describe('CacheClient', () => {
   context('simple options', () => {

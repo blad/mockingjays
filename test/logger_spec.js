@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import Logger from '../lib/logger';
+import Logger from '../src/logger';
 
 
 describe('Logger', function() {

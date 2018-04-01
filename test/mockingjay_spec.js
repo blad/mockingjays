@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import Mockingjay from '../lib/mockingjay';
+import Mockingjay from '../src/mockingjay';
 
 describe('Mockingjay', function () {
 

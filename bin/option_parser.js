@@ -1,5 +1,6 @@
-var parseArgs = require('minimist');
-var _ = require('lodash');
+import parseArgs from 'minimist';
+import _ from 'lodash';
+
 var OptionsParser = {}
 
 var hasCommand = (arg) => arg == 'serve' || arg == 'rehash'
@@ -39,4 +40,4 @@ OptionsParser.shouldServe = function (options) {
 }
 
 
-module.exports = OptionsParser
+export default OptionsParser;

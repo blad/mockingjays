@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import RequestHash from '../lib/request_hash';
+import RequestHash from '../src/request_hash';
 
 
 describe('RequestHash with Empty Body', function() {

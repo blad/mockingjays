@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import TransactionState from '../lib/transaction_state';
+import TransactionState from '../src/transaction_state';
 
 
 describe('TransactionState', function() {

@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import DefaultOptions from '../lib/default_options';
+import DefaultOptions from '../src/default_options';
 
 
 describe('DefaultOptions', function() {

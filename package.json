@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build:core && npm run build:test",
-    "build:core": "babel src -d lib",
-    "build:test": "babel test -d lib_test",
+    "build:core": "babel src -d build/src --copy-files && babel bin -d build/bin --copy-files",
+    "build:test": "npm run build:test:feature && npm run build:test:unit",
+    "build:test:feature": "babel features/step_definitions -d build/features/step_definitions --copy-files && babel features/support -d build/features/support --copy-files",
+    "build:test:unit": "babel test -d build/test --copy-files",
     "clean": "rm -rf temp/",
     "test": "npm run test:unit && npm run test:feature",
-    "test:unit": "npm run clean && npm run build && mocha --exit ./lib_test/.",
+    "test:unit": "npm run clean && npm run build && mocha --exit ./build/test",
     "test:feature": "npm run clean && ./node_modules/cucumber/bin/cucumber.js --format=pretty"
   },
   "repository": {

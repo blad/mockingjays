@@ -36,5 +36,4 @@ node_modules
 .vscode/
 
 # Compiled Files:
-*lib/
-*lib_test/
+*build/

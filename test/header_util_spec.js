@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import HeaderUtil from '../lib/header_util';
+import HeaderUtil from '../src/header_util';
 
 describe('Header Util', function () {
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-var Mockingjays = require('../index');
-var HelpMenu = require('./help_menu');
-var OptionParser = require('./option_parser');
+import Mockingjays from '../index';
+import HelpMenu from './help_menu';
+import OptionParser from './option_parser';
+
 var userOptions = OptionParser.parse(process.argv);
 
 switch (true) {
