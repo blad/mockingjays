@@ -40,6 +40,7 @@ Then(/^the boundary is a mockingjays boundary$/, function (done) {
   var files = this.cacheFiles(this.options.cacheDir, '/formData');
   if (files.length != 1) {
     done('Expecting 1 file for form-data. '+ files.length +' found');
+    return;
   }
   var generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
   var hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
