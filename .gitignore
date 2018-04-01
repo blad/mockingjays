@@ -33,3 +33,7 @@ node_modules
 # IDE files
 *.iml
 .idea/
+
+# Compiled Files:
+*lib/
+*lib_test/
