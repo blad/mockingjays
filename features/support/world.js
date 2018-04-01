@@ -1,4 +1,5 @@
 import FileSystemHelper from '../../src/filesystem_helper';
+import {setWorldConstructor} from 'cucumber';
 import path from 'path';
 
 function World() {
@@ -15,6 +16,4 @@ function World() {
   }
 }
 
-export default function() {
-  this.World = World;
-};
+setWorldConstructor(World)

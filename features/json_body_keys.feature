@@ -12,6 +12,7 @@ Feature: Form Data Proxy
       | serverBaseUrl      | http://localhost:9001 |
       | logLevel           | warn                  |
       | ignoreJsonBodyPath | keys.pathA            |
+      | logLevel           | error                 |
     And I serve
     And I make a POST request to "/jsonRequest" with the JSON body:
       """

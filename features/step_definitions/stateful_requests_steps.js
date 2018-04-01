@@ -1,49 +1,50 @@
+import {Given, Then, When} from 'cucumber';
 import http from 'http';
 
-export default function() {
-  var self = this;
+Given(/^I provide the following transition config$/, function (string, done) {
+  try {
+    this.options.transitionConfig = JSON.parse(string);
+    done();
+  } catch (error) {
+    done(error);
+  }
+});
 
-  this.Given(/^I provide the following transition config$/, function (string, done) {
-    try {
-      this.options.transitionConfig = JSON.parse(string);
-      done();
-    } catch (error) {
-      done(error);
-    }
-  });
 
-  this.When(/^I make a "([^"]*)" request to "([^"]*)"$/, function (method, path, done) {
-    var options = {
-      hostname: 'localhost',
-      port: this.options.port,
-      path: path,
-      method: method
-    }
-    var req = http.request(options, function(response) {
-      var str = '';
-      response.on('data', function (chunk) {str += chunk;});
-      response.on('end', function() {
-        self.result = str;
-        done(str ? undefined : 'Empty Response');
-      });
-      response.on('error', function(){ done('Error during request.')});
+When(/^I make a "([^"]*)" request to "([^"]*)"$/, function (method, path, done) {
+  var options = {
+    hostname: 'localhost',
+    port: this.options.port,
+    path: path,
+    method: method
+  }
+
+  var req = http.request(options, (response) => {
+    var str = '';
+    response.on('data', (chunk) => {str += chunk;});
+    response.on('end', () => {
+      this.result = str;
+      done(str ? undefined : 'Empty Response');
     });
-    req.on('error', function(){ done('Error during request.')});
-    req.end();
+    response.on('error', (error) => { done('Error during request:' + error) });
   });
+  req.on('error', (error) => { done('Error during request:' + error) });
+  req.end();
+});
 
-  this.Then(/^I can see (\d+) cache files for "([^"]*)"$/, function (count, path, done) {
-    var files = this.cacheFiles(this.options.cacheDir, path);
-    done(files.length == parseInt(count, 10) ? undefined : 'Expected to see ' + count + " cache files, but found "+ files.length);
-  });
 
-  this.Then(/^I see the result "([^"]*)"$/, function (result, done) {
-    var msg = [
-      'Expected Result Not Found',
-      'Expected: ' + result,
-      '\n',
-      'Found: ' + self.result
-    ].join('\n');
-    done(self.result.indexOf(result) > -1  ? undefined : msg);
-  });
-}
+Then(/^I can see (\d+) cache files for "([^"]*)"$/, function (count, path, done) {
+  var files = this.cacheFiles(this.options.cacheDir, path);
+  done(files.length == parseInt(count, 10) ? undefined : 'Expected to see ' + count + " cache files, but found "+ files.length);
+});
+
+
+Then(/^I see the result "([^"]*)"$/, function (result, done) {
+  var msg = [
+    'Expected Result Not Found',
+    'Expected: ' + result,
+    'Found: ' + this.result
+  ].join('\n');
+
+  done(this.result.indexOf(result) > -1  ? undefined : msg);
+});

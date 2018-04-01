@@ -1,4 +1,5 @@
 import Hapi from 'hapi';
+import inert from 'inert';
 
 var TestServer = function(options){
   options = options || {};
@@ -7,7 +8,7 @@ var TestServer = function(options){
 
   this.state = {};
   this.server = new Hapi.Server();
-  this.server.register(require('inert'), function (err){});
+  this.server.register(inert, function (err){});
   this.server.connection({host: userHost, port: userPort});
 };
 
@@ -22,9 +23,7 @@ TestServer.prototype.addRoute = function (path, method, handler) {
 };
 
 TestServer.prototype.stop = function () {
-  this.server.stop({}, function() {
-    console.log('Server stopped');
-  });
+  this.server.stop({}, function() {});
 
   return this;
 };
@@ -32,10 +31,7 @@ TestServer.prototype.stop = function () {
 TestServer.prototype.start = function () {
   var self = this;
   this.server.start((err) => {
-    if (err) {
-      throw err;
-    }
-    console.log('Server running at:', self.server.info.uri);
+    if (err) { throw err; }
   });
 
   return this;

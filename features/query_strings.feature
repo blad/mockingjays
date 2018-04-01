@@ -12,7 +12,7 @@ Feature: Form Data Proxy
       | OPTION             | VALUE                 |
       | cacheDir           | ./temp/               |
       | serverBaseUrl      | http://localhost:9001 |
-      | logLevel           | warn                  |
+      | logLevel           | error                 |
     And I serve
     And I make a GET request to "/queryStringRequest" with the query strings:
       | KEY      | VALUE    |
@@ -28,7 +28,7 @@ Feature: Form Data Proxy
       | OPTION             | VALUE                 |
       | cacheDir           | ./temp/               |
       | serverBaseUrl      | http://localhost:9001 |
-      | logLevel           | warn                  |
+      | logLevel           | error                 |
       | queryStringIgnore  | testKey1              |
     And I serve
     When I make a GET request to "/queryStringRequest" with the query strings:

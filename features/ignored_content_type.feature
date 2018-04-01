@@ -12,6 +12,7 @@ Feature: Ignored Content Types
       | serverBaseUrl     | http://localhost:9001 |
       | cacheHeader       | content-type          |
       | ignoreContentType | image/*               |
+      | logLevel          | error                 |
     And I serve
     And I see no error
     When I make a "GET" request to "/image" with headers:
@@ -26,6 +27,7 @@ Feature: Ignored Content Types
       | serverBaseUrl     | http://localhost:9001 |
       | cacheHeader       | content-type          |
       | ignoreContentType | image/*               |
+      | logLevel          | error                 |
     And I serve
     And I see no error
     When I make a "GET" request to "/image" with headers:

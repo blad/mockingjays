@@ -1,42 +1,45 @@
+import {After, Before} from 'cucumber';
 import fs from 'fs';
 import TestServer from './test_server';
 
-module.exports = function () {
-  var self = this;
-  self.serverState = {count: 0};
+Before('@TestServer', function (scenario) {
+  var world = this;
+  world.serverState = {count: 0};
+  world.server = new TestServer();
 
-  this.Before('@TestServer', '@TestServer', function (scenario) {
-    self.server = new TestServer();
-
-    self.server.addRoute('/routeWith500', 'GET', function(req, res) {
-        throw Error('Expected Error');
-    });
-
-    self.server.addRoute('/getCount', 'GET', function(req, res) {
-      res(self.serverState.count);
-    });
-
-    self.server.addRoute('/increment', 'GET', function(req, res) {
-      self.serverState.count = self.serverState.count + 1;
-      res('incremented');
-    });
-
-    self.server.addRoute('/jsonRequest', 'POST', function(req, res) {
-      res({status: 'success'});
-    });
-
-    self.server.addRoute('/image', 'GET', function(req, res) {
-      res
-        .file(__dirname + '/test.png')
-        .type('image/png');
-    });
-
-    self.server.start();
+  world.server.addRoute('/routeWith500', 'GET', function(req, res) {
+      res(new Error("Here is an error you expected."))
   });
 
-
-  this.After('@TestServer', '@TestServer', function (scenario) {
-    self.serverState.count = 0;
-    self.server.stop();
+  world.server.addRoute('/getCount', 'GET', function(req, res) {
+    res(world.serverState.count);
   });
-};
+
+  world.server.addRoute('/increment', 'GET', function(req, res) {
+    world.serverState.count = world.serverState.count + 1;
+    res('incremented');
+  });
+
+  world.server.addRoute('/jsonRequest', 'POST', function(req, res) {
+    res({status: 'success'});
+  });
+
+  world.server.addRoute('/cacheHeader', 'POST', function(req, res) {
+    res({status: 'success'});
+  });
+
+  world.server.addRoute('/image', 'GET', function(req, res) {
+    res
+      .file(__dirname + '/test.png')
+      .type('image/png');
+  });
+
+  world.server.start();
+});
+
+
+After('@TestServer', function (scenario) {
+  var world = this;
+  world.serverState.count = 0;
+  world.server.stop();
+});

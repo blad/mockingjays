@@ -1,7 +1,10 @@
 import http from 'http';
+import httpShutdown from 'http-shutdown';
 
-export default function listen (options, requestHandler, onReady) {
-  var server = require('http-shutdown')(http.createServer(requestHandler));
+function listen (options, requestHandler, onReady) {
+  var server = httpShutdown(http.createServer(requestHandler));
   server.listen(options.port, (onReady || function() {}));
   return server;
 };
+
+export default {listen}

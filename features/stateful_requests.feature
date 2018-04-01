@@ -9,7 +9,7 @@ Feature: Stateful Requests Options
       | OPTION        | VALUE                 |
       | cacheDir      | ./temp/               |
       | serverBaseUrl | http://localhost:9001 |
-      | logLevel      | warn                  |
+      | logLevel      | error                 |
     And I provide the following transition config
       """
       {

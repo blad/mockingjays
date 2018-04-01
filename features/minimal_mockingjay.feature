@@ -12,6 +12,7 @@ Feature: Minimal Mockingjay Instance
     Given I want to create a Mockingjay instance with the following options
       | OPTION   | VALUE   |
       | cacheDir | ./temp/ |
+      | logLevel | error   |
     When I serve
     Then I see an error asking me to specify missing options
 
@@ -19,6 +20,7 @@ Feature: Minimal Mockingjay Instance
     Given I want to create a Mockingjay instance with the following options
       | OPTION        | VALUE           |
       | serverBaseUrl | http://swapi.co |
+      | logLevel      | error           |
     When I serve
     Then I see an error asking me to specify missing options
 
@@ -27,5 +29,6 @@ Feature: Minimal Mockingjay Instance
       | OPTION        | VALUE           |
       | cacheDir      | ./temp/         |
       | serverBaseUrl | http://swapi.co |
+      | logLevel      | error           |
     When I serve
     Then I see no error

@@ -10,8 +10,7 @@ switch (true) {
     HelpMenu();
     break;
   case OptionParser.shouldDisplayVersion(userOptions):
-    var pjson = require('../package.json');
-    console.log('Mockingjays v' + pjson.version);
+    console.log('Mockingjays v2.0.0-alpha');
     break;
   case OptionParser.shouldRehash(userOptions):
     new Mockingjays().rehash(userOptions);

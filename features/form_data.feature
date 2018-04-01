@@ -11,7 +11,7 @@ Feature: Form Data Proxy
       | cacheDir      | ./temp/               |
       | serverBaseUrl | http://localhost:9001 |
       | cacheHeader   | content-type          |
-      | logLevel      | warn                  |
+      | logLevel      | error                 |
       And I serve
       When I make a form data request to "/formData"
       Then the boundary is a mockingjays boundary

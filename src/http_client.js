@@ -1,4 +1,6 @@
 import url from 'url';
+import http from 'http'
+import https from 'https'
 
 import HeaderUtil from './header_util';
 import Util from './util';
@@ -14,10 +16,10 @@ HttpClient.prototype.isIgnoredType = function(contentType) {
 
 HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
   var self = this;
-  var http = require(requestOptions.port == 443 ? 'https' : 'http');
+  var protocolHandler = requestOptions.port == 443 ? https : http;
 
   return new Promise(function(resolve, reject) {
-    var req = http.request(requestOptions, function(res) {
+    var req = protocolHandler.request(requestOptions, function(res) {
       var statusCode = res.statusCode;
       if (HeaderUtil.isText(res.headers['content-type'])) {
         self._accumulateResponse(res, requestOptions, resolve, reject);

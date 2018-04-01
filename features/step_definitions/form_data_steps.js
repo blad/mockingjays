@@ -1,73 +1,73 @@
-import http from 'http';
+import {Then, When} from 'cucumber';
 import fs from 'fs';
-
-export default function () {
-  var self = this;
-
-  this.When(/^I wait$/, function (done) {});
+import http from 'http';
 
 
-  this.When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
-    var options = {
-      hostname: 'localhost',
-      port: this.options.port,
-      path: path,
-      headers: {
-        'content-type': 'multipart/form-data; boundary="---TestBoundaryXYZ123"'
-      },
-      method: 'POST'
-    };
+When(/^I wait$/, {timeout: 60 * 1000 * 5}, function () {
+  return new Promise(() => {})
+});
 
-    var postData = '---TestBoundaryXYZ123\r\nContent-Type: application/octet-stream\r\n\r\nHello World\r\n---TestBoundaryXYZ123--\r\n'
 
-    var req = http.request(options, function(response) {
-      var str = '';
-      response.on('data', function (chunk) {str += chunk;});
-      response.on('end', function() {
-        self.result = str;
-        done(str ? undefined : 'Empty Response');
-      });
-      response.on('error', function(){ done('Error during request.')});
+When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
+  var options = {
+    hostname: 'localhost',
+    port: this.options.port,
+    path: path,
+    headers: {
+      'content-type': 'multipart/form-data; boundary="---TestBoundaryXYZ123"'
+    },
+    method: 'POST'
+  };
+
+  var postData = '---TestBoundaryXYZ123\r\nContent-Type: application/octet-stream\r\n\r\nHello World\r\n---TestBoundaryXYZ123--\r\n'
+
+  var req = http.request(options, function(response) {
+    var str = '';
+    response.on('data', function (chunk) {str += chunk;});
+    response.on('end', function() {
+      this.result = str;
+      done(str ? undefined : 'Empty Response');
     });
-    req.on('error', function(){ done('Error during request.')});
-    req.write(postData)
-    req.end();
+    response.on('error', function(){ done('Error during request.')});
   });
+  req.on('error', function(){ done('Error during request.')});
+  req.write(postData)
+  req.end();
+});
 
 
-  this.Then(/^the boundary is a mockingjays boundary$/, function (done) {
-    var files = this.cacheFiles(this.options.cacheDir, '/formData');
-    if (files.length != 1) {
-      done('Expecting 1 file for form-data. '+ files.length +' found');
-    }
-    var generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
-    var hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
+Then(/^the boundary is a mockingjays boundary$/, function (done) {
+  var files = this.cacheFiles(this.options.cacheDir, '/formData');
+  if (files.length != 1) {
+    done('Expecting 1 file for form-data. '+ files.length +' found');
+  }
+  var generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
+  var hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
 
-    done(!hasUpdatedBoundary ? 'Missing Mockingjays Boundary in Form Data': null);
-  });
+  done(!hasUpdatedBoundary ? 'Missing Mockingjays Boundary in Form Data': null);
+});
 
-  this.When(/^I make a POST request to "([^"]*)" with the JSON body:$/, function (path, postData, done) {
-    var options = {
-      hostname: 'localhost',
-      port: this.options.port,
-      path: path,
-      headers: {
-        'content-type': 'application/json'
-      },
-      method: 'POST'
-    }
+When(/^I make a POST request to "([^"]*)" with the JSON body:$/, function (path, postData, done) {
+  var options = {
+    hostname: 'localhost',
+    port: this.options.port,
+    path: path,
+    headers: {
+      'content-type': 'application/json'
+    },
+    method: 'POST'
+  }
 
-    var req = http.request(options, function(response) {
-      var str = '';
-      response.on('data', function(chunk) {str += chunk;});
-      response.on('end', function() {
-        self.result = str;
-        done(str ? undefined : 'Empty Response');
-      });
-      response.on('error', function(){ done('Error during request.')});
+  var req = http.request(options, function(response) {
+    var str = '';
+    response.on('data', function(chunk) {str += chunk;});
+    response.on('end', function() {
+      this.result = str;
+      done(str ? undefined : 'Empty Response');
     });
-    req.on('error', function(){ done('Error during request.')});
-    req.write(JSON.stringify(JSON.parse(postData)));
-    req.end();
+    response.on('error', function(){ done('Error during request.')});
   });
-};
+  req.on('error', function(){ done('Error during request.')});
+  req.write(JSON.stringify(JSON.parse(postData)));
+  req.end();
+});

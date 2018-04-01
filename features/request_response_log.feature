@@ -9,7 +9,7 @@ Feature: Request Response Log
       | OPTION                 | VALUE                 |
       | cacheDir               | ./temp/               |
       | serverBaseUrl          | http://localhost:9001 |
-      | logLevel               | warn                  |
+      | logLevel               | error                 |
       | requestResponseLogFile | ./temp/req.log        |
     And I serve
     When I make a "GET" request to "/getCount"
@@ -23,7 +23,7 @@ Feature: Request Response Log
       | OPTION                 | VALUE                 |
       | cacheDir               | ./temp/               |
       | serverBaseUrl          | http://localhost:9001 |
-      | logLevel               | warn                  |
+      | logLevel               | error                 |
       | requestResponseLogFile | ./temp/req.log        |
     And I serve
     When I make a "GET" request to "/routeWith500"

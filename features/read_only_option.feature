@@ -9,7 +9,7 @@ Feature: Stateful Requests Options
       | OPTION        | VALUE                 |
       | cacheDir      | ./temp/               |
       | serverBaseUrl | http://localhost:9001 |
-      | logLevel      | warn                  |
+      | logLevel      | error                 |
       | readOnly      | true                  |
     And I serve
     When I make a "GET" request to "/getCount"
@@ -23,7 +23,7 @@ Feature: Stateful Requests Options
       | OPTION        | VALUE                 |
       | cacheDir      | ./temp/               |
       | serverBaseUrl | http://localhost:9001 |
-      | logLevel      | warn                  |
+      | logLevel      | error                 |
       | readOnly      | false                 |
     And I serve
     When I make a "GET" request to "/getCount"

@@ -11,9 +11,10 @@ Feature: Minimal Mockingjay Instance
       | cacheDir      | ./temp/               |
       | serverBaseUrl | http://localhost:9001 |
       | cacheHeader   | content-type          |
+      | logLevel      | error                 |
     And I serve
     And I see no error
-    When I make a "POST" request to "/cacheheader" with headers:
+    When I make a "POST" request to "/cacheHeader" with headers:
       | HEADER       | VALUE            |
       | content-type | application/json |
     Then I see a cache file for "/cacheheader" with the following headers:
