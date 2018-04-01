@@ -1,14 +1,19 @@
 import Hapi from 'hapi';
 import inert from 'inert';
 
-var TestServer = function(options){
+var TestServerBuilder = async function(options){
   options = options || {};
   var userHost = options.host || 'localhost';
   var userPort = options.port || 9001;
+  var hapiInstance = new Hapi.server({host: userHost, port: userPort});
+  await hapiInstance.register(inert);
 
+  return new TestServer(hapiInstance);
+};
+
+var TestServer = function(server){
   this.state = {};
-  this.server = new Hapi.server({host: userHost, port: userPort});
-  this.server.register(inert);
+  this.server = server;
 };
 
 TestServer.prototype.addRoute = function (path, method, handler) {
@@ -36,4 +41,4 @@ TestServer.prototype.start = function () {
   return this;
 };
 
-export default TestServer;
+export default TestServerBuilder;
