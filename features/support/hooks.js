@@ -33,8 +33,7 @@ Before('@TestServer', async function (scenario) {
   });
 
   world.server.addRoute('/image', 'GET', function(req, h) {
-    h.file(__dirname + '/test.png')
-      .type('image/png');
+    return h.file(__dirname + '/test.png').type('image/png');
   });
 
   world.server.start();
