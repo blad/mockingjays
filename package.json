@@ -4,10 +4,12 @@
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d src",
+    "build": "npm run build:core && npm run build:test",
+    "build:core": "babel src -d lib",
+    "build:test": "babel test -d lib_test",
     "clean": "rm -rf temp/",
     "test": "npm run test:unit && npm run test:feature",
-    "test:unit": "npm run clean && mocha ./test/.",
+    "test:unit": "npm run clean && npm run build && mocha ./lib_test/.",
     "test:feature": "npm run clean && ./node_modules/cucumber/bin/cucumber.js --format=pretty"
   },
   "repository": {
