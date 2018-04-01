@@ -127,7 +127,6 @@ Mockingjay.prototype.recordToRequestResponseLog = function(key, value, additiona
  */
 Mockingjay.prototype.onRequest = function(request, response) {
   logger.info(Colorize.green('Request Received'), request.url, request.method);
-  var self = this;
   var simplifiedRequest = this.simplify(request);
   var corsHeaders = HeaderUtil.getCorsHeaders(request.headers.origin);
 
@@ -135,11 +134,11 @@ Mockingjay.prototype.onRequest = function(request, response) {
     response.setHeader(corsHeader, corsHeaders[corsHeader]);
   }
 
-  request.on('data', function(data) {
+  request.on('data', (data) => {
     simplifiedRequest.body += data;
   });
 
-  request.on('end', function() {
+  request.on('end', () => {
     if (FormDataHandler.isFormData(simplifiedRequest.headers)) {
       simplifiedRequest = FormDataHandler.updateBoundary(simplifiedRequest);
     }
@@ -147,8 +146,7 @@ Mockingjay.prototype.onRequest = function(request, response) {
     if (simplifiedRequest.headers['content-type'] === 'application/json') {
       simplifiedRequest.body = Util.parseJSON(simplifiedRequest.body);
     }
-
-    self.echo(simplifiedRequest, response);
+    this.echo(simplifiedRequest, response);
   });
 };
 

@@ -4,15 +4,15 @@ import Util from './util';
 var FORM_MULTIPART = 'multipart/form-data';
 var FORM_URL_ENCODED = 'application/x-www-form-urlencoded';
 var CONTENT_TYPE = 'content-type';
+var CONTENT_LENGTH = 'content-length';
 
 
 var FormDataHandler = {}
 
 
 FormDataHandler.isFormData = function (headers) {
-  return headers
-  && headers[CONTENT_TYPE]
-  && headers[CONTENT_TYPE].match(FORM_MULTIPART);
+  headers = headers || {}
+  return headers[CONTENT_TYPE] && headers[CONTENT_TYPE].match(FORM_MULTIPART);
 }
 
 
@@ -37,9 +37,12 @@ FormDataHandler.boundaryHash = function (string) {
 };
 
 
-FormDataHandler.setHeaderBoundary = function (oldBoundary, newBoundary, headers) {
+FormDataHandler.setHeaderBoundary = function (oldBoundary, newBoundary, newRequest) {
+  var {headers, body} = newRequest;
   headers[CONTENT_TYPE] = headers[CONTENT_TYPE].replace(new RegExp(oldBoundary, 'g'), newBoundary);
-  return headers
+  headers[CONTENT_LENGTH] = body.length;
+
+  return headers;
 }
 
 
@@ -59,8 +62,8 @@ FormDataHandler.updateBoundary = function (request) {
   var oldBoundary = FormDataHandler.getBoundary(headers[CONTENT_TYPE]);
   var newBoundary = FormDataHandler.getBodySignature(oldBoundary, body);
 
-  newRequest.headers = FormDataHandler.setHeaderBoundary(oldBoundary, newBoundary, headers);
   newRequest.body = FormDataHandler.setBodyBoundary(oldBoundary, newBoundary, body);
+  newRequest.headers = FormDataHandler.setHeaderBoundary(oldBoundary, newBoundary, newRequest);
 
   return newRequest;
 }

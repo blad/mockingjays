@@ -34,6 +34,7 @@ describe('Form Data Handler', function () {
 
       expect(newRequest).to.deep.equal({
         headers: {
+          "content-length": 239,
           "content-type": "multipart/form-data; boundary=\"mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4\""
         },
         body: "--mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n--mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4--\r\n"
@@ -53,6 +54,7 @@ describe('Form Data Handler', function () {
 
       expect(newRequest).to.deep.equal({
         headers: {
+          "content-length": 239,
           "content-type": "multipart/form-data; boundary=mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4"
         },
         body: "--mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n--mockingjays63dc8a91ab42ae19780e1f7d97d15ed8799271f4--\r\n"

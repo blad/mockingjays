@@ -32,7 +32,11 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     });
 
     if (requestOptions.body) {
-      req.write(JSON.stringify(requestOptions.body));
+      if (requestOptions.headers['content-type'].match('application/json')) {
+        req.write(JSON.stringify(requestOptions.body));
+      } else {
+        req.write(requestOptions.body);
+      }
     }
     req.end()
 

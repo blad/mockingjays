@@ -29,7 +29,7 @@ var KNOWN_TEXTUAL_CONTENT_TYPES = [
 var getTextualContentTypeReducer = function (contentType) {
   return function (isTextual, current) {
     // Treating a missing content type as a textual type.
-    return isTextual || !contentType || contentType.indexOf(current) != -1;
+    return isTextual || !contentType || (contentType.indexOf(current) > -1);
   }
 }
 
