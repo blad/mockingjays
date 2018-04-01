@@ -33,6 +33,7 @@ node_modules
 # IDE files
 *.iml
 .idea/
+.vscode/
 
 # Compiled Files:
 *lib/
