@@ -188,4 +188,4 @@ CacheClient.prototype.requestHash = function (request) {
     .substr(0,10);
 }
 
-module.exports = CacheClient
+export default CacheClient

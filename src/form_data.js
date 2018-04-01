@@ -65,4 +65,4 @@ FormDataHandler.updateBoundary = function (request) {
   return newRequest;
 }
 
-module.exports = FormDataHandler
+export default FormDataHandler;

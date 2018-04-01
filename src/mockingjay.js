@@ -168,4 +168,4 @@ Mockingjay.prototype.simplify = function (request) {
   return options;
 };
 
-module.exports = Mockingjay
+export default Mockingjay;
