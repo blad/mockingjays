@@ -37,7 +37,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "chai": "^3.4.1",
+    "chai": "^4.0.0",
     "cucumber": "^4.0.0",
     "hapi": "^11.1.4",
     "inert": "^3.2.0",
@@ -45,10 +45,10 @@
     "sinon": "^4.0.0"
   },
   "dependencies": {
-    "http-shutdown": "^1.2.0",
-    "immutable": "^3.8.1",
+    "http-shutdown": "^1.0.0",
+    "immutable": "^3.0.0",
     "lodash": "^4.0.0",
-    "minimist": "^1.2.0",
-    "qs": "^6.4.0"
+    "minimist": "^1.0.0",
+    "qs": "^6.0.0"
   }
 }
