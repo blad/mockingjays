@@ -1,7 +1,7 @@
-var Server = require('./src/server');
-var Mockingjay = require('./src/mockingjay');
-var Rehasher = require('./src/rehasher');
-var DefaultOptions = require('./src/default_options');
+import Server from './src/server';
+import Mockingjay from './src/mockingjay';
+import Rehasher from './src/rehasher';
+import DefaultOptions from './src/default_options';
 
 var Mockingjays = function() {}
 
@@ -44,4 +44,4 @@ Mockingjays.prototype.rehash = function(options) {
   new Rehasher(finalOptions).process();
 }
 
-module.exports = Mockingjays
+export default Mockingjays;

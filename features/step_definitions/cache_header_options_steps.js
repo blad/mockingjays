@@ -1,10 +1,10 @@
-var Mockingjays = require('../../index');
-var fs = require('fs');
-var http = require('http');
-var path = require('path');
+import Mockingjays from '../../index';
+import fs from 'fs';
+import http from 'http';
+import path from 'path';
 
 
-module.exports = function () {
+export default function () {
   var self = this;
   this.When(/^I make a "([^"]*)" request to "([^"]*)" with headers:$/, function (method, path, table, done) {
     var headers = {};

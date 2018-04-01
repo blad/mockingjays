@@ -1,5 +1,6 @@
-var http = require('http');
-module.exports = function() {
+import http from 'http';
+
+export default function() {
   var self = this;
 
   this.Given(/^I provide the following transition config$/, function (string, done) {

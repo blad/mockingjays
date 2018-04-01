@@ -1,7 +1,7 @@
-Mockingjays = require('../../index');
-path = require('path');
+import Mockingjays from '../../index';
+import path from 'path';
 
-module.exports = function () {
+export default function () {
 
   this.Given(/^I want to create a Mockingjay instance with no options$/, function (done) {
     this.options = {};

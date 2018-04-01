@@ -1,5 +1,5 @@
-var fs = require('fs');
-var TestServer = require('./test_server');
+import fs from 'fs';
+import TestServer from './test_server';
 
 module.exports = function () {
   var self = this;

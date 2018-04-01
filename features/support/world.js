@@ -1,5 +1,5 @@
-var FileSystemHelper = require('../../src/filesystem_helper');
-var path = require('path');
+import FileSystemHelper from '../../src/filesystem_helper';
+import path from 'path';
 
 function World() {
   this.cacheFiles = function(cacheDir, endpoint) {
@@ -15,6 +15,6 @@ function World() {
   }
 }
 
-module.exports = function() {
+export default function() {
   this.World = World;
 };

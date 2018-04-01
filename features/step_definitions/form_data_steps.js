@@ -1,7 +1,7 @@
-var http = require('http');
-var fs = require('fs');
+import http from 'http';
+import fs from 'fs';
 
-module.exports = function() {
+export default function () {
   var self = this;
 
   this.When(/^I wait$/, function (done) {});

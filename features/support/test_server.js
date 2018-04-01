@@ -1,4 +1,4 @@
-var Hapi = require('hapi');
+import Hapi from 'hapi';
 
 var TestServer = function(options){
   options = options || {};
@@ -41,4 +41,4 @@ TestServer.prototype.start = function () {
   return this;
 };
 
-module.exports = TestServer
+export default TestServer;

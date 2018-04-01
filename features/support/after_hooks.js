@@ -1,4 +1,4 @@
-module.exports = function () {
+export default function () {
   this.After(function (scenario) {
     // Clean Up After Every Scenario:
     if (this.mockingjay) {
