@@ -9,17 +9,21 @@ When(/^I wait$/, {timeout: 60 * 1000 * 5}, function () {
 
 
 When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
+  var postData = '--AaB03x\r\n' +
+    'content-disposition: form-data; name="x"\r\n' +
+    '\r\n' +
+    'Hello World\r\n' +
+    '--AaB03x--\r\n';
+
   var options = {
     hostname: 'localhost',
     port: this.options.port,
     path: path,
     headers: {
-      'content-type': 'multipart/form-data; boundary="---TestBoundaryXYZ123"'
+      'content-type': 'multipart/form-data; boundary=AaB03x',
     },
     method: 'POST'
   };
-
-  var postData = '---TestBoundaryXYZ123\r\nContent-Type: application/octet-stream\r\n\r\nHello World\r\n---TestBoundaryXYZ123--\r\n'
 
   var req = http.request(options, function(response) {
     var str = '';
@@ -28,11 +32,10 @@ When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
       this.result = str;
       done(str ? undefined : 'Empty Response');
     });
-    response.on('error', function(){ done('Error during request.')});
+    response.on('error', function(error){ done('Error during request:' + error)});
   });
-  req.on('error', function(){ done('Error during request.')});
-  req.write(postData)
-  req.end();
+  req.on('error', function(error){ done('Error during request:' + error)});
+  req.end(postData);
 });
 
 

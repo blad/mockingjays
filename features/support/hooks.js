@@ -11,6 +11,10 @@ Before('@TestServer', function (scenario) {
       res(new Error("Here is an error you expected."))
   });
 
+  world.server.addRoute('/formData', 'POST', function(req, res) {
+    res({status: 'success'});
+  });
+
   world.server.addRoute('/getCount', 'GET', function(req, res) {
     res(world.serverState.count);
   });

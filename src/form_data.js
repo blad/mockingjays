@@ -17,7 +17,7 @@ FormDataHandler.isFormData = function (headers) {
 
 
 FormDataHandler.getBoundary = function (contentType) {
-  var matches = contentType.match(/.*boundary="?([^"]*)"?.*/);
+  var matches = contentType.match(/.*boundary="?([^"]*)"?/);
   return matches[1] || '';
 }
 
@@ -33,7 +33,7 @@ FormDataHandler.getBodySignature = function (boundary, body) {
 FormDataHandler.boundaryHash = function (string) {
   var shasum = crypto.createHash('sha1');
   shasum.update(string);
-  return '----mockingjays' + shasum.digest('hex');
+  return 'mockingjays' + shasum.digest('hex');
 };
 
 
