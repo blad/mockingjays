@@ -7,9 +7,8 @@ var TestServer = function(options){
   var userPort = options.port || 9001;
 
   this.state = {};
-  this.server = new Hapi.Server();
-  this.server.register(inert, function (err){});
-  this.server.connection({host: userHost, port: userPort});
+  this.server = new Hapi.server({host: userHost, port: userPort});
+  this.server.register(inert);
 };
 
 TestServer.prototype.addRoute = function (path, method, handler) {
