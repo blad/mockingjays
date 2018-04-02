@@ -15,19 +15,18 @@ HttpClient.prototype.isIgnoredType = function(contentType) {
 }
 
 HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
-  let self = this;
   let protocolHandler = requestOptions.port == 443 ? https : http;
 
-  return new Promise(function(resolve, reject) {
-    let req = protocolHandler.request(requestOptions, function(res) {
+  return new Promise((resolve, reject) => {
+    let req = protocolHandler.request(requestOptions, (res) => {
       let statusCode = res.statusCode;
       if (HeaderUtil.isText(res.headers['content-type'])) {
-        self._accumulateResponse(res, requestOptions, resolve, reject);
+        this._accumulateResponse(res, requestOptions, resolve, reject);
       } else {
-        if (!self.isIgnoredType(requestOptions.headers.accept)) {
-          self.logger.warn('Non Textual Content-Type Detected...Piping Response from Source Server.');
+        if (!this.isIgnoredType(requestOptions.headers.accept)) {
+          this.logger.warn('Non Textual Content-Type Detected...Piping Response from Source Server.');
         }
-        self._pipeResonse(res, outputBuffer, resolve, reject);
+        this._pipeResonse(res, outputBuffer, resolve, reject);
       }
     });
 
@@ -40,14 +39,14 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     }
     req.end()
 
-    req.on('error', function (error) {
-      let isIgnoredContentType = self.isIgnoredType(requestOptions.headers.accept)
+    req.on('error', (error) => {
+      let isIgnoredContentType = this.isIgnoredType(requestOptions.headers.accept)
       switch (error.code) {
         case 'ENOTFOUND':
           if (!isIgnoredContentType) {
-            self.logger.debug('Unable to Connect to Host.');
-            self.logger.debug('Check the Domain Spelling and Try Again.');
-            self.logger.debug('No Data Saved for Request.');
+            this.logger.debug('Unable to Connect to Host.');
+            this.logger.debug('Check the Domain Spelling and Try Again.');
+            this.logger.debug('No Data Saved for Request.');
           }
           break;
       }

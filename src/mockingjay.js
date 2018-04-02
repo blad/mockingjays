@@ -50,11 +50,10 @@ Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
   }
 
   logger.info(Colorize.red('Learning'), JSON.stringify(request));
-  let self = this;
   let responsePromise = this.httpClient.fetch(request, outputBuffer);
-  return responsePromise.then(function (response) {
-    if (request.method == 'OPTIONS' || self._okToCache(response.headers['content-type'])) {
-      return self.cacheClient.record(request, response);
+  return responsePromise.then(response => {
+    if (request.method == 'OPTIONS' || this._okToCache(response.headers['content-type'])) {
+      return this.cacheClient.record(request, response);
     } else {
       return Promise.resolve(response);
     }
@@ -76,14 +75,13 @@ Mockingjay.prototype._okToCache = function (responseType) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
-  let self = this;
   let shouldRepeat = this.knows(request) && !this.options.refresh;
   let responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
-  self.recordToRequestResponseLog('Hash', this.cacheClient.requestHash(request));
-  self.recordToRequestResponseLog('Request', Util.stringify(request));
-  responsePromise.then(function(response) {
+  this.recordToRequestResponseLog('Hash', this.cacheClient.requestHash(request));
+  this.recordToRequestResponseLog('Request', Util.stringify(request));
+  responsePromise.then(response => {
     logger.info('Responding:', response.status, response.type);
-    self.recordToRequestResponseLog('Response', Util.stringify(response),  {end: true});
+    this.recordToRequestResponseLog('Response', Util.stringify(response),  {end: true});
     if (!response.piped) {
       let responseString = typeof(response.data) === 'string' ? response.data : Util.stringify(response.data);
       if (HeaderUtil.isText(response.type)) {
@@ -96,14 +94,14 @@ Mockingjay.prototype.echo = function(request, outputBuffer) {
 
       outputBuffer.end(responseString);
 
-      if (self.transactionState.isStateful(request.path, request.method)) {
+      if (this.transactionState.isStateful(request.path, request.method)) {
         logger.info('Stateful Transaction Detected. Saving Key for Defined Requests');
-        self.transactionState.set(request.path, request.method, self.cacheClient.requestHash(request));
+        this.transactionState.set(request.path, request.method, this.cacheClient.requestHash(request));
       }
     }
-  }, function (error) {
+  }, error => {
     logger.debug(error.toString());
-    self.recordToRequestResponseLog('Response', error.toString(), {end: true});
+    this.recordToRequestResponseLog('Response', error.toString(), {end: true});
     outputBuffer.writeHead(500, {'Content-Type': 'text/plain'});
     outputBuffer.end('Error:' + error.toString());
   });

@@ -33,7 +33,6 @@ TestServer.prototype.stop = function () {
 };
 
 TestServer.prototype.start = function () {
-  let self = this;
   this.server.start((err) => {
     if (err) { throw err; }
   });

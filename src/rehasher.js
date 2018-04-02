@@ -22,7 +22,6 @@ let Rehashser = function (options) {
 }
 
 Rehashser.prototype.process = function () {
-  let self = this;
   FileSystemHelper
   .findDirectories(this.options.cacheDir)
   .forEach(this.rehashWithOptions(this.options))
@@ -30,19 +29,19 @@ Rehashser.prototype.process = function () {
 
 
 Rehashser.prototype.rehashWithOptions = function(options) {
-  let self = this;
-  return function (root) {
+  return root => {
     let notADirectory = function(file) {return !FileSystemHelper.directoryExists(file)};
     FileSystemHelper
       .findFileType(root, notADirectory)
-      .forEach(function (file) {
-        self.getContents(file)
-        .then(function(cachedContents) {
-          let originalCachedContents = Util.parseJSON(Util.stringify(cachedContents));
-          self.updateResponseWithOptions(cachedContents);
-          self.updateRequestWithOptions(cachedContents);
-          self.updateFile(file, cachedContents, originalCachedContents);
-        });
+      .forEach(file => {
+        this
+          .getContents(file)
+          .then(cachedContents => {
+            let originalCachedContents = Util.parseJSON(Util.stringify(cachedContents));
+            this.updateResponseWithOptions(cachedContents);
+            this.updateRequestWithOptions(cachedContents);
+            this.updateFile(file, cachedContents, originalCachedContents);
+          });
       });
   }
 }

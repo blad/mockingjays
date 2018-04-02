@@ -18,13 +18,12 @@ TransactionState.prototype.isStateful = function(path, method) {
 }
 
 TransactionState.prototype.set = function (statefulPath, method, transactionKey) {
-  let self = this;
   if(!this.options[statefulPath]) {
     return;
   } else {
     let affectedPaths = this.options[statefulPath].links;
-    affectedPaths.forEach(function (pathOptions) {
-      self.transactionMap[pathOptions.path + pathOptions.method] = transactionKey;
+    affectedPaths.forEach(pathOptions => {
+      this.transactionMap[pathOptions.path + pathOptions.method] = transactionKey;
     });
   }
 }
