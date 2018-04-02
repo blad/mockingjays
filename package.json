@@ -10,6 +10,7 @@
     "build:test:feature": "babel features -d build/features --copy-files",
     "build:test:unit": "babel test -d build/test --copy-files",
     "clean": "rm -rf build/temp/",
+    "prepublish": "rm -rf build && npm run build:core",
     "test": "npm run test:unit && npm run test:feature",
     "test:unit": "npm run clean && npm run build && mocha --exit ./build/test",
     "test:feature": "npm run clean && npm run build && (cd build && cucumber-js)"
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.0.0",
     "cucumber": "^4.0.0",
@@ -45,6 +47,7 @@
     "sinon": "^4.0.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.0.0",
     "http-shutdown": "^1.0.0",
     "immutable": "^3.0.0",
     "lodash": "^4.0.0",
