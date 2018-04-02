@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/blad/mockingjays#readme",
   "bin": {
-    "mockingjays": "bin/mockingjays.js"
+    "mockingjays": "build/bin/mockingjays.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
