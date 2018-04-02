@@ -44,15 +44,15 @@ FileSystemHelper.createDirectoryParent = function (directoryPath, callback) {
 
 FileSystemHelper.findFileType = function (root, typePredicate) {
   var formattedRoot = root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
-  try {
-    return fs
-      .readdirSync(formattedRoot)
-      .filter((file) => file != '.' && file != '..')
-      .map((file)  => formattedRoot + file)
-      .filter(typePredicate);
-  } catch (error) {
-    return []; // No Matches
-  }
+  // try {
+  return fs
+    .readdirSync(formattedRoot)
+    .filter((file) => file != '.' && file != '..')
+    .map((file)  => formattedRoot + file)
+    .filter(typePredicate);
+  // } catch (error) {
+  //   return []; // No Matches
+  // }
 }
 
 

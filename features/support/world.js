@@ -5,7 +5,6 @@ import path from 'path';
 function World() {
   this.cacheFiles = function(cacheDir, endpoint) {
     var cwd = process.cwd();
-    console.log('cacheFiles', {cwd});
     var isFile = function (filePath) { return !FileSystemHelper.directoryExists(filePath); };
     return FileSystemHelper.findFileType(path.join(cwd, cacheDir, endpoint), isFile);
   }
