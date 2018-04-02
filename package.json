@@ -2,7 +2,7 @@
   "name": "mockingjays",
   "version": "2.0.0-alpha.12",
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "build": "npm run build:core && npm run build:test",
     "build:core": "babel src -d build/src --copy-files && babel bin -d build/bin --copy-files && babel index.js -d build/",
