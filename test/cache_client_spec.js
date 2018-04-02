@@ -5,7 +5,7 @@ import CacheClient from '../src/cache_client';
 describe('CacheClient', () => {
   context('simple options', () => {
     beforeEach(function() {
-      var userOptions = {
+      let userOptions = {
         cacheDir: '/Users/home/fixtures',
         cacheHeader: ['authorization']
       };
@@ -117,7 +117,7 @@ describe('CacheClient', () => {
       })
 
       it('should return the different hash for identical requests with different headers', function() {
-        var copyRequest = {
+        let copyRequest = {
           hostname: 'swapi.co',
           path: '/api/',
           port: 80,
@@ -129,7 +129,7 @@ describe('CacheClient', () => {
         expect(this.client.requestHash(this.requests[0])).to.not.equal(this.client.requestHash(copyRequest))
 
         // Differet Client Different Options not considering any headers
-        var newClient = new CacheClient({cacheDir: '/Users/home/fixtures'});
+        let newClient = new CacheClient({cacheDir: '/Users/home/fixtures'});
         expect(newClient.requestHash(this.requests[0])).to.equal(newClient.requestHash(copyRequest))
 
       });

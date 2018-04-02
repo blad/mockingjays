@@ -7,7 +7,7 @@ import HeaderUtil from './header_util';
 import Logger from './logger';
 import Util from './util';
 
-var Rehashser = function (options) {
+let Rehashser = function (options) {
   this.logger = new Logger();
   this.options = options;
 
@@ -22,7 +22,7 @@ var Rehashser = function (options) {
 }
 
 Rehashser.prototype.process = function () {
-  var self = this;
+  let self = this;
   FileSystemHelper
   .findDirectories(this.options.cacheDir)
   .forEach(this.rehashWithOptions(this.options))
@@ -30,15 +30,15 @@ Rehashser.prototype.process = function () {
 
 
 Rehashser.prototype.rehashWithOptions = function(options) {
-  var self = this;
+  let self = this;
   return function (root) {
-    var notADirectory = function(file) {return !FileSystemHelper.directoryExists(file)};
+    let notADirectory = function(file) {return !FileSystemHelper.directoryExists(file)};
     FileSystemHelper
       .findFileType(root, notADirectory)
       .forEach(function (file) {
         self.getContents(file)
         .then(function(cachedContents) {
-          var originalCachedContents = Util.parseJSON(Util.stringify(cachedContents));
+          let originalCachedContents = Util.parseJSON(Util.stringify(cachedContents));
           self.updateResponseWithOptions(cachedContents);
           self.updateRequestWithOptions(cachedContents);
           self.updateFile(file, cachedContents, originalCachedContents);
@@ -53,7 +53,7 @@ Rehashser.prototype.getContents = function(file) {
       if (err) {
         reject(err);
       } else {
-        var cachedData = Util.parseJSON(data);
+        let cachedData = Util.parseJSON(data);
         resolve(cachedData);
       }
     });
@@ -61,13 +61,13 @@ Rehashser.prototype.getContents = function(file) {
 }
 
 Rehashser.prototype.updateResponseWithOptions = function(cacheContent) {
-  var reducedHeaders = HeaderUtil.removeHeaders(this.options.responseHeaderBlacklist, cacheContent.headers);
+  let reducedHeaders = HeaderUtil.removeHeaders(this.options.responseHeaderBlacklist, cacheContent.headers);
   cacheContent.headers = reducedHeaders;
 }
 
 Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
-  var filteredHeaders =  HeaderUtil.filterHeaders(this.options.cacheHeaders, cacheContent.request.headers);
-  var urlInfo = Url.parse(this.options.serverBaseUrl); // Update Base Server URL
+  let filteredHeaders =  HeaderUtil.filterHeaders(this.options.cacheHeaders, cacheContent.request.headers);
+  let urlInfo = Url.parse(this.options.serverBaseUrl); // Update Base Server URL
 
   cacheContent.request.hostname = urlInfo.hostname;
   cacheContent.request.headers = filteredHeaders;
@@ -76,7 +76,7 @@ Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
 }
 
 Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {
-  var cacheClient = this.cacheClient;
+  let cacheClient = this.cacheClient;
   if (cacheClient.isCached(cacheContent.request)) {
     this.logger.info('Updating Contents for for File:', filePath);
     cacheClient.record(cacheContent.request, cacheContent);

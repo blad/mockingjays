@@ -14,9 +14,9 @@ import Logger from './logger';
 import TransactionState from './transaction_state';
 import Util from './util';
 
-var logger = new Logger();
+let logger = new Logger();
 
-var Mockingjay = function(options) {
+let Mockingjay = function(options) {
   this.options = options;
   this.options.logger = logger;
   logger.setLevel(options.logLevel);
@@ -50,8 +50,8 @@ Mockingjay.prototype.learnOrPipe = function(request, outputBuffer) {
   }
 
   logger.info(Colorize.red('Learning'), JSON.stringify(request));
-  var self = this;
-  var responsePromise = this.httpClient.fetch(request, outputBuffer);
+  let self = this;
+  let responsePromise = this.httpClient.fetch(request, outputBuffer);
   return responsePromise.then(function (response) {
     if (request.method == 'OPTIONS' || self._okToCache(response.headers['content-type'])) {
       return self.cacheClient.record(request, response);
@@ -76,16 +76,16 @@ Mockingjay.prototype._okToCache = function (responseType) {
  * or need to fetch a fresh response.
  */
 Mockingjay.prototype.echo = function(request, outputBuffer) {
-  var self = this;
-  var shouldRepeat = this.knows(request) && !this.options.refresh;
-  var responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
+  let self = this;
+  let shouldRepeat = this.knows(request) && !this.options.refresh;
+  let responsePromise = shouldRepeat ? this.repeat(request) : this.learnOrPipe(request, outputBuffer);
   self.recordToRequestResponseLog('Hash', this.cacheClient.requestHash(request));
   self.recordToRequestResponseLog('Request', Util.stringify(request));
   responsePromise.then(function(response) {
     logger.info('Responding:', response.status, response.type);
     self.recordToRequestResponseLog('Response', Util.stringify(response),  {end: true});
     if (!response.piped) {
-      var responseString = typeof(response.data) === 'string' ? response.data : Util.stringify(response.data);
+      let responseString = typeof(response.data) === 'string' ? response.data : Util.stringify(response.data);
       if (HeaderUtil.isText(response.type)) {
         logger.info(responseString);
       }
@@ -115,7 +115,7 @@ Mockingjay.prototype.recordToRequestResponseLog = function(key, value, additiona
   if (!this.options.requestResponseLogFile) {
     return;
   }
-  var line = key + ': ' + value + '\n' + (additionalOptions.end ? '\n' : '');
+  let line = key + ': ' + value + '\n' + (additionalOptions.end ? '\n' : '');
   fs.appendFile(this.options.requestResponseLogFile, line, (err) => {
     if (err) throw err;
   });
@@ -127,10 +127,10 @@ Mockingjay.prototype.recordToRequestResponseLog = function(key, value, additiona
  */
 Mockingjay.prototype.onRequest = function(request, response) {
   logger.info(Colorize.green('Request Received'), request.url, request.method);
-  var simplifiedRequest = this.simplify(request);
-  var corsHeaders = HeaderUtil.getCorsHeaders(request.headers.origin);
+  let simplifiedRequest = this.simplify(request);
+  let corsHeaders = HeaderUtil.getCorsHeaders(request.headers.origin);
 
-  for (var corsHeader in corsHeaders) {
+  for (let corsHeader in corsHeaders) {
     response.setHeader(corsHeader, corsHeaders[corsHeader]);
   }
 
@@ -152,9 +152,9 @@ Mockingjay.prototype.onRequest = function(request, response) {
 
 
 Mockingjay.prototype.simplify = function (request) {
-  var urlSplit = url.parse(this.options.serverBaseUrl + request.url);
-  var isHttps = urlSplit.protocol === 'https:'
-  var options = {
+  let urlSplit = url.parse(this.options.serverBaseUrl + request.url);
+  let isHttps = urlSplit.protocol === 'https:'
+  let options = {
     hostname: urlSplit.hostname,
     port: parseInt(urlSplit.port) || (isHttps ? 443 : 80),
     path: urlSplit.path,

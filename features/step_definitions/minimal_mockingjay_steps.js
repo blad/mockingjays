@@ -9,7 +9,7 @@ Given(/^I want to create a Mockingjay instance with no options$/, function (done
 
 
 Given(/^I want to create a Mockingjay instance with the following options$/, function (optionsTable, done) {
-  var options = {}
+  let options = {}
   optionsTable.rows().forEach(function (row) {
     return options[row[0]] = row[1];
   });

@@ -1,17 +1,17 @@
 import Logger from './logger';
 
-var Util = {
+let Util = {
   logger: new Logger()
 };
 
 Util.determinePort = function (urlInfo) {
-  var isHttps = urlInfo.protocol === 'https:'
+  let isHttps = urlInfo.protocol === 'https:'
   return parseInt(urlInfo.port) || (isHttps ? 443 : 80);
 }
 
 
 Util.stringify = function (inputObject) {
-  var jsonObject = inputObject || '';
+  let jsonObject = inputObject || '';
 
   try {
     switch (typeof(jsonObject)) {
@@ -46,8 +46,8 @@ Util.simpleCopy = function (target) {
 
 
 Util.regExArrayContains = function (regExArray, value) {
-  var inList = function (expressionMatched, next) {
-    var matchList = new RegExp(next).exec(value);
+  let inList = function (expressionMatched, next) {
+    let matchList = new RegExp(next).exec(value);
     return expressionMatched || Boolean(matchList && matchList.length > 0);
   };
   return regExArray.reduce(inList, false);
@@ -56,14 +56,14 @@ Util.regExArrayContains = function (regExArray, value) {
 
 Util.sortObjectKeys = function (originalObject) {
   // Sort the keys to get predictable order in object keys.
-  var keys = [];
-  for (var key in originalObject) {
+  let keys = [];
+  for (let key in originalObject) {
     keys.push(key);
   }
   keys.sort();
 
   // Copy the Keys in order:
-  var resultObject = {};
+  let resultObject = {};
   keys.forEach(function(key) {
     // Standardize the key to be lowercase:
     resultObject[key.toLowerCase()] = originalObject[key];

@@ -1,4 +1,4 @@
-var HEADER_WHITE_LIST = [
+let HEADER_WHITE_LIST = [
   'accept',
   'authorization',
   'content-length',
@@ -9,8 +9,8 @@ var HEADER_WHITE_LIST = [
   'access-control-request-headers'
 ];
 
-var isInWhiteList = function(key, headers) {
-  var inWhiteList = HEADER_WHITE_LIST.indexOf(key) !== -1;
+let isInWhiteList = function(key, headers) {
+  let inWhiteList = HEADER_WHITE_LIST.indexOf(key) !== -1;
   if (inWhiteList) {
     // Only include content length of non-zero length.
     return !(key === 'content-length' && headers[key] === "0");
@@ -19,14 +19,14 @@ var isInWhiteList = function(key, headers) {
 };
 
 
-var KNOWN_TEXTUAL_CONTENT_TYPES = [
+let KNOWN_TEXTUAL_CONTENT_TYPES = [
   'application/json',
   'text/plain',
   'text/html'
 ];
 
 // Helper Reduction Function that take the cu
-var getTextualContentTypeReducer = function (contentType) {
+let getTextualContentTypeReducer = function (contentType) {
   return function (isTextual, current) {
     // Treating a missing content type as a textual type.
     return isTextual || !contentType || (contentType.indexOf(current) > -1);
@@ -34,7 +34,7 @@ var getTextualContentTypeReducer = function (contentType) {
 }
 
 
-var HeaderUtil = {
+let HeaderUtil = {
   HEADER_WHITE_LIST: HEADER_WHITE_LIST,
   KNOWN_TEXTUAL_CONTENT_TYPES: KNOWN_TEXTUAL_CONTENT_TYPES
 };
@@ -57,10 +57,10 @@ HeaderUtil.isText = function (contentType) {
  * requestHeaders - Object of headers to filter.
  */
 HeaderUtil.filterHeaders =  function (wantedHeaders, requestHeaders) {
-  var headers = {};
-  var key;
+  let headers = {};
+  let key;
   wantedHeaders = wantedHeaders || [];
-  for (var index = 0; index < wantedHeaders.length; index++) {
+  for (let index = 0; index < wantedHeaders.length; index++) {
     key = wantedHeaders[index];
     if (requestHeaders[key]) {
       headers[key] = requestHeaders[key];
@@ -77,9 +77,9 @@ HeaderUtil.filterHeaders =  function (wantedHeaders, requestHeaders) {
  * requestHeaders - Object of headers.
  */
 HeaderUtil.removeHeaders =  function (targetHeader, requestHeaders) {
-  var headers = {};
+  let headers = {};
   targetHeader = targetHeader || [];
-  for (var key in requestHeaders) {
+  for (let key in requestHeaders) {
     if (targetHeader.indexOf(key.toLowerCase()) == -1) {
       headers[key] = requestHeaders[key];
     }
@@ -112,9 +112,9 @@ HeaderUtil.getCorsHeaders = function (origin) {
  * Variability in headers leads to a different hash for and file signatures.
  */
 HeaderUtil.standardize = function (requestHeaders) {
-  var headers = HeaderUtil.sortHeaders(requestHeaders);
-  var allowedHeaders = {};
-  for (var key in headers) {
+  let headers = HeaderUtil.sortHeaders(requestHeaders);
+  let allowedHeaders = {};
+  for (let key in headers) {
     if (isInWhiteList(key, headers)) {
       allowedHeaders[key] = headers[key];
     }
@@ -131,14 +131,14 @@ HeaderUtil.standardize = function (requestHeaders) {
  */
 HeaderUtil.sortHeaders = function (requestHeaders) {
   // Sort the keys to get predictable order in object keys.
-  var keys = [];
-  for (var key in requestHeaders) {
+  let keys = [];
+  for (let key in requestHeaders) {
     keys.push(key);
   }
   keys.sort();
 
   // Copy the Keys in order:
-  var headers = {};
+  let headers = {};
   keys.forEach(function(key) {
     // Standardize the key to be lowercase:
     headers[key.toLowerCase()] = requestHeaders[key];

@@ -1,21 +1,21 @@
 import parseArgs from 'minimist';
 import _ from 'lodash';
 
-var OptionsParser = {}
+let OptionsParser = {}
 
-var hasCommand = (arg) => arg == 'serve' || arg == 'rehash'
+let hasCommand = (arg) => arg == 'serve' || arg == 'rehash'
 
 OptionsParser.parse = function(processArgs) {
-  var userArgs = parseArgs(processArgs.slice(2));
-  var command = _.find(userArgs._, hasCommand)
+  let userArgs = parseArgs(processArgs.slice(2));
+  let command = _.find(userArgs._, hasCommand)
   delete userArgs._ // Argument are parse. Done Extracting Values
   return _.extend(userArgs, {command: command})
 }
 
 
 OptionsParser.shouldDisplayHelp = function (options) {
-  var argCount = 0;
-  for (var key in options) {
+  let argCount = 0;
+  for (let key in options) {
     argCount++;
   }
   return options.command == 'help' || options.help || argCount == 0;
@@ -33,9 +33,9 @@ OptionsParser.shouldRehash = function (options) {
 
 
 OptionsParser.shouldServe = function (options) {
-  var displayHelpMenu = OptionsParser.shouldDisplayHelp(options);
-  var displayVersionNumber = OptionsParser.shouldDisplayVersion(options);
-  var rehash = OptionsParser.shouldRehash(options);
+  let displayHelpMenu = OptionsParser.shouldDisplayHelp(options);
+  let displayVersionNumber = OptionsParser.shouldDisplayVersion(options);
+  let rehash = OptionsParser.shouldRehash(options);
   return !displayHelpMenu && !displayVersionNumber && !rehash;
 }
 

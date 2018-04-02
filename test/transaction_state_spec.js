@@ -5,7 +5,7 @@ import TransactionState from '../src/transaction_state';
 describe('TransactionState', function() {
 
   describe('state with populated configuration', function() {
-    var transactionConfig = {
+    let transactionConfig = {
       "/api/": {
         "method": "GET",
         "status": 200,
@@ -17,7 +17,7 @@ describe('TransactionState', function() {
         ]
       }
     }
-    var transactionState = new TransactionState(transactionConfig);
+    let transactionState = new TransactionState(transactionConfig);
 
     it('should identify stateful transaction', function () {
       expect(transactionState.isStateful('/api/', 'GET')).to.be.true;
@@ -36,7 +36,7 @@ describe('TransactionState', function() {
     });
 
     it('should return the key for a stateful transaction', function () {
-      var expectedKey = 'abcd1234beef';
+      let expectedKey = 'abcd1234beef';
       transactionState.set('/api/', 'GET', expectedKey);
 
       expect(transactionState.get('/api/people/1/', 'GET')).to.equal(expectedKey);
@@ -50,7 +50,7 @@ describe('TransactionState', function() {
 
 
   describe('state with empty configuration', function() {
-    var transactionState = new TransactionState({});
+    let transactionState = new TransactionState({});
 
     it('should identify stateful transaction', function () {
       expect(transactionState.isStateful('/api/', 'GET')).to.be.false;
@@ -66,7 +66,7 @@ describe('TransactionState', function() {
     });
 
     it('should return the key for a stateful transaction', function () {
-      var expectedKey = 'abcd1234beef';
+      let expectedKey = 'abcd1234beef';
       transactionState.set('/api/', 'GET', expectedKey); // Should have no effect
       expect(transactionState.get('/api/people/1/', 'GET')).to.equal('');
       expect(transactionState.get('/api/people/1/', 'POST')).to.equal('');

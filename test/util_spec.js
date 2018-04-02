@@ -22,7 +22,7 @@ describe('Util Functions', function() {
 
   describe('parseJSON', function () {
     it('should parse valid json', function () {
-      var exampleString = '{"example": "string value", "example2": 1, "example": [1, "abc"]}';
+      let exampleString = '{"example": "string value", "example2": 1, "example": [1, "abc"]}';
       expect(Util.parseJSON(exampleString)).to.deep.equal({
         example: 'string value',
         example2: 1,
@@ -31,7 +31,7 @@ describe('Util Functions', function() {
     });
 
     it('should return the string value of a failed parse attempt', function () {
-      var exampleString = 'Exception occurred on server. Unable to process request.';
+      let exampleString = 'Exception occurred on server. Unable to process request.';
       expect(Util.parseJSON(exampleString)).to.deep.equal(exampleString);
     });
   });
@@ -39,7 +39,7 @@ describe('Util Functions', function() {
 
   describe('stringify', function () {
     it('Stringify JSON', function () {
-      var exampleString = JSON.stringify(JSON.parse('{"example": "string value", "example2": 1, "example": [1, "abc"]}'), null, 2);
+      let exampleString = JSON.stringify(JSON.parse('{"example": "string value", "example2": 1, "example": [1, "abc"]}'), null, 2);
 
       expect(Util.stringify({
         example: 'string value',
@@ -49,22 +49,22 @@ describe('Util Functions', function() {
     });
 
     it('should return the string if a string is provided', function () {
-      var exampleString = 'string-example';
+      let exampleString = 'string-example';
       expect(Util.stringify(exampleString)).to.equal(exampleString);
     });
 
     it('should return the string if a number is provided', function () {
-      var exampleString = '123';
+      let exampleString = '123';
       expect(Util.stringify(123)).to.equal(exampleString);
     });
 
     it('should call toString if a function is provided', function () {
-      var exampleFunction = function(){};
+      let exampleFunction = function(){};
       expect(Util.stringify(exampleFunction)).to.equal('[Function]');
     });
 
     it('should call toString if a circular reference exception is encountered', function () {
-      var circularObject = {};
+      let circularObject = {};
       circularObject.cycle = circularObject
       expect(Util.stringify(circularObject)).to.equal('[object Object]');
     });
@@ -73,11 +73,11 @@ describe('Util Functions', function() {
 
   describe('simpleCopy', function () {
     it('should provide a copy of an object', function () {
-      var exampleObject = {
+      let exampleObject = {
         abc: 123,
         def: 456
       };
-      var copy = Util.simpleCopy(exampleObject);
+      let copy = Util.simpleCopy(exampleObject);
       expect(copy).to.deep.equal(exampleObject); // Equals
 
       copy.abc = 987;
@@ -89,16 +89,16 @@ describe('Util Functions', function() {
 
   describe('regExArrayContains', function () {
     it('should match the value against a pattern', function () {
-      var regExList = ['image/.*', 'text/.*', 'application/json'];
-      var examples = ['image/png', 'image/jpg', 'text/plain', 'text/html', 'application/json'];
+      let regExList = ['image/.*', 'text/.*', 'application/json'];
+      let examples = ['image/png', 'image/jpg', 'text/plain', 'text/html', 'application/json'];
       examples.forEach(function (example) {
         expect(Util.regExArrayContains(regExList, example)).to.be.true
       });
     });
 
     it('should fail to match the value when pattern does not match', function () {
-      var regExList = ['image/.*', 'text/.*'];
-      var examples = ['application/json', 'application/image', 'plain/text'];
+      let regExList = ['image/.*', 'text/.*'];
+      let examples = ['application/json', 'application/image', 'plain/text'];
       examples.forEach(function (example) {
         expect(Util.regExArrayContains(regExList, example)).to.be.false
       });

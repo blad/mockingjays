@@ -4,10 +4,10 @@ import Mockingjay from '../src/mockingjay';
 describe('Mockingjay', function () {
 
   describe('simplify', function () {
-    var mockingjay = new Mockingjay({serverBaseUrl: 'http://www.google.com'});
+    let mockingjay = new Mockingjay({serverBaseUrl: 'http://www.google.com'});
 
     it('should prepare options for HTTP request', function () {
-      var givenRequest = {
+      let givenRequest = {
         url: '/query',
         method: 'GET',
         body: '',

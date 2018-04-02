@@ -1,17 +1,17 @@
 import Hapi from 'hapi';
 import inert from 'inert';
 
-var TestServerBuilder = async function(options){
+let TestServerBuilder = async function(options){
   options = options || {};
-  var userHost = options.host || 'localhost';
-  var userPort = options.port || 9001;
-  var hapiInstance = new Hapi.server({host: userHost, port: userPort});
+  let userHost = options.host || 'localhost';
+  let userPort = options.port || 9001;
+  let hapiInstance = new Hapi.server({host: userHost, port: userPort});
   await hapiInstance.register(inert);
 
   return new TestServer(hapiInstance);
 };
 
-var TestServer = function(server){
+let TestServer = function(server){
   this.state = {};
   this.server = server;
 };
@@ -33,7 +33,7 @@ TestServer.prototype.stop = function () {
 };
 
 TestServer.prototype.start = function () {
-  var self = this;
+  let self = this;
   this.server.start((err) => {
     if (err) { throw err; }
   });

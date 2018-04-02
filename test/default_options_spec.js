@@ -5,8 +5,8 @@ import DefaultOptions from '../src/default_options';
 describe('DefaultOptions', function() {
 
   describe('_handeBaseUrlDefault', function() {
-    var defaults = new DefaultOptions(); // Deafaults Object is not stateful.
-    var userProvidedInput = {}
+    let defaults = new DefaultOptions(); // Deafaults Object is not stateful.
+    let userProvidedInput = {}
 
     it('should expect a serverBaseUrl value from the user', function() {
       expect(function() { defaults._handleBaseUrlDefault(userProvidedInput)}).to.throw('serverBaseUrl is required! It can not be empty.');
@@ -15,8 +15,8 @@ describe('DefaultOptions', function() {
 
 
   describe('_handleCacheDirectoryDefault', function() {
-    var defaults = new DefaultOptions(); // Deafaults Object is not stateful.
-    var userProvidedInput = {}
+    let defaults = new DefaultOptions(); // Deafaults Object is not stateful.
+    let userProvidedInput = {}
 
     it('should expect a default cacheDir value from the user', function() {
       expect(function() { defaults._handleCacheDirectoryDefault(userProvidedInput)}).to.throw('cacheDir is required! It can not be empty.');
@@ -25,10 +25,10 @@ describe('DefaultOptions', function() {
 
 
   describe('merge()', function() {
-    var defaults = new DefaultOptions(); // Deafaults Object is not stateful.
+    let defaults = new DefaultOptions(); // Deafaults Object is not stateful.
 
     it('merges successuflly when ALL options are provided', function () {
-      var userProvidedOptions = {
+      let userProvidedOptions = {
         overrideCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
@@ -43,7 +43,7 @@ describe('DefaultOptions', function() {
         whiteLabel: true
       };
 
-      var expectedOptionsOutput = {
+      let expectedOptionsOutput = {
         accessLogFile: null,
         overrideCacheDir: '/var/base/fixtures',
         cacheDir: '/var/app/fixtures',
@@ -68,12 +68,12 @@ describe('DefaultOptions', function() {
 
 
     it('merges successuflly when MINIMUM options are provided', function () {
-      var userProvidedOptions = {
+      let userProvidedOptions = {
         cacheDir: '/var/app/fixtures',
         serverBaseUrl: 'http://swapi.co',
       };
 
-      var expectedOptionsOutput = {
+      let expectedOptionsOutput = {
         // Provided Values
         overrideCacheDir: null,
         cacheDir: '/var/app/fixtures',

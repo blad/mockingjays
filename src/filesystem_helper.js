@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import Logger from './logger';
 
-var joinArray = function (acc, next) {return acc.concat(next);};
+let joinArray = function (acc, next) {return acc.concat(next);};
 
-var FileSystemHelper = {
+let FileSystemHelper = {
   logger: new Logger()
 };
 
@@ -20,7 +20,7 @@ FileSystemHelper.createDirectory = function (directoryPath) {
   return new Promise(function (resolve, reject) {
     FileSystemHelper.createDirectoryParent(directoryPath, function (error) {
       if (error) {
-        var errorMessage = 'Failed to Create Directory: ' + directoryPath;
+        let errorMessage = 'Failed to Create Directory: ' + directoryPath;
         FileSystemHelper.logger.error('Failed to Create Directory: ' + directoryPath, error);
         reject('Failed to Create Directory: ' + directoryPath);
       } else {
@@ -43,7 +43,7 @@ FileSystemHelper.createDirectoryParent = function (directoryPath, callback) {
 }
 
 FileSystemHelper.findFileType = function (root, typePredicate) {
-  var formattedRoot = root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
+  let formattedRoot = root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
   try {
     return fs
       .readdirSync(formattedRoot)

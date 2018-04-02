@@ -7,11 +7,11 @@ import {Then, When} from 'cucumber';
 const TIMEOUT = 20 * 1000;
 
 When(/^I make a "([^"]*)" request to "([^"]*)" with headers:$/, {timeout: TIMEOUT}, function (method, urlPath, table, done) {
-  var headers = {};
+  let headers = {};
 
   table.rows().forEach(row => headers[row[0]] = row[1]);
 
-  var options = {
+  let options = {
     hostname: 'localhost',
     port: this.options.port,
     path: urlPath,
@@ -19,8 +19,8 @@ When(/^I make a "([^"]*)" request to "([^"]*)" with headers:$/, {timeout: TIMEOU
     headers: headers
   };
 
-  var req = http.request(options, (response) => {
-    var chunks = [];
+  let req = http.request(options, (response) => {
+    let chunks = [];
     response.on('data', (chunk) => {
       chunks.push(chunk);
     });
@@ -40,24 +40,24 @@ When(/^I make a "([^"]*)" request to "([^"]*)" with headers:$/, {timeout: TIMEOU
 
 
 When(/^I make a GET request to "([^"]*)" with the query strings:$/, function (path, table, done) {
-  var first = true;
-  var queryString = table.hashes().reduce(function(qs, current) {
-    var key = current.KEY;
-    var val = current.VALUE;
+  let first = true;
+  let queryString = table.hashes().reduce(function(qs, current) {
+    let key = current.KEY;
+    let val = current.VALUE;
     qs += (first ? '' : '&') + key + '=' + (isNaN(val) ? val : parseInt(val, 10));
     first = false;
     return qs;
   }, '?');
 
-  var options = {
+  let options = {
     hostname: 'localhost',
     port: this.options.port,
     path: path + queryString,
     method: 'GET'
   };
 
-  var req = http.request(options, function(response) {
-    var str = '';
+  let req = http.request(options, function(response) {
+    let str = '';
     response.on('data', function (chunk) {str += chunk;});
     response.on('end', function() {
       this.result = str;
@@ -71,14 +71,14 @@ When(/^I make a GET request to "([^"]*)" with the query strings:$/, function (pa
 
 
 Then(/^I see a cache file for "([^"]*)" with the following headers:$/, function (path, table, done) {
-  var files = this.cacheFiles(this.options.cacheDir, path);
+  let files = this.cacheFiles(this.options.cacheDir, path);
   if (files.length != 1) {
     done('Expecting 1 file for form-data. '+ files.length +' found');
     return;
   }
 
-  var generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
-  var requiredHeadersFound = true;
+  let generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
+  let requiredHeadersFound = true;
 
   table.rows().forEach(function(row) {
     requiredHeadersFound = requiredHeadersFound

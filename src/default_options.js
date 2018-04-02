@@ -5,9 +5,9 @@ import FileSystemHelper from './filesystem_helper';
 import Logger from './logger';
 import Util from './util';
 
-var logger = new Logger();
+let logger = new Logger();
 
-var getBooleanValue = function(value, defaultValue) {
+let getBooleanValue = function(value, defaultValue) {
   if (typeof value === 'undefined') {
     return defaultValue;
   }
@@ -19,8 +19,8 @@ var getBooleanValue = function(value, defaultValue) {
 
   // Handle String Values
   if (typeof value === 'string') {
-    var isTrueString = value.toLowerCase() == 'true';
-    var isFalseString = value.toLowerCase() == 'false';
+    let isTrueString = value.toLowerCase() == 'true';
+    let isFalseString = value.toLowerCase() == 'false';
 
     return isTrueString && !isFalseString;
   }
@@ -32,7 +32,7 @@ var getBooleanValue = function(value, defaultValue) {
 /**
  * Provides default values and verifies that requied values are set.
  */
-var DefaultOptions = function() {}
+let DefaultOptions = function() {}
 
 DefaultOptions.prototype.options = {
   accessLogFile: null,
@@ -60,7 +60,7 @@ DefaultOptions.prototype.defaultExtras = {
 
 
 DefaultOptions.prototype.merge = function(options, extraOptions) {
-  var extras = extraOptions || this.defaultExtras;
+  let extras = extraOptions || this.defaultExtras;
   this._handleAccessLogFile(options);
   this._handleBaseCacheDirectoryDefault(options);
   this._handleBaseUrlDefault(options);
@@ -82,13 +82,13 @@ DefaultOptions.prototype.merge = function(options, extraOptions) {
 
 
 DefaultOptions.prototype._handleAccessLogFile = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   options.accessLogFile = options.accessLogFile || defaults.accessLogFile;
 }
 
 
 DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, extras) {
-  var defaults = this.options;
+  let defaults = this.options;
   // Directory where the cache files can be read from:
   options.overrideCacheDir = options.overrideCacheDir || defaults.overrideCacheDir;
 
@@ -109,7 +109,7 @@ DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, 
 
 
 DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
 
   // The base URL of the server to proxy requests to.
   options.serverBaseUrl = options.serverBaseUrl || defaults.serverBaseUrl;
@@ -120,7 +120,7 @@ DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
 
 
 DefaultOptions.prototype._handleCacheHeaders = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   if (options.cacheHeader && typeof(options.cacheHeader) === 'string') {
     options.cacheHeader = options.cacheHeader.split(',').map(function(header) { return header.toLowerCase() });
   } else {
@@ -130,7 +130,7 @@ DefaultOptions.prototype._handleCacheHeaders = function (options) {
 
 
 DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extras) {
-  var defaults = this.options;
+  let defaults = this.options;
   // Directory where the cache files can be read and written to:
   options.cacheDir = options.cacheDir || defaults.cacheDir;
   if (!options.cacheDir) {
@@ -150,8 +150,8 @@ DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extra
 
 
 DefaultOptions.prototype._handleContentTypeDefault = function (options) {
-  var defaults = this.options;
-  var blacklist = (options.ignoreContentType || defaults.ignoreContentType)
+  let defaults = this.options;
+  let blacklist = (options.ignoreContentType || defaults.ignoreContentType)
     .split(',')
     .filter(function (type) {return type !== ''})
     .map(function (type) {return type.trim();})
@@ -161,7 +161,7 @@ DefaultOptions.prototype._handleContentTypeDefault = function (options) {
 
 
 DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   if (options.ignoreJsonBodyPath && typeof(options.ignoreJsonBodyPath) == 'string') {
     options.ignoreJsonBodyPath = options.ignoreJsonBodyPath.split(',');
   } else {
@@ -171,7 +171,7 @@ DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
 
 
 DefaultOptions.prototype._handleLogLevel = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   if (!options.logLevel) {
     options.logLevel = defaults.logLevel;
   }
@@ -184,7 +184,7 @@ DefaultOptions.prototype._handlePassthrough = function (options) {
 
 
 DefaultOptions.prototype._handlePortDefault = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   options.port = options.port || defaults.port;
 }
 
@@ -200,13 +200,13 @@ DefaultOptions.prototype._handleRefreshDefault = function (options) {
 
 
 DefaultOptions.prototype._handleRequestResponseLogFile = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   options.requestResponseLogFile = options.requestResponseLogFile || defaults.requestResponseLogFile;
 }
 
 
 DefaultOptions.prototype._handleResponseHeaders = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   if (options.responseHeaderBlacklist && typeof(options.responseHeaderBlacklist) == 'string') {
     options.responseHeaderBlacklist = options.responseHeaderBlacklist.split(',');
   } else {
@@ -216,7 +216,7 @@ DefaultOptions.prototype._handleResponseHeaders = function (options) {
 
 
 DefaultOptions.prototype._handleTransitionConfig = function (options) {
-  var defaults = this.options;
+  let defaults = this.options;
   if (!options.transitionConfig) {
     options.transitionConfig = defaults.transitionConfig;
   } else {

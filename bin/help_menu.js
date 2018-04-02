@@ -1,5 +1,5 @@
-var HelpMenu = function() {
-  var helpDescription = [
+let HelpMenu = function() {
+  let helpDescription = [
     "",
     "Usage:",
     "  mockingjays <command> [options]",

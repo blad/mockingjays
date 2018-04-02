@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import Util from './util';
 import HeaderUtil from './header_util';
 
-var RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPath) {
+let RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPath) {
   this.request = request;
   this.cacheHeaders = cacheHeaders;
   this.whiteLabel = whiteLabel;
@@ -12,19 +12,19 @@ var RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPat
 
 
 RequestHash.prototype.toString = function () {
-  var request = this._filteredAttributes();
+  let request = this._filteredAttributes();
   if (request.body) {
     // Backward Compatability Hash with Existing Fixture Files
     request.body = JSON.stringify(request.body);
   }
-  var shasum = crypto.createHash('sha1');
+  let shasum = crypto.createHash('sha1');
   shasum.update(JSON.stringify(Util.sortObjectKeys(request)));
   return shasum.digest('hex');
 };
 
 
 RequestHash.prototype._filteredAttributes = function () {
-  var filteredAttributes = Util.simpleCopy(this.request);
+  let filteredAttributes = Util.simpleCopy(this.request);
   filteredAttributes.headers = HeaderUtil.filterHeaders(this.cacheHeaders, this.request.headers);
   if (this.whiteLabel) {
     filteredAttributes.hostname = 'example.com';

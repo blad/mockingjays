@@ -5,7 +5,7 @@ import https from 'https'
 import HeaderUtil from './header_util';
 import Util from './util';
 
-var HttpClient = function (options) {
+let HttpClient = function (options) {
   this.options = options;
   this.logger = options.logger;
 }
@@ -15,12 +15,12 @@ HttpClient.prototype.isIgnoredType = function(contentType) {
 }
 
 HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
-  var self = this;
-  var protocolHandler = requestOptions.port == 443 ? https : http;
+  let self = this;
+  let protocolHandler = requestOptions.port == 443 ? https : http;
 
   return new Promise(function(resolve, reject) {
-    var req = protocolHandler.request(requestOptions, function(res) {
-      var statusCode = res.statusCode;
+    let req = protocolHandler.request(requestOptions, function(res) {
+      let statusCode = res.statusCode;
       if (HeaderUtil.isText(res.headers['content-type'])) {
         self._accumulateResponse(res, requestOptions, resolve, reject);
       } else {
@@ -41,7 +41,7 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
     req.end()
 
     req.on('error', function (error) {
-      var isIgnoredContentType = self.isIgnoredType(requestOptions.headers.accept)
+      let isIgnoredContentType = self.isIgnoredType(requestOptions.headers.accept)
       switch (error.code) {
         case 'ENOTFOUND':
           if (!isIgnoredContentType) {
@@ -62,8 +62,8 @@ HttpClient.prototype.fetch = function (requestOptions, outputBuffer) {
 
 
 HttpClient.prototype._pipeResonse = function (res, outputBuffer, resolve, reject) {
-  var contentType = res.headers['content-type'];
-  var statusCode = res.statusCode
+  let contentType = res.headers['content-type'];
+  let statusCode = res.statusCode
   res.pipe(outputBuffer);
 
   resolve({
@@ -76,15 +76,15 @@ HttpClient.prototype._pipeResonse = function (res, outputBuffer, resolve, reject
 
 
 HttpClient.prototype._accumulateResponse = function (res, options, resolve, reject) {
-  var contentType = res.headers['content-type'];
-  var statusCode = res.statusCode;
-  var responseData = '';
+  let contentType = res.headers['content-type'];
+  let statusCode = res.statusCode;
+  let responseData = '';
   res.on('data', function (chunk) {
     responseData += chunk;
   });
 
   res.on('end', function() {
-    var isJson = contentType === 'application/json';
+    let isJson = contentType === 'application/json';
     resolve({
       request: options,
       status: statusCode,

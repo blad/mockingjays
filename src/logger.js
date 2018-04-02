@@ -1,13 +1,13 @@
 import Colorize from './colorize';
 
-var Level = {
+let Level = {
   ERROR: 1,
   WARN: 2,
   INFO: 3,
   DEBUG: 4
 };
 
-var Logger = function() {
+let Logger = function() {
   this.level = Level.INFO;
   if (arguments.length > 0) {
     this.setLevel.apply(this, arguments);
@@ -61,8 +61,8 @@ Logger.prototype.warn = function () {
 
 
 Logger.prototype.log = function () {
-  var level = arguments[0];
-  var messages = Array.prototype.slice.call(arguments, 1);
+  let level = arguments[0];
+  let messages = Array.prototype.slice.call(arguments, 1);
   if (messages.length == 1 && messages[0] === 'false') {
     return;
   }
@@ -85,12 +85,12 @@ Logger.prototype.log = function () {
 }
 
 Logger.prototype.formatLines = function (lines) {
-  var newLines = [];
-  for (var index = 0; index < lines.length; index++) {
-    var multiline = lines[index].toString().split('\n');
-    for (var subindex = 0; subindex < multiline.length; subindex++) {
-      var prefix = subindex == 0 ? '' : '          ';
-      var suffix = multiline.length > 1 ? '\n' : '';
+  let newLines = [];
+  for (let index = 0; index < lines.length; index++) {
+    let multiline = lines[index].toString().split('\n');
+    for (let subindex = 0; subindex < multiline.length; subindex++) {
+      let prefix = subindex == 0 ? '' : '          ';
+      let suffix = multiline.length > 1 ? '\n' : '';
       newLines.push(prefix + multiline[subindex] + suffix);
     }
   }

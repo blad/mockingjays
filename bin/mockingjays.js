@@ -3,7 +3,7 @@ import Mockingjays from '../index';
 import HelpMenu from './help_menu';
 import OptionParser from './option_parser';
 
-var userOptions = OptionParser.parse(process.argv);
+let userOptions = OptionParser.parse(process.argv);
 
 switch (true) {
   case OptionParser.shouldDisplayHelp(userOptions):

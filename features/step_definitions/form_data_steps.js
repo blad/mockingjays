@@ -9,13 +9,13 @@ When(/^I wait$/, {timeout: 60 * 1000 * 5}, function () {
 
 
 When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
-  var postData = '--AaB03x\r\n' +
+  let postData = '--AaB03x\r\n' +
     'content-disposition: form-data; name="x"\r\n' +
     '\r\n' +
     'Hello World\r\n' +
     '--AaB03x--\r\n';
 
-  var options = {
+  let options = {
     hostname: 'localhost',
     port: this.options.port,
     path: path,
@@ -25,8 +25,8 @@ When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
     method: 'POST'
   };
 
-  var req = http.request(options, function(response) {
-    var str = '';
+  let req = http.request(options, function(response) {
+    let str = '';
     response.on('data', function (chunk) {str += chunk;});
     response.on('end', function() {
       this.result = str;
@@ -40,19 +40,19 @@ When(/^I make a form data request to "([^"]*)"$/, function (path, done) {
 
 
 Then(/^the boundary is a mockingjays boundary$/, function (done) {
-  var files = this.cacheFiles(this.options.cacheDir, '/formData');
+  let files = this.cacheFiles(this.options.cacheDir, '/formData');
   if (files.length != 1) {
     done('Expecting 1 file for form-data. '+ files.length +' found');
     return;
   }
-  var generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
-  var hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
+  let generatedJSON = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
+  let hasUpdatedBoundary = generatedJSON.request.body.match('mockingjay');
 
   done(!hasUpdatedBoundary ? 'Missing Mockingjays Boundary in Form Data': null);
 });
 
 When(/^I make a POST request to "([^"]*)" with the JSON body:$/, function (path, postData, done) {
-  var options = {
+  let options = {
     hostname: 'localhost',
     port: this.options.port,
     path: path,
@@ -62,8 +62,8 @@ When(/^I make a POST request to "([^"]*)" with the JSON body:$/, function (path,
     method: 'POST'
   }
 
-  var req = http.request(options, function(response) {
-    var str = '';
+  let req = http.request(options, function(response) {
+    let str = '';
     response.on('data', function(chunk) {str += chunk;});
     response.on('end', function() {
       this.result = str;

@@ -6,7 +6,7 @@ describe('Option Parser', function() {
 
   describe('parse', function () {
     it('should return the string value of a failed parse attempt', function () {
-      var exmapleArguments = [
+      let exmapleArguments = [
         'node',
         'mockingjays',
         'serve',
@@ -14,7 +14,7 @@ describe('Option Parser', function() {
         '--cacheDir=/var/temp/fixtures'
       ]
 
-      var expectedOptions = {
+      let expectedOptions = {
         command: 'serve',
         baseServerUrl: 'http://google.com',
         cacheDir: '/var/temp/fixtures'

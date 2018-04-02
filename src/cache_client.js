@@ -12,7 +12,7 @@ const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
 const EXT = '.json';
 
 let replaceQueryParam = function(directoryName) {
-  var queryParamStartIndex = directoryName.indexOf('?');
+  let queryParamStartIndex = directoryName.indexOf('?');
 
   if (queryParamStartIndex == -1){
     return directoryName;
@@ -21,7 +21,7 @@ let replaceQueryParam = function(directoryName) {
   return directoryName.substr(0, queryParamStartIndex);
 }
 
-var CacheClient = function(options) {
+let CacheClient = function(options) {
   this.logger = options.logger;
   this.passthrough = options.passthrough;
   this.cacheDir = options.cacheDir;
@@ -97,7 +97,7 @@ CacheClient.prototype.writeToAccessFile = function (filePath) {
 
 
 CacheClient.prototype.fetch = function (request) {
-  var filePath = this.getReadFileName(request);
+  let filePath = this.getReadFileName(request);
   this.logger.debug(Colorize.blue('Serving'), filePath);
   this.writeToAccessFile(filePath);
   return new Promise((resolve, reject) => {
@@ -113,11 +113,11 @@ CacheClient.prototype.record = function (request, response) {
   return new Promise((resolve, reject) => {
     response.request.headers = HeaderUtil.filterHeaders(this.cacheHeader, request.headers);
     response.headers = HeaderUtil.removeHeaders(this.responseHeaderBlacklist, response.headers);
-    var responseString = Util.stringify(response) + "\n";
+    let responseString = Util.stringify(response) + "\n";
 
-    var writeToFile = () => {
+    let writeToFile = () => {
       if (this.passthrough) {return resolve(response);}
-      var targetFile = this.getWriteFileName(request);
+      let targetFile = this.getWriteFileName(request);
       this.writeToAccessFile(targetFile);
       fs.writeFile(targetFile, responseString, (err) => {
         if (err) {return reject(err);}
@@ -125,7 +125,7 @@ CacheClient.prototype.record = function (request, response) {
       });
     };
 
-    var directory = this.directory(request, this.overrideCacheDir || this.cacheDir);
+    let directory = this.directory(request, this.overrideCacheDir || this.cacheDir);
     if (!FileSystemHelper.directoryExists(directory)) {
       return FileSystemHelper.createDirectory(directory).then(writeToFile);
     }
@@ -136,15 +136,15 @@ CacheClient.prototype.record = function (request, response) {
 
 CacheClient.prototype.remove = function (request, originalFilename) {
   return new Promise((resolve, reject) => {
-    var directory = this.directory(request, this.cacheDir);
+    let directory = this.directory(request, this.cacheDir);
     if (FileSystemHelper.directoryExists(directory)) {
-      var filePath = originalFilename ? originalFilename : this.getReadFileName(request);
+      let filePath = originalFilename ? originalFilename : this.getReadFileName(request);
       fs.unlink(filePath, (error) => {
         if (!error) {
           return resolve();
         }
 
-        var message = 'Unable to Delete File: ' + filePath;
+        let message = 'Unable to Delete File: ' + filePath;
         this.logger.error(message, error);
         return reject(error)
       });
@@ -157,8 +157,8 @@ CacheClient.prototype.remove = function (request, originalFilename) {
 
 
 CacheClient.prototype.directory = function (request, rootDir) {
-  var requestPath = request.path || '';
-  var pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
+  let requestPath = request.path || '';
+  let pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
   requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
   requestPath = requestPath.split('/').map(replaceQueryParam).join('/').toLowerCase();
 
@@ -167,16 +167,16 @@ CacheClient.prototype.directory = function (request, rootDir) {
 
 
 CacheClient.prototype.requestPathOverride = function (request) {
-  var requestHash = this.requestHash(request);
-  var directory = this.directory(request, this.overrideCacheDir);
+  let requestHash = this.requestHash(request);
+  let directory = this.directory(request, this.overrideCacheDir);
 
   return path.join(directory, requestHash) + EXT;
 }
 
 
 CacheClient.prototype.requestPath = function (request) {
-  var requestHash = this.requestHash(request);
-  var directory = this.directory(request, this.cacheDir);
+  let requestHash = this.requestHash(request);
+  let directory = this.directory(request, this.cacheDir);
 
   return path.join(directory, requestHash) + EXT;
 }

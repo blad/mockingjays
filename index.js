@@ -3,7 +3,7 @@ import Mockingjay from './src/mockingjay';
 import Rehasher from './src/rehasher';
 import DefaultOptions from './src/default_options';
 
-var Mockingjays = function() {}
+let Mockingjays = function() {}
 
 /**
  * Start creates a Mockingjays Server and starts proxying
@@ -16,10 +16,10 @@ var Mockingjays = function() {}
  * @param onReady - A {Function} to be called when the proxy is ready. [Optional]
  */
  Mockingjays.prototype.start = function(options, onReady) {
-  var defaultOptions = new DefaultOptions();
-  var finalOptions = defaultOptions.merge(options);
-  var mockingjay = new Mockingjay(finalOptions);
-  var requestHandler =  function(req, res) {
+  let defaultOptions = new DefaultOptions();
+  let finalOptions = defaultOptions.merge(options);
+  let mockingjay = new Mockingjay(finalOptions);
+  let requestHandler =  function(req, res) {
     mockingjay.onRequest(req, res);
   };
   this.server = Server.listen(finalOptions, requestHandler, onReady);
@@ -39,8 +39,8 @@ Mockingjays.prototype.close = function(done) {
  *          :serverBaseUrl - Base URL for the source server.
  */
 Mockingjays.prototype.rehash = function(options) {
-  var defaultOptions = new DefaultOptions();
-  var finalOptions = defaultOptions.merge(options, {attemptToCreateCacheDir: false});
+  let defaultOptions = new DefaultOptions();
+  let finalOptions = defaultOptions.merge(options, {attemptToCreateCacheDir: false});
   new Rehasher(finalOptions).process();
 }
 

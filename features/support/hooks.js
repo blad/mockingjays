@@ -3,7 +3,7 @@ import fs from 'fs';
 import TestServer from './test_server';
 
 Before('@TestServer', async function (scenario) {
-  var world = this;
+  let world = this;
   world.serverState = {count: 0};
   world.server = await TestServer();
 
@@ -41,7 +41,7 @@ Before('@TestServer', async function (scenario) {
 
 
 After('@TestServer', function (scenario) {
-  var world = this;
+  let world = this;
   world.serverState.count = 0;
   world.server.stop();
 });

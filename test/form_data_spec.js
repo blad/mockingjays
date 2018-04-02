@@ -5,14 +5,14 @@ describe('Form Data Handler', function () {
 
   describe('isFormData', function () {
     it('should return true for form content-type', function () {
-      var actualResult = FormDataHandler.isFormData({
+      let actualResult = FormDataHandler.isFormData({
         'content-type': 'multipart/form-data'
       });
       expect(actualResult).to.be.ok
     });
 
     it('should return false for non-form content types', function () {
-      var actualResult = FormDataHandler.isFormData({
+      let actualResult = FormDataHandler.isFormData({
         'content-type': 'application/json'
       });
 
@@ -23,14 +23,14 @@ describe('Form Data Handler', function () {
 
   describe('updateBoundary', function () {
     it('should update the boundary for a form content-type', function () {
-      var request = {
+      let request = {
         headers:{
           'content-type': "multipart/form-data; boundary=\"test123\""
         },
         body: "--test123\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n--test123--\r\n"
       }
 
-      var newRequest = FormDataHandler.updateBoundary(request);
+      let newRequest = FormDataHandler.updateBoundary(request);
 
       expect(newRequest).to.deep.equal({
         headers: {
@@ -43,14 +43,14 @@ describe('Form Data Handler', function () {
 
 
     it('should update the boundary for a form content-type without quotes', function () {
-      var request = {
+      let request = {
         headers:{
           'content-type': "multipart/form-data; boundary=quoteless123"
         },
         body: "--quoteless123\r\nContent-Disposition: form-data; name=\"file\"; filename=\"valid-file.csv\"\r\nContent-Type: application/octet-stream\r\n\r\nsample-data\r\n--quoteless123--\r\n"
       }
 
-      var newRequest = FormDataHandler.updateBoundary(request);
+      let newRequest = FormDataHandler.updateBoundary(request);
 
       expect(newRequest).to.deep.equal({
         headers: {
@@ -63,7 +63,7 @@ describe('Form Data Handler', function () {
 
 
     it('should not update the boundary for a form content-type', function () {
-      var request = {
+      let request = {
         headers:{
           'content-type': "application/json"
         },
@@ -72,7 +72,7 @@ describe('Form Data Handler', function () {
         }
       }
 
-      var newRequest = FormDataHandler.updateBoundary(request);
+      let newRequest = FormDataHandler.updateBoundary(request);
 
       expect(newRequest).to.deep.equal(request);
     });
