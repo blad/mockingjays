@@ -1,24 +1,21 @@
 import parseArgs from 'minimist';
-import _ from 'lodash';
+import R from 'ramda';
 
 let OptionsParser = {}
 
-let hasCommand = (arg) => arg == 'serve' || arg == 'rehash'
+let findCommand = R.find((arg) => arg == 'serve' || arg == 'rehash')
+let setCommand = R.assoc('command')
 
 OptionsParser.parse = function(processArgs) {
   let userArgs = parseArgs(processArgs.slice(2));
-  let command = _.find(userArgs._, hasCommand)
-  delete userArgs._ // Argument are parse. Done Extracting Values
-  return _.extend(userArgs, {command: command})
+  let command = findCommand(userArgs._)
+  delete userArgs._ // Done Extracting Values
+  return setCommand(command, userArgs);
 }
 
 
 OptionsParser.shouldDisplayHelp = function (options) {
-  let argCount = 0;
-  for (let key in options) {
-    argCount++;
-  }
-  return options.command == 'help' || options.help || argCount == 0;
+  return options.command == 'help' || options.help || R.length(R.keys(options)) == 0;
 }
 
 
@@ -33,10 +30,12 @@ OptionsParser.shouldRehash = function (options) {
 
 
 OptionsParser.shouldServe = function (options) {
-  let displayHelpMenu = OptionsParser.shouldDisplayHelp(options);
-  let displayVersionNumber = OptionsParser.shouldDisplayVersion(options);
-  let rehash = OptionsParser.shouldRehash(options);
-  return !displayHelpMenu && !displayVersionNumber && !rehash;
+  let isTrue = R.identity
+  return R.none(isTrue, [
+    OptionsParser.shouldDisplayHelp(options),
+    OptionsParser.shouldDisplayVersion(options),
+    OptionsParser.shouldRehash(options)
+  ]);
 }
 
 

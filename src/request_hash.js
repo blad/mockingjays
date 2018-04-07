@@ -1,7 +1,33 @@
-import _ from 'lodash';
 import crypto from 'crypto';
+import R from 'ramda';
 import Util from './util';
 import HeaderUtil from './header_util';
+
+const stringifyBody = R.ifElse(
+  R.has('body'),
+  R.converge(
+    R.assoc('body'), [
+      R.compose(JSON.stringify, R.prop('body')),
+      R.identity
+    ]
+  ),
+  R.identity
+);
+
+
+const makeHostAndPortAgnostic = R.compose(
+  R.assoc('hostname', 'example.com'),
+  R.assoc('port', 80)
+);
+
+const composeSignature = R.compose(computeHash, JSON.stringify, Util.sortObjectKeys, stringifyBody);
+
+function computeHash(payload) {
+  let shasum = crypto.createHash('sha1');
+  shasum.update(payload);
+  return shasum.digest('hex');
+}
+
 
 let RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPath) {
   this.request = request;
@@ -12,34 +38,35 @@ let RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPat
 
 
 RequestHash.prototype.toString = function () {
-  let request = this._filteredAttributes();
-  if (request.body) {
-    // Backward Compatability Hash with Existing Fixture Files
-    request.body = JSON.stringify(request.body);
+  return composeSignature(this._filteredAttributes())
+};
+
+const stubIgnoredJsonPaths = (payload, path) => {
+  if (typeof(payload.body) !== "object") {
+    return payload;
   }
-  let shasum = crypto.createHash('sha1');
-  shasum.update(JSON.stringify(Util.sortObjectKeys(request)));
-  return shasum.digest('hex');
+
+  let updatedPath = ['body'].concat(path.split('.'));
+  let jsonPath = R.lensPath(updatedPath);
+
+  return R.ifElse(
+    R.view(jsonPath),
+    R.set(jsonPath, '---omitted-by-proxy---'),
+    R.identity
+  )(payload);
 };
 
 
 RequestHash.prototype._filteredAttributes = function () {
-  let filteredAttributes = Util.simpleCopy(this.request);
-  filteredAttributes.headers = HeaderUtil.filterHeaders(this.cacheHeaders, this.request.headers);
-  if (this.whiteLabel) {
-    filteredAttributes.hostname = 'example.com';
-    filteredAttributes.port = 80;
-  }
-
-  if (this.ignoreJsonBodyPath && this.ignoreJsonBodyPath.length && _.isPlainObject(filteredAttributes.body)) {
-    this.ignoreJsonBodyPath.forEach(function(path) {
-      if (_.has(filteredAttributes.body, path)) {
-        _.set(filteredAttributes.body, path, '---omitted-by-proxy---');
-      }
-    });
-  }
-
-  return filteredAttributes;
+  return R.compose(
+    R.reduce(stubIgnoredJsonPaths, R.__, this.ignoreJsonBodyPath || []),
+    R.ifElse(R.always(this.whiteLabel), makeHostAndPortAgnostic, R.identity),
+    R.converge(
+      R.assoc('headers'), [
+        R.compose(HeaderUtil.filterHeaders(this.cacheHeaders), R.prop('headers')),
+        R.identity
+      ]),
+  )(this.request)
 }
 
 export default RequestHash;

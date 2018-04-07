@@ -1,3 +1,5 @@
+import R from 'ramda';
+
 let HEADER_WHITE_LIST = [
   'accept',
   'authorization',
@@ -56,7 +58,7 @@ HeaderUtil.isText = function (contentType) {
  * wantedHeader - Array of headers to keep.
  * requestHeaders - Object of headers to filter.
  */
-HeaderUtil.filterHeaders =  function (wantedHeaders, requestHeaders) {
+HeaderUtil.filterHeaders =  R.curry((wantedHeaders, requestHeaders) => {
   let headers = {};
   let key;
   wantedHeaders = wantedHeaders || [];
@@ -67,7 +69,7 @@ HeaderUtil.filterHeaders =  function (wantedHeaders, requestHeaders) {
     }
   }
   return headers;
-};
+});
 
 
 /**
