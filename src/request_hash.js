@@ -3,6 +3,10 @@ import R from 'ramda';
 import Util from './util';
 import HeaderUtil from './header_util';
 
+const JSON_STUBED_VALUE = '---omitted-by-proxy---';
+const WHITELABEL_HOSTNAME = 'example.com';
+const WHITELABEL_PORT = 80;
+
 const stringifyBody = R.ifElse(
   R.has('body'),
   R.converge(
@@ -16,8 +20,8 @@ const stringifyBody = R.ifElse(
 
 
 const makeHostAndPortAgnostic = R.compose(
-  R.assoc('hostname', 'example.com'),
-  R.assoc('port', 80)
+  R.assoc('hostname', WHITELABEL_HOSTNAME),
+  R.assoc('port', WHITELABEL_PORT)
 );
 
 const composeSignature = R.compose(computeHash, JSON.stringify, Util.sortObjectKeys, stringifyBody);
@@ -51,7 +55,7 @@ const stubIgnoredJsonPaths = (payload, path) => {
 
   return R.ifElse(
     R.view(jsonPath),
-    R.set(jsonPath, '---omitted-by-proxy---'),
+    R.set(jsonPath, JSON_STUBED_VALUE),
     R.identity
   )(payload);
 };

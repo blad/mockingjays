@@ -1,5 +1,6 @@
 import net from 'net';
 import FileSystem from 'fs';
+import R from 'ramda';
 
 import FileSystemHelper from './filesystem_helper';
 import Logger from './logger';
@@ -13,16 +14,14 @@ let getBooleanValue = function(value, defaultValue) {
   }
 
   // Handle Boolean Values:
-  if (value == true || value == false) {
+  if (value === true || value === false) {
     return value;
   }
 
   // Handle String Values
   if (typeof value === 'string') {
-    let isTrueString = value.toLowerCase() == 'true';
-    let isFalseString = value.toLowerCase() == 'false';
-
-    return isTrueString && !isFalseString;
+    let lowerCaseValue = value.toLowerCase()
+    return lowerCaseValue === 'true' && lowerCaseValue !== 'false';
   }
 
   return defaultValue
@@ -32,71 +31,62 @@ let getBooleanValue = function(value, defaultValue) {
 /**
  * Provides default values and verifies that requied values are set.
  */
-let DefaultOptions = function() {}
-
-DefaultOptions.prototype.options = {
-  accessLogFile: null,
-  cacheDir: null,
-  cacheHeader: [],
-  ignoreContentType: '',
-  ignoreJsonBodyPath: [],
-  logLevel: 'info',
-  overrideCacheDir: null,
-  passthrough: false,
-  port: process.env.MOCKINGJAYS_PORT || 9000,
-  readOnly: false,
-  refresh: false,
-  requestResponseLogFile: null,
-  responseHeaderBlacklist: [],
-  serverBaseUrl: null,
-  transitionConfig: {},
-  whiteLabel: false
-}
-
-
-DefaultOptions.prototype.defaultExtras = {
-  attemptToCreateCacheDir: true
+let DefaultOptions = function() {
+  this.defaults = {
+    attemptToCreateCacheDir: true,
+    accessLogFile: null,
+    cacheDir: null,
+    cacheHeader: [],
+    ignoreContentType: '',
+    ignoreJsonBodyPath: [],
+    logLevel: 'info',
+    overrideCacheDir: null,
+    passthrough: false,
+    port: process.env.MOCKINGJAYS_PORT || 9000,
+    readOnly: false,
+    refresh: false,
+    requestResponseLogFile: null,
+    responseHeaderBlacklist: [],
+    serverBaseUrl: null,
+    transitionConfig: {},
+    whiteLabel: false
+  }
 }
 
 
 DefaultOptions.prototype.merge = function(options, extraOptions) {
-  let extras = extraOptions || this.defaultExtras;
-  this._handleAccessLogFile(options);
-  this._handleBaseCacheDirectoryDefault(options);
-  this._handleBaseUrlDefault(options);
-  this._handleCacheDirectoryDefault(options, extras);
-  this._handleCacheHeaders(options);
-  this._handleContentTypeDefault(options);
-  this._handleIgnoreJsonBodyPath(options);
-  this._handleLogLevel(options);
-  this._handlePassthrough(options);
-  this._handlePortDefault(options);
-  this._handleReadOnly(options);
-  this._handleRefreshDefault(options);
-  this._handleRequestResponseLogFile(options);
-  this._handleResponseHeaders(options);
-  this._handleTransitionConfig(options);
-  this._handleWhiteLabel(options);
-  return options;
+  let defaults = [this.defaults]
+  return R.compose(
+    R.partial(this._handleAccessLogFile, defaults),
+    R.partial(this._handleBaseCacheDirectoryDefault, defaults),
+    R.partial(this._handleBaseUrlDefault, defaults),
+    R.partial(this._handleCacheHeaders, defaults),
+    R.partial(this._handleContentTypeDefault, defaults),
+    R.partial(this._handleIgnoreJsonBodyPath, defaults),
+    R.partial(this._handleLogLevel, defaults),
+    R.partial(this._handlePassthrough, defaults),
+    R.partial(this._handlePortDefault, defaults),
+    R.partial(this._handleReadOnly, defaults),
+    R.partial(this._handleRefreshDefault, defaults),
+    R.partial(this._handleRequestResponseLogFile, defaults),
+    R.partial(this._handleResponseHeaders, defaults),
+    R.partial(this._handleTransitionConfig, defaults),
+    R.partial(this._handleWhiteLabel, defaults),
+    R.partial(this._handleCacheDirectoryDefault, defaults)
+  )(R.merge(options, extraOptions));
 }
 
 
-DefaultOptions.prototype._handleAccessLogFile = function (options) {
-  let defaults = this.options;
-  options.accessLogFile = options.accessLogFile || defaults.accessLogFile;
+DefaultOptions.prototype._handleAccessLogFile = function (defaults, options) {
+  return R.assoc('accessLogFile', options.accessLogFile || defaults.accessLogFile, options);
 }
 
 
-DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, extras) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (defaults, options) {
   // Directory where the cache files can be read from:
-  options.overrideCacheDir = options.overrideCacheDir || defaults.overrideCacheDir;
+  options = R.assoc('overrideCacheDir', options.overrideCacheDir || defaults.overrideCacheDir, options);
 
-  if (!options.overrideCacheDir) {
-    return; // No Base Cache Directory Provided
-  }
-
-  if (!FileSystemHelper.directoryExists(options.overrideCacheDir)) {
+  if (options.overrideCacheDir && !FileSystemHelper.directoryExists(options.overrideCacheDir)) {
     logger.warn('Base Cache Directory Does not Exists.')
     logger.warn('Attempting to Create: ', options.overrideCacheDir);
     FileSystemHelper
@@ -105,39 +95,37 @@ DefaultOptions.prototype._handleBaseCacheDirectoryDefault  = function (options, 
         throw Error("Please Use a Writable Location for the Base Cache Directory.");
       });
   }
+
+  return options;
 }
 
 
-DefaultOptions.prototype._handleBaseUrlDefault = function (options) {
-  let defaults = this.options;
-
+DefaultOptions.prototype._handleBaseUrlDefault = function (defaults, options) {
   // The base URL of the server to proxy requests to.
-  options.serverBaseUrl = options.serverBaseUrl || defaults.serverBaseUrl;
   if (!options.serverBaseUrl) {
     throw Error("serverBaseUrl is required! It can not be empty.");
   };
+  return options;
 }
 
 
-DefaultOptions.prototype._handleCacheHeaders = function (options) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleCacheHeaders = function (defaults, options) {
   if (options.cacheHeader && typeof(options.cacheHeader) === 'string') {
-    options.cacheHeader = options.cacheHeader.split(',').map(function(header) { return header.toLowerCase() });
-  } else {
-    options.cacheHeader = options.cacheHeader || defaults.cacheHeader;
+    let value = options.cacheHeader.split(',').map(function(header) { return header.toLowerCase() })
+    return R.assoc('cacheHeader', value, options);
   }
+  return R.assoc('cacheHeader', options.cacheHeader || defaults.cacheHeader, options);
 }
 
 
-DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extras) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleCacheDirectoryDefault = function (defaults, options) {
   // Directory where the cache files can be read and written to:
-  options.cacheDir = options.cacheDir || defaults.cacheDir;
+  options = R.assoc('cacheDir', options.cacheDir || defaults.cacheDir, options);
   if (!options.cacheDir) {
     throw Error("cacheDir is required! It can not be empty.");
   }
 
-  if (!FileSystemHelper.directoryExists(options.cacheDir) && extras.attemptToCreateCacheDir) {
+  if (!FileSystemHelper.directoryExists(options.cacheDir) && options.attemptToCreateCacheDir) {
     logger.warn('Cache Directory Does not Exists.')
     logger.warn('Attempting to Create: ', options.cacheDir);
     FileSystemHelper
@@ -146,88 +134,83 @@ DefaultOptions.prototype._handleCacheDirectoryDefault = function (options, extra
         throw Error("Please Use a Writable Location for the Cache Directory.");
       });
   }
+
+  return options;
 }
 
 
-DefaultOptions.prototype._handleContentTypeDefault = function (options) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleContentTypeDefault = function (defaults, options) {
   let blacklist = (options.ignoreContentType || defaults.ignoreContentType)
     .split(',')
     .filter(function (type) {return type !== ''})
     .map(function (type) {return type.trim();})
     .map(function (type) {return type.replace(/\*/g, '.*')});
-  options.ignoreContentType = blacklist;
+
+  return R.assoc('ignoreContentType', blacklist, options);
 }
 
 
-DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (options) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleIgnoreJsonBodyPath = function (defaults, options) {
   if (options.ignoreJsonBodyPath && typeof(options.ignoreJsonBodyPath) == 'string') {
-    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath.split(',');
-  } else {
-    options.ignoreJsonBodyPath = options.ignoreJsonBodyPath || defaults.ignoreJsonBodyPath;
+    return R.assoc('ignoreJsonBodyPath', options.ignoreJsonBodyPath.split(','), options);
   }
+  return R.assoc('ignoreJsonBodyPath', options.ignoreJsonBodyPath || defaults.ignoreJsonBodyPath, options);
 }
 
 
-DefaultOptions.prototype._handleLogLevel = function (options) {
-  let defaults = this.options;
-  if (!options.logLevel) {
-    options.logLevel = defaults.logLevel;
-  }
+DefaultOptions.prototype._handleLogLevel = function (defaults, options) {
+  return R.assoc('logLevel', options.logLevel || defaults.logLevel, options);
 }
 
 
-DefaultOptions.prototype._handlePassthrough = function (options) {
-  options.passthrough = getBooleanValue(options.passthrough, this.options.passthrough)
+DefaultOptions.prototype._handlePassthrough = function (defaults, options) {
+  return R.assoc('passthrough', getBooleanValue(options.passthrough, defaults.passthrough), options);
 }
 
 
-DefaultOptions.prototype._handlePortDefault = function (options) {
-  let defaults = this.options;
-  options.port = options.port || defaults.port;
+DefaultOptions.prototype._handlePortDefault = function (defaults, options) {
+  return R.assoc('port', options.port || defaults.port, options);
 }
 
 
-DefaultOptions.prototype._handleReadOnly = function (options) {
-  options.readOnly = getBooleanValue(options.readOnly, this.options.readOnly)
+DefaultOptions.prototype._handleReadOnly = function (defaults, options) {
+  return R.assoc('readOnly', getBooleanValue(options.readOnly, defaults.readOnly), options);
 }
 
 
-DefaultOptions.prototype._handleRefreshDefault = function (options) {
-  options.refresh = getBooleanValue(options.refresh, this.options.refresh)
+DefaultOptions.prototype._handleRefreshDefault = function (defaults, options) {
+  return R.assoc('refresh', getBooleanValue(options.refresh, defaults.refresh), options);
 }
 
 
-DefaultOptions.prototype._handleRequestResponseLogFile = function (options) {
-  let defaults = this.options;
-  options.requestResponseLogFile = options.requestResponseLogFile || defaults.requestResponseLogFile;
+DefaultOptions.prototype._handleRequestResponseLogFile = function (defaults, options) {
+  return R.assoc('requestResponseLogFile', options.requestResponseLogFile || defaults.requestResponseLogFile, options);
 }
 
 
-DefaultOptions.prototype._handleResponseHeaders = function (options) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleResponseHeaders = function (defaults, options) {
   if (options.responseHeaderBlacklist && typeof(options.responseHeaderBlacklist) == 'string') {
-    options.responseHeaderBlacklist = options.responseHeaderBlacklist.split(',');
-  } else {
-    options.responseHeaderBlacklist = options.responseHeaderBlacklist || defaults.responseHeaderBlacklist;
+    return R.assoc('responseHeaderBlacklist', options.responseHeaderBlacklist.split(','), options);
   }
+  return R.assoc('responseHeaderBlacklist', options.responseHeaderBlacklist || defaults.responseHeaderBlacklist, options);
 }
 
 
-DefaultOptions.prototype._handleTransitionConfig = function (options) {
-  let defaults = this.options;
+DefaultOptions.prototype._handleTransitionConfig = function (defaults, options) {
   if (!options.transitionConfig) {
-    options.transitionConfig = defaults.transitionConfig;
-  } else {
-    if (typeof(options.transitionConfig) === 'string') {
-      options.transitionConfig = Util.parseJSON(FileSystem.readFileSync(options.transitionConfig, {encoding: 'utf-8'}));
-    }
+    return R.assoc('transitionConfig', defaults.transitionConfig, options);
   }
+
+  if (typeof(options.transitionConfig) === 'string') {
+    return R.assoc('transitionConfig', Util.parseJSON(FileSystem.readFileSync(options.transitionConfig, {encoding: 'utf-8'})), options);
+  }
+
+  return options;
 }
 
-DefaultOptions.prototype._handleWhiteLabel = function (options) {
-  options.whiteLabel = getBooleanValue(options.whiteLabel, this.options.whiteLabel)
+
+DefaultOptions.prototype._handleWhiteLabel = function (defaults, options) {
+  return R.assoc('whiteLabel', getBooleanValue(options.whiteLabel, defaults.whiteLabel), options);
 }
 
 

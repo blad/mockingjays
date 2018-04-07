@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import R from 'ramda';
 import Util from './util';
 
 let FORM_MULTIPART = 'multipart/form-data';
@@ -7,65 +8,71 @@ let CONTENT_TYPE = 'content-type';
 let CONTENT_LENGTH = 'content-length';
 
 
-let FormDataHandler = {}
-
-
-FormDataHandler.isFormData = function (headers) {
+export function isFormData(headers) {
   headers = headers || {}
   return headers[CONTENT_TYPE] && headers[CONTENT_TYPE].match(FORM_MULTIPART);
 }
 
 
-FormDataHandler.getBoundary = function (contentType) {
+export function getBoundary(headers) {
+  let contentType = headers[CONTENT_TYPE]
   let matches = contentType.match(/.*boundary="?([^"]*)"?/);
   return matches[1] || '';
 }
 
 
-FormDataHandler.getBodySignature = function (boundary, body) {
+export function getNewBoundary(boundary, body) {
   let strippedBody = body.replace(new RegExp(boundary, 'g'), '-');
-  let signature = FormDataHandler.boundaryHash(strippedBody);
+  let signature = boundaryHash(strippedBody);
 
   return signature;
 }
 
 
-FormDataHandler.boundaryHash = function (string) {
+export function boundaryHash(string) {
   let shasum = crypto.createHash('sha1');
   shasum.update(string);
   return 'mockingjays' + shasum.digest('hex');
 };
 
 
-FormDataHandler.setHeaderBoundary = function (oldBoundary, newBoundary, newRequest) {
+export const setHeaderBoundary = R.curry(function(oldBoundary, newBoundary, newRequest) {
   let {headers, body} = newRequest;
-  headers[CONTENT_TYPE] = headers[CONTENT_TYPE].replace(new RegExp(oldBoundary, 'g'), newBoundary);
-  headers[CONTENT_LENGTH] = body.length;
-
-  return headers;
-}
-
-
-FormDataHandler.setBodyBoundary = function (oldBoundary, newBoundary, body) {
-  return body.replace(new RegExp(oldBoundary, 'g'), newBoundary);
-}
+  let updatedBoundary = headers[CONTENT_TYPE].replace(new RegExp(oldBoundary, 'g'), newBoundary)
+  let updateHeaders = R.compose(
+    R.assoc(CONTENT_TYPE, updatedBoundary),
+    R.assoc(CONTENT_LENGTH, body.length)
+  )
+  return R.assoc('headers', updateHeaders(headers), newRequest);
+})
 
 
-FormDataHandler.updateBoundary = function (request) {
-  let newRequest = Util.simpleCopy(request);
-  if (!FormDataHandler.isFormData(request.headers)) {
-    return newRequest;
+export const setBodyBoundary = R.curry(function(oldBoundary, newBoundary, request) {
+  return R.assoc('body', request.body.replace(new RegExp(oldBoundary, 'g'), newBoundary), request)
+});
+
+
+export function updateBoundary(request) {
+  let {headers, body} = request;
+  if (!isFormData(headers)) {
+    return request;
   }
 
-  let headers = newRequest.headers;
-  let body = newRequest.body;
-  let oldBoundary = FormDataHandler.getBoundary(headers[CONTENT_TYPE]);
-  let newBoundary = FormDataHandler.getBodySignature(oldBoundary, body);
+  let oldBoundary = getBoundary(headers);
+  let newBoundary = getNewBoundary(oldBoundary, body);
 
-  newRequest.body = FormDataHandler.setBodyBoundary(oldBoundary, newBoundary, body);
-  newRequest.headers = FormDataHandler.setHeaderBoundary(oldBoundary, newBoundary, newRequest);
-
-  return newRequest;
+  return R.compose(
+    setHeaderBoundary(oldBoundary, newBoundary),
+    setBodyBoundary(oldBoundary, newBoundary)
+  )(request);
 }
 
-export default FormDataHandler;
+export default {
+  boundaryHash,
+  getNewBoundary,
+  getBoundary,
+  isFormData,
+  setHeaderBoundary,
+  setBodyBoundary,
+  updateBoundary
+}

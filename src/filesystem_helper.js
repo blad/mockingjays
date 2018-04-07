@@ -1,68 +1,67 @@
 import fs from 'fs';
 import path from 'path';
+import R from 'ramda';
 import Logger from './logger';
 
-let joinArray = function (acc, next) {return acc.concat(next);};
 
-let FileSystemHelper = {
-  logger: new Logger()
-};
+const logger = new Logger();
+const isDirectory = (path) => fs.statSync(path).isDirectory()
+export const directoryExists = R.tryCatch(isDirectory, R.F)
 
-FileSystemHelper.directoryExists = function (filePath) {
-  try {
-    return fs.statSync(filePath).isDirectory();
-  } catch (e) {
-    return false;
-  }
-}
 
-FileSystemHelper.createDirectory = function (directoryPath) {
+export const createDirectory = function (directoryPath) {
   return new Promise(function (resolve, reject) {
-    FileSystemHelper.createDirectoryParent(directoryPath, function (error) {
+    createDirectoryParent(directoryPath, function (error) {
       if (error) {
         let errorMessage = 'Failed to Create Directory: ' + directoryPath;
-        FileSystemHelper.logger.error('Failed to Create Directory: ' + directoryPath, error);
-        reject('Failed to Create Directory: ' + directoryPath);
-      } else {
-        FileSystemHelper.logger.info('Successfully Created Directory: ' + directoryPath);
-        resolve();
+        logger.error('Failed to Create Directory: ' + directoryPath, error);
+        return reject('Failed to Create Directory: ' + directoryPath);
       }
+
+      logger.info('Successfully Created Directory: ' + directoryPath);
+      resolve();
     });
   });
 }
 
-FileSystemHelper.createDirectoryParent = function (directoryPath, callback) {
+export const createDirectoryParent = function (directoryPath, callback) {
   fs.mkdir(directoryPath, (error) => {
     if (error && error.code === 'ENOENT') {
-      FileSystemHelper.createDirectoryParent(path.dirname(directoryPath),
-        FileSystemHelper.createDirectoryParent.bind(this, directoryPath, callback));
-    } else if (callback) {
-      callback(error);
+      let parentDirectory = path.dirname(directoryPath);
+      let createCurrentDirectoryCallback = createDirectoryParent.bind(null, directoryPath, callback)
+      return createDirectoryParent(parentDirectory, createCurrentDirectoryCallback);
     }
+
+    return callback(error);
   });
 }
 
-FileSystemHelper.findFileType = function (root, typePredicate) {
-  let formattedRoot = root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
+
+export const findDirectories = function (root) {
+  return R.transduce(R.map(findDirectories), R.flip(R.append), [root], findFileType(root, directoryExists))
+}
+
+const formatRootPath = (root) => root.lastIndexOf('/') != root.length - 1 ? root + '/' : root;
+
+export const findFileType = function (root, typePredicate) {
+  let formattedRoot = formatRootPath(root);
   try {
-    return fs
-      .readdirSync(formattedRoot)
-      .filter((file) => file != '.' && file != '..')
-      .map((file)  => formattedRoot + file)
-      .filter(typePredicate);
+    let findFileTypes = R.compose(
+      R.filter((file) => file != '.' && file != '..'),
+      R.map((file)  => formattedRoot + file),
+      R.filter(typePredicate)
+    )
+    return R.transduce(findFileTypes, R.flip(R.append), [], fs.readdirSync(formattedRoot))
   } catch (error) {
     return []; // No Matches
   }
 }
 
 
-FileSystemHelper.findDirectories = function (root) {
-  return FileSystemHelper
-    .findFileType(root, FileSystemHelper.directoryExists)
-    .map(function (dir) {return FileSystemHelper.findDirectories(dir);})
-    .reduce(joinArray, [root]);
-}
-
-
-
-export default FileSystemHelper;
+export default {
+  createDirectory,
+  createDirectoryParent,
+  directoryExists,
+  findDirectories,
+  findFileType
+};

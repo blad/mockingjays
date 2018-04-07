@@ -1,3 +1,4 @@
+import R from 'ramda';
 import Logger from './logger';
 
 let Util = {
@@ -5,8 +6,7 @@ let Util = {
 };
 
 Util.determinePort = function (urlInfo) {
-  let isHttps = urlInfo.protocol === 'https:'
-  return parseInt(urlInfo.port) || (isHttps ? 443 : 80);
+  return parseInt(urlInfo.port) || (urlInfo.protocol === 'https:' ? 443 : 80);
 }
 
 
@@ -56,20 +56,11 @@ Util.regExArrayContains = function (regExArray, value) {
 
 Util.sortObjectKeys = function (originalObject) {
   // Sort the keys to get predictable order in object keys.
-  let keys = [];
-  for (let key in originalObject) {
-    keys.push(key);
-  }
-  keys.sort();
-
-  // Copy the Keys in order:
-  let resultObject = {};
-  keys.forEach(function(key) {
-    // Standardize the key to be lowercase:
-    resultObject[key.toLowerCase()] = originalObject[key];
-  });
-
-  return resultObject;
+  return R.map(R.toLower, R.keys(originalObject))
+    .sort()
+    .reduce((targetObj, key) =>
+      R.assoc(key, originalObject[key], targetObj)
+    , {});
 };
 
 export default Util;

@@ -14,6 +14,7 @@ Given(/^I want to create a Mockingjay instance with the following options$/, fun
     return options[row[0]] = row[1];
   });
   this.options = options;
+  this.options.port = this.options.port || 9000;
   done();
 });
 

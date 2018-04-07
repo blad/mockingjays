@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import DefaultOptions from '../src/default_options';
 
-
+let DEFAULTS = {}
 describe('DefaultOptions', function() {
 
   describe('_handeBaseUrlDefault', function() {
@@ -9,7 +9,7 @@ describe('DefaultOptions', function() {
     let userProvidedInput = {}
 
     it('should expect a serverBaseUrl value from the user', function() {
-      expect(function() { defaults._handleBaseUrlDefault(userProvidedInput)}).to.throw('serverBaseUrl is required! It can not be empty.');
+      expect(function() { defaults._handleBaseUrlDefault(DEFAULTS, userProvidedInput)}).to.throw('serverBaseUrl is required! It can not be empty.');
     })
   })
 
@@ -19,7 +19,7 @@ describe('DefaultOptions', function() {
     let userProvidedInput = {}
 
     it('should expect a default cacheDir value from the user', function() {
-      expect(function() { defaults._handleCacheDirectoryDefault(userProvidedInput)}).to.throw('cacheDir is required! It can not be empty.');
+      expect(function() { defaults._handleCacheDirectoryDefault(DEFAULTS, userProvidedInput)}).to.throw('cacheDir is required! It can not be empty.');
     })
   })
 
