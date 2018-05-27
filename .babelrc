@@ -1,6 +1,7 @@
 {
   "plugins": ["transform-runtime"],
   "presets": [
+    "flow",
     ["env", {
       "targets": {
         "node": "8.11"
