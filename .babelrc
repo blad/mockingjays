@@ -1,5 +1,11 @@
 {
-  "plugins": ["transform-runtime"],
+  "plugins": [
+    "transform-runtime",
+    ["add-module-exports", {
+        "addDefaultProperty": true
+      }
+    ]
+  ],
   "presets": [
     ["env", {
       "targets": {
