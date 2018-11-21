@@ -14,11 +14,13 @@ Mockingjays
 *Mockingjays* acts as a mock server for previously seen requests and captures new request for future use.
 
 ## Install Mockingjays
+
 ```bash
 npm install -g mockingjays
 ```
 
 ## CLI Use
+
 ```bash
 mockingjays serve\
   --cacheDir=/var/app/fixtures \ # Required
@@ -40,9 +42,11 @@ These modes are `serve` and `rehash`.
 to the existing cache. The `rehash` command is useful for updating the url of the
 source server, removing headers from the response and request data.
 
-## Programatic API
+## Javascript API
+
 ```javascript
-var Mockingjays = require('../mockingjays')
+var Mockingjays = require('mockingjays');
+
 new Mockingjays().start({
   cacheDir: '/var/app/fixtures', // Required
   serverBaseUrl: 'http://swapi.co', // Required
@@ -52,6 +56,13 @@ new Mockingjays().start({
   refresh: true
 });
 ```
+
+### Methods
+
+`start` - Start creates a Mockingjays server and starts proxying or mocking
+          responses based on previous training.
+`close` - Stops an existing Mockingjays server.
+`rehash` - Processes the existing cache with a new set of options.
 
 ## Options
 
@@ -155,7 +166,7 @@ If you have questions about the use of Mockingjays please leave a message in the
 For a list of changes between versions please see the [CHANGELOG](./CHANGELOG.md) file.
 
 # License: Apache 2.0
-Copyright 2015 Bladymir Tellez\<btellez@gmail.com\>
+Copyright 2018 Bladymir Tellez\<btellez@gmail.com\>
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
