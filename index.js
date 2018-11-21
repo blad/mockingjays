@@ -6,7 +6,7 @@ import DefaultOptions from './src/default_options';
 let Mockingjays = function() {}
 
 /**
- * Start creates a Mockingjays Server and starts proxying
+ * Start creates a Mockingjays server and starts proxying
  * or mocking responses based on previous training.
  *
  * @param options - An {Object} with options
