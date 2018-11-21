@@ -15,7 +15,7 @@ let Mockingjays = function() {}
  *          :serverBaseUrl - Base URL for the source server.
  * @param onReady - A {Function} to be called when the proxy is ready. [Optional]
  */
- Mockingjays.prototype.start = function(options, onReady) {
+Mockingjays.prototype.start = function(options, onReady) {
   let defaultOptions = new DefaultOptions();
   let finalOptions = defaultOptions.merge(options);
   let mockingjay = new Mockingjay(finalOptions);
@@ -26,6 +26,22 @@ let Mockingjays = function() {}
   return this;
 }
 
+/**
+ * Stop a an Mockingjays server.
+ *
+ * @param done - A {Function} to be called when the server has closed. [Optional]
+ */
+Mockingjays.prototype.stop = function(done) {
+  this.server.forceShutdown(done || function() {});
+}
+
+/**
+ * @deprecated in favor of .stop
+ *
+ * Stop a an Mockingjays server.
+ *
+ * @param done - A {Function} to be called when the server has closed. [Optional]
+ */
 Mockingjays.prototype.close = function(done) {
   this.server.forceShutdown(done || function() {});
 }
