@@ -61,7 +61,7 @@ new Mockingjays().start({
 
 `start` - Start creates a Mockingjays server and starts proxying or mocking
           responses based on previous training.
-`close` - Stops an existing Mockingjays server.
+`stop` - Stops an existing Mockingjays server.
 `rehash` - Processes the existing cache with a new set of options.
 
 ## Options
