@@ -1,6 +1,7 @@
 import Colorize from './colorize';
 
 let Level = {
+  NONE: 0,
   ERROR: 1,
   WARN: 2,
   INFO: 3,
@@ -28,6 +29,9 @@ Logger.prototype.setLevel = function (logLevel) {
       break;
     case 'debug':
       this.level = Level.DEBUG;
+      break;
+    case 'none':
+      this.level = Level.NONE;
       break;
     default:
       console.warn('Unknown Log Level, Setting level to INFO');
