@@ -72,7 +72,13 @@ new Mockingjays().start({
   - ***Required***
 - **cacheHeader** - Headers that should be considered as part of the cache signature. By default all headers are ignored in the cache signature.
   - *Default: ''*
-- **logLevel** - The Level of Logging information that should be displayed to the console. Available options: `error`(least info, error only), `warn`, `info`, `debug` (most info).
+- **logLevel** - The Level of Logging information that should be displayed to the console.
+  - The available options are ranked from least info to most info:
+    * `none` - Nothing is logged.
+    * `error` - Only errors are logged.
+    * `warn` - Errors and warnings are logged.
+    * `info` - Errors, warnings, and info are logged.
+    * `debug` - Everything is logged.
   - *Default: info*
 - **port** - Port that the proxy server should bind to.
   - *Default: 9000*
