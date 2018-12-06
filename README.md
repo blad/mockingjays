@@ -4,6 +4,7 @@ Mockingjays
 [![Circle CI Build Status](https://circleci.com/gh/blad/mockingjays.png?circle-token=a4bd29bc70058220eb8e663e848ff4448231d79a)](https://circleci.com/gh/blad/mockingjays)
 [![npm version](https://badge.fury.io/js/mockingjays.svg)](https://www.npmjs.com/package/mockingjays)
 [![Gitter](https://badges.gitter.im/blad/mockingjays.svg)](https://gitter.im/blad/mockingjays?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fblad%2Fmockingjays.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fblad%2Fmockingjays?ref=badge_shield)
 
 *Mockingjays* is a proxying tool that responds to requests with responses that have been previously observed.
 
@@ -185,3 +186,6 @@ Copyright 2018 Bladymir Tellez\<btellez@gmail.com\>
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fblad%2Fmockingjays.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fblad%2Fmockingjays?ref=badge_large)
