@@ -38,38 +38,6 @@ When(/^I make a "([^"]*)" request to "([^"]*)" with headers:$/, {timeout: TIMEOU
   }
 });
 
-
-When(/^I make a GET request to "([^"]*)" with the query strings:$/, function (path, table, done) {
-  let first = true;
-  let queryString = table.hashes().reduce(function(qs, current) {
-    let key = current.KEY;
-    let val = current.VALUE;
-    qs += (first ? '' : '&') + key + '=' + (isNaN(val) ? val : parseInt(val, 10));
-    first = false;
-    return qs;
-  }, '?');
-
-  let options = {
-    hostname: 'localhost',
-    port: this.options.port,
-    path: path + queryString,
-    method: 'GET'
-  };
-
-  let req = http.request(options, function(response) {
-    let str = '';
-    response.on('data', function (chunk) {str += chunk;});
-    response.on('end', function() {
-      this.result = str;
-      done(str ? undefined : 'Empty Response');
-    });
-    response.on('error', function(){ done('Error during request.')});
-  });
-  req.on('error', function(){ done('Error during request.')});
-  req.end();
-});
-
-
 Then(/^I see a cache file for "([^"]*)" with the following headers:$/, function (path, table, done) {
   let files = this.cacheFiles(this.options.cacheDir, path);
   if (files.length != 1) {
