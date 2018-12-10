@@ -1,4 +1,5 @@
 import fs from 'fs';
+import qs = 'querystring';
 import path from 'path';
 import url from 'url';
 
@@ -6,6 +7,7 @@ import Colorize from './colorize';
 import FileSystemHelper from './filesystem_helper';
 import RequestHash from './request_hash';
 import HeaderUtil from './header_util';
+import QueryStringUtil from './query_string_util';
 import Util from './util';
 
 const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
@@ -22,15 +24,16 @@ let replaceQueryParam = function(directoryName) {
 }
 
 let CacheClient = function(options) {
-  this.logger = options.logger;
-  this.passthrough = options.passthrough;
+  this.accessLogFile = options.accessLogFile;
   this.cacheDir = options.cacheDir;
   this.cacheHeader = options.cacheHeader;
+  this.ignoreJsonBodyPath = options.ignoreJsonBodyPath;
+  this.logger = options.logger;
+  this.overrideCacheDir = options.overrideCacheDir;
+  this.passthrough = options.passthrough;
+  this.queryParameterBlacklist = options.queryParameterBlacklist;
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
   this.whiteLabel = options.whiteLabel;
-  this.ignoreJsonBodyPath = options.ignoreJsonBodyPath;
-  this.overrideCacheDir = options.overrideCacheDir;
-  this.accessLogFile = options.accessLogFile;
   FileSystemHelper.logger = options.logger;
 }
 
@@ -113,6 +116,11 @@ CacheClient.prototype.record = function (request, response) {
   return new Promise((resolve, reject) => {
     response.request.headers = HeaderUtil.filterHeaders(this.cacheHeader, request.headers);
     response.headers = HeaderUtil.removeHeaders(this.responseHeaderBlacklist, response.headers);
+    response.request.path = QueryStringUtil.filterQueryParameters(
+      this.queryParameterBlacklist,
+      response.request.path
+    );
+
     let responseString = Util.stringify(response) + "\n";
 
     let writeToFile = () => {

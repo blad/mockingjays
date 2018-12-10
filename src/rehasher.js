@@ -5,6 +5,7 @@ import CacheClient from './cache_client';
 import FileSystemHelper from './filesystem_helper';
 import HeaderUtil from './header_util';
 import Logger from './logger';
+import QueryStringUtil from './query_string_util';
 import Util from './util';
 
 let Rehashser = function (options) {
@@ -67,6 +68,11 @@ Rehashser.prototype.updateResponseWithOptions = function(cacheContent) {
 Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
   let filteredHeaders =  HeaderUtil.filterHeaders(this.options.cacheHeaders, cacheContent.request.headers);
   let urlInfo = Url.parse(this.options.serverBaseUrl); // Update Base Server URL
+
+  cacheContent.request.path = QueryStringUtil.filterQueryParameters(
+    this.options.queryParameterBlacklist,
+    cacheContent.request.path
+  );
 
   cacheContent.request.hostname = urlInfo.hostname;
   cacheContent.request.headers = filteredHeaders;
