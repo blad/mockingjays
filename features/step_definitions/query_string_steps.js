@@ -44,7 +44,7 @@ Then("the {string} cache file doesn't contain the following query strings keys:"
     const queryStringValues = querystring.parse(fileContents.request.path);
 
     const cacheFileContains = R.pipe(
-      R.keys(queryStringValues)
+      R.keys(queryStringValues),
       R.contains(expectedBlacklistedQueryStringKeys)
     );
 
