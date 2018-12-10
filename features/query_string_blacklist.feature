@@ -18,7 +18,7 @@ Feature: Query String Blacklist
       | token | super-secret-authentication-token |
       | woot  | Yeah!                             |
       | value | spoon                             |
-    Then I can see a cache file for "/queryStringRequest"
+    Then I can see one cache file for "/queryStringRequest"
     And the "/queryStringRequest" cache file doesn't contain the following query string keys:
       | token |
       | woot  |

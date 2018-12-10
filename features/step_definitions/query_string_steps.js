@@ -25,6 +25,7 @@ When('I make a {string} request to {string} with the query string values:',
       });
       response.on('error', () => done('Error during request.'));
     });
+
     req.on('error', () => done('Error during request.'));
     req.end();
 });
@@ -42,10 +43,10 @@ Then("the {string} cache file doesn't contain the following query strings keys:"
     const fileContents = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}))
     const queryStringValues = querystring.parse(fileContents.request.path);
 
-    const cacheFileContainsBlacklistedKeys = R.pipe(
+    const cacheFileContains = R.pipe(
       R.keys(queryStringValues)
       R.contains(expectedBlacklistedQueryStringKeys)
-    )(blacklistedKeys);
+    );
 
-    expect(cacheFileContainsBlacklistedKeys).to.be.false;
+    expect(cacheFileContains(blacklistedKeys)).to.be.false;
 });
