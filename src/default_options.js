@@ -42,7 +42,7 @@ let DefaultOptions = function() {
     overrideCacheDir: null,
     passthrough: false,
     port: process.env.MOCKINGJAYS_PORT || 9000,
-    queryStringBlacklist: null,
+    queryParameterBlacklist: null,
     readOnly: false,
     refresh: false,
     requestResponseLogFile: null,
@@ -217,8 +217,8 @@ DefaultOptions.prototype._handleWhiteLabel = function (defaults, options) {
 
 DefaultOptions.prototype._handleQueryStringBlacklist = function (defaults, options) {
   return R.assoc(
-    'queryStringBlacklist',
-    options.queryStringBlacklist || defaults.queryStringBlacklist,
+    'queryParameterBlacklist',
+    options.queryParameterBlacklist || defaults.queryParameterBlacklist,
     options
   );
 }

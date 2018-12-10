@@ -40,7 +40,7 @@ describe('DefaultOptions', function() {
         cacheHeader: 'authorization,content-length',
         requestResponseLogFile: '/request/response.log',
         responseHeaderBlacklist: ['date'],
-        queryStringBlacklist: 'butt,things',
+        queryParameterBlacklist: 'butt,things',
         whiteLabel: true
       };
 
@@ -61,7 +61,7 @@ describe('DefaultOptions', function() {
         requestResponseLogFile: '/request/response.log',
 	      ignoreJsonBodyPath: [],
         transitionConfig: {},
-        queryStringBlacklist: 'butt,things',
+        queryParameterBlacklist: 'butt,things',
         whiteLabel: true
       };
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);
@@ -88,7 +88,7 @@ describe('DefaultOptions', function() {
         refresh: false,
         passthrough: false,
         cacheHeader: [],
-        queryStringBlacklist: null,
+        queryParameterBlacklist: null,
         responseHeaderBlacklist: [],
         requestResponseLogFile: null,
         readOnly: false,
