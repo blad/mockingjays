@@ -1,5 +1,5 @@
 import fs from 'fs';
-import qs = 'querystring';
+import qs from 'querystring';
 import path from 'path';
 import url from 'url';
 
