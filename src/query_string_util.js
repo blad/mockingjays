@@ -1,3 +1,6 @@
+import qs from 'querystring';
+import R from 'ramda';
+
 const filterQueryParameters = (blacklist, path) => {
   if (!blacklist) return path;
 
@@ -8,9 +11,11 @@ const filterQueryParameters = (blacklist, path) => {
   const host = path.substr(0, queryStringIndex);
   const queryString = path.substr(queryStringIndex + 1);
 
-  const queryStringObj = qs.parse(queryString);
-  const filteredQueryStringObj = R.omit(blacklistArray);
-  const filteredQueryString = qs.stringify(filteredQueryStringObj);
+  const filteredQueryString = R.pipe(
+    qs.parse,
+    R.omit(blacklistArray),
+    qs.stringify,
+  )(queryString);
 
   if (filteredQueryString === '') return host;
   return `${host}?${filteredQueryString}`;
