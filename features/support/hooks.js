@@ -28,6 +28,10 @@ Before('@TestServer', async function (scenario) {
     return {status: 'success'};
   });
 
+  world.server.addRoute('/queryStringRequest', 'GET', function(req, h) {
+    return {status: 'success'};
+  });
+
   world.server.addRoute('/cacheHeader', 'POST', function(req, h) {
     return {status: 'success'};
   });

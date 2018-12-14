@@ -5,7 +5,7 @@ import {Then, When} from 'cucumber';
 import R from 'ramda';
 import {expect} from 'mocha';
 
-When('I make a {string} request to {string} with the query string values:',
+When('I make a {string} request to {string} with the query parameters:',
   function (method, path, table, done) {
     const queryString = querystring.stringify(table.rowsHash());
     const options = {
@@ -16,12 +16,13 @@ When('I make a {string} request to {string} with the query string values:',
     };
 
     const req = http.request(options, function(response) {
-      let str = '';
+      let data = [];
 
-      response.on('data', chunk => str += chunk);
+      response.on('data', chunk => data.push(chunk));
       response.on('end', function() {
-        this.result = str;
-        done(str ? undefined : 'Empty Response');
+        this.result = data;
+        console.log('RESULT', this.result);
+        done(data ? undefined : 'Empty Response');
       });
       response.on('error', () => done('Error during request.'));
     });

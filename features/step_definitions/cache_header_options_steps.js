@@ -3,6 +3,7 @@ import fs from 'fs';
 import http from 'http';
 import path from 'path';
 import {Then, When} from 'cucumber';
+import {expect} from 'chai';
 
 const TIMEOUT = 20 * 1000;
 
@@ -57,8 +58,8 @@ Then(/^I see a cache file for "([^"]*)" with the following headers:$/, function 
   done(!requiredHeadersFound ? 'Missing Headers': null);
 });
 
-Then('I see one cache file for {string}', function (path, table, done) {
-  let files = this.cacheFiles(this.options.cacheDir, path);
+Then('I can see one cache file for {string}', function (path, table) {
+  const files = this.cacheFiles(this.options.cacheDir, path);
   const errorMsg = `Expecting 1 file for form-data. ${files.length} found`;
 
   expect(files.length, errorMsg).to.equal(1);

@@ -4,16 +4,17 @@ Feature: Query String Blacklist
   I want to be able to ignore specified query string keys,
   So they do not get cached or logged.
 
-  @TestServer
+  @TestServer @Only
   Scenario: Serving with ignored query string keys
     Given I want to create a Mockingjay instance with the following options
       | OPTION               | VALUE                 |
       | cacheDir             | ./temp/               |
-      | serverBaseUrl        | http://localhost:9001 |
       | logLevel             | error                 |
       | queryStringBlacklist | token, woot           |
+      | serverBaseUrl        | http://localhost:9001 |
     And I serve
-    And I make a GET request to "/queryStringRequest" with the query strings:
+    And I see no error
+    And I make a "GET" request to "/queryStringRequest" with the query parameters:
       | KEY   | VALUE                             |
       | token | super-secret-authentication-token |
       | woot  | Yeah!                             |

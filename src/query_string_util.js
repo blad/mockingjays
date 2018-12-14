@@ -21,4 +21,4 @@ const filterQueryParameters = (blacklist, path) => {
   return `${host}?${filteredQueryString}`;
 };
 
-export {filterQueryParameters};
+export default {filterQueryParameters};
