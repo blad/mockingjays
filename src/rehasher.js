@@ -5,9 +5,10 @@ import CacheClient from './cache_client';
 import FileSystemHelper from './filesystem_helper';
 import HeaderUtil from './header_util';
 import Logger from './logger';
+import QueryStringUtil from './query_string_util';
 import Util from './util';
 
-let Rehashser = function (options) {
+let Rehasher = function (options) {
   this.logger = new Logger();
   this.options = options;
 
@@ -19,18 +20,18 @@ let Rehashser = function (options) {
   }
 
   this.cacheClient = new CacheClient(options);
-};
+}
 
-Rehashser.prototype.process = function () {
+Rehasher.prototype.process = function () {
   FileSystemHelper
-    .findDirectories(this.options.cacheDir)
-    .forEach(this.rehashWithOptions(this.options));
-};
+  .findDirectories(this.options.cacheDir)
+  .forEach(this.rehashWithOptions(this.options))
+}
 
 
-Rehashser.prototype.rehashWithOptions = function () {
+Rehasher.prototype.rehashWithOptions = function(options) {
   return root => {
-    let notADirectory = function (file) { return !FileSystemHelper.directoryExists(file); };
+    let notADirectory = function(file) {return !FileSystemHelper.directoryExists(file)};
     FileSystemHelper
       .findFileType(root, notADirectory)
       .forEach(file => {
@@ -43,11 +44,11 @@ Rehashser.prototype.rehashWithOptions = function () {
             this.updateFile(file, cachedContents, originalCachedContents);
           });
       });
-  };
-};
+  }
+}
 
-Rehashser.prototype.getContents = function (file) {
-  return new Promise(function (resolve, reject) {
+Rehasher.prototype.getContents = function(file) {
+  return new Promise(function(resolve, reject) {
     FileSystem.readFile(file, function (err, data) {
       if (err) {
         reject(err);
@@ -57,24 +58,29 @@ Rehashser.prototype.getContents = function (file) {
       }
     });
   });
-};
+}
 
-Rehashser.prototype.updateResponseWithOptions = function (cacheContent) {
+Rehasher.prototype.updateResponseWithOptions = function(cacheContent) {
   let reducedHeaders = HeaderUtil.removeHeaders(this.options.responseHeaderBlacklist, cacheContent.headers);
   cacheContent.headers = reducedHeaders;
-};
+}
 
-Rehashser.prototype.updateRequestWithOptions = function (cacheContent) {
+Rehasher.prototype.updateRequestWithOptions = function(cacheContent) {
   let filteredHeaders =  HeaderUtil.filterHeaders(this.options.cacheHeaders, cacheContent.request.headers);
   let urlInfo = Url.parse(this.options.serverBaseUrl); // Update Base Server URL
+
+  cacheContent.request.path = QueryStringUtil.filterQueryParameters(
+    this.options.queryParameterBlacklist,
+    cacheContent.request.path
+  );
 
   cacheContent.request.hostname = urlInfo.hostname;
   cacheContent.request.headers = filteredHeaders;
   cacheContent.request.port = Util.determinePort(urlInfo);
   cacheContent.request.transaction = cacheContent.request.transaction || '';
-};
+}
 
-Rehashser.prototype.updateFile = function (filePath, cacheContent, originalCachedContents) {
+Rehasher.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {
   let cacheClient = this.cacheClient;
   if (cacheClient.isCached(cacheContent.request)) {
     this.logger.info('Updating Contents for for File:', filePath);
@@ -83,10 +89,10 @@ Rehashser.prototype.updateFile = function (filePath, cacheContent, originalCache
     this.logger.info('Hash Changed for Request. Renaming File for Request: ', cacheContent.request.path);
     cacheClient
       .record(cacheContent.request, cacheContent)
-      .then(function () {
+      .then(function() {
         cacheClient.remove(originalCachedContents.request, filePath);
       });
   }
-};
+}
 
-export default Rehashser;
+export default Rehasher;

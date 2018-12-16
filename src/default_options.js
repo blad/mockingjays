@@ -26,7 +26,6 @@ let getBooleanValue = function (value, defaultValue) {
   return defaultValue;
 };
 
-
 /**
  * Provides default values and verifies that requied values are set.
  */
@@ -42,6 +41,7 @@ let DefaultOptions = function () {
     overrideCacheDir: null,
     passthrough: false,
     port: process.env.MOCKINGJAYS_PORT || 9000,
+    queryParameterBlacklist: null,
     readOnly: false,
     refresh: false,
     requestResponseLogFile: null,
@@ -62,6 +62,7 @@ DefaultOptions.prototype.merge = function (options, extraOptions) {
     R.partial(this._handleCacheHeaders, defaults),
     R.partial(this._handleContentTypeDefault, defaults),
     R.partial(this._handleIgnoreJsonBodyPath, defaults),
+    R.partial(this._handleWhiteLabel, defaults),
     R.partial(this._handleLogLevel, defaults),
     R.partial(this._handlePassthrough, defaults),
     R.partial(this._handlePortDefault, defaults),
@@ -71,7 +72,8 @@ DefaultOptions.prototype.merge = function (options, extraOptions) {
     R.partial(this._handleResponseHeaders, defaults),
     R.partial(this._handleTransitionConfig, defaults),
     R.partial(this._handleWhiteLabel, defaults),
-    R.partial(this._handleCacheDirectoryDefault, defaults)
+    R.partial(this._handleCacheDirectoryDefault, defaults),
+    R.partial(this._handleQueryStringBlacklist, defaults),
   )(R.merge(options, extraOptions));
 };
 
@@ -215,6 +217,14 @@ DefaultOptions.prototype._handleTransitionConfig = function (defaults, options) 
 DefaultOptions.prototype._handleWhiteLabel = function (defaults, options) {
   return R.assoc('whiteLabel', getBooleanValue(options.whiteLabel, defaults.whiteLabel), options);
 };
+
+DefaultOptions.prototype._handleQueryStringBlacklist = function (defaults, options) {
+  return R.assoc(
+    'queryParameterBlacklist',
+    options.queryParameterBlacklist || defaults.queryParameterBlacklist,
+    options
+  );
+}
 
 
 export default DefaultOptions;

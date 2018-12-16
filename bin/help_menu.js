@@ -17,6 +17,7 @@ let HelpMenu = function() {
     "  --ignoreContentType         Comma separated list of content-types that should not be cached. \u{1b}[1;33mDefault: \'\'\u{1b}[0m",
     "  --refresh                   Indicates if the cache should be updated unconditionally. \u{1b}[1;33mDefault: false\u{1b}[0m",
     "  --cacheHeaders              Headers that should be considered as part of the cache signature. \u{1b}[1;33mDefault: \'\'\u{1b}[0m",
+    "  --queryParameterBlacklist   Comma separated list of query parameters that should not be cached. \\033[1;33mDefault: \'\'\\033[0m",
     "  --readOnly                  Disable writing new cache fixtures. \u{1b}[1;33mDefault: false\u{1b}[0m",
     "  --responseHeaderBlacklist   Indicates headers that should not be recorded to the cache file. \u{1b}[1;33mDefault: \'\'\u{1b}[0m",
     "  --help                      Displays this description of options",
