@@ -5,9 +5,10 @@ import CacheClient from './cache_client';
 import FileSystemHelper from './filesystem_helper';
 import HeaderUtil from './header_util';
 import Logger from './logger';
+import QueryStringUtil from './query_string_util';
 import Util from './util';
 
-let Rehashser = function (options) {
+let Rehasher = function (options) {
   this.logger = new Logger();
   this.options = options;
 
@@ -21,14 +22,14 @@ let Rehashser = function (options) {
   this.cacheClient = new CacheClient(options);
 }
 
-Rehashser.prototype.process = function () {
+Rehasher.prototype.process = function () {
   FileSystemHelper
   .findDirectories(this.options.cacheDir)
   .forEach(this.rehashWithOptions(this.options))
 }
 
 
-Rehashser.prototype.rehashWithOptions = function(options) {
+Rehasher.prototype.rehashWithOptions = function(options) {
   return root => {
     let notADirectory = function(file) {return !FileSystemHelper.directoryExists(file)};
     FileSystemHelper
@@ -46,7 +47,7 @@ Rehashser.prototype.rehashWithOptions = function(options) {
   }
 }
 
-Rehashser.prototype.getContents = function(file) {
+Rehasher.prototype.getContents = function(file) {
   return new Promise(function(resolve, reject) {
     FileSystem.readFile(file, function (err, data) {
       if (err) {
@@ -59,14 +60,19 @@ Rehashser.prototype.getContents = function(file) {
   });
 }
 
-Rehashser.prototype.updateResponseWithOptions = function(cacheContent) {
+Rehasher.prototype.updateResponseWithOptions = function(cacheContent) {
   let reducedHeaders = HeaderUtil.removeHeaders(this.options.responseHeaderBlacklist, cacheContent.headers);
   cacheContent.headers = reducedHeaders;
 }
 
-Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
+Rehasher.prototype.updateRequestWithOptions = function(cacheContent) {
   let filteredHeaders =  HeaderUtil.filterHeaders(this.options.cacheHeaders, cacheContent.request.headers);
   let urlInfo = Url.parse(this.options.serverBaseUrl); // Update Base Server URL
+
+  cacheContent.request.path = QueryStringUtil.filterQueryParameters(
+    this.options.queryParameterBlacklist,
+    cacheContent.request.path
+  );
 
   cacheContent.request.hostname = urlInfo.hostname;
   cacheContent.request.headers = filteredHeaders;
@@ -74,7 +80,7 @@ Rehashser.prototype.updateRequestWithOptions = function(cacheContent) {
   cacheContent.request.transaction = cacheContent.request.transaction || '';
 }
 
-Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {
+Rehasher.prototype.updateFile = function(filePath, cacheContent, originalCachedContents) {
   let cacheClient = this.cacheClient;
   if (cacheClient.isCached(cacheContent.request)) {
     this.logger.info('Updating Contents for for File:', filePath);
@@ -89,4 +95,4 @@ Rehashser.prototype.updateFile = function(filePath, cacheContent, originalCached
   }
 }
 
-export default Rehashser;
+export default Rehasher;

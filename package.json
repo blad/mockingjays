@@ -13,7 +13,9 @@
     "prepublish": "rm -rf build && npm run build:core",
     "test": "npm run test:unit && npm run test:feature",
     "test:unit": "npm run clean && npm run build && mocha --exit ./build/test",
-    "test:feature": "npm run clean && npm run build && (cd build && cucumber-js)"
+    "test:feature": "npm run clean && npm run build && (cd build && cucumber-js)",
+    "test:feature:only":
+      "npm run clean && npm run build && (cd build && cucumber-js --tags '@Only')"
   },
   "repository": {
     "type": "git",

@@ -3,6 +3,7 @@ import fs from 'fs';
 import http from 'http';
 import path from 'path';
 import {Then, When} from 'cucumber';
+import {expect} from 'chai';
 
 const TIMEOUT = 20 * 1000;
 
@@ -38,38 +39,6 @@ When(/^I make a "([^"]*)" request to "([^"]*)" with headers:$/, {timeout: TIMEOU
   }
 });
 
-
-When(/^I make a GET request to "([^"]*)" with the query strings:$/, function (path, table, done) {
-  let first = true;
-  let queryString = table.hashes().reduce(function(qs, current) {
-    let key = current.KEY;
-    let val = current.VALUE;
-    qs += (first ? '' : '&') + key + '=' + (isNaN(val) ? val : parseInt(val, 10));
-    first = false;
-    return qs;
-  }, '?');
-
-  let options = {
-    hostname: 'localhost',
-    port: this.options.port,
-    path: path + queryString,
-    method: 'GET'
-  };
-
-  let req = http.request(options, function(response) {
-    let str = '';
-    response.on('data', function (chunk) {str += chunk;});
-    response.on('end', function() {
-      this.result = str;
-      done(str ? undefined : 'Empty Response');
-    });
-    response.on('error', function(){ done('Error during request.')});
-  });
-  req.on('error', function(){ done('Error during request.')});
-  req.end();
-});
-
-
 Then(/^I see a cache file for "([^"]*)" with the following headers:$/, function (path, table, done) {
   let files = this.cacheFiles(this.options.cacheDir, path);
   if (files.length != 1) {
@@ -87,4 +56,11 @@ Then(/^I see a cache file for "([^"]*)" with the following headers:$/, function 
   });
 
   done(!requiredHeadersFound ? 'Missing Headers': null);
+});
+
+Then('I can see one cache file for {string}', function(path) {
+  const files = this.cacheFiles(this.options.cacheDir, path);
+  const errorMsg = `Expecting 1 file for form-data. ${files.length} found`;
+
+  expect(files.length, errorMsg).to.equal(1);
 });

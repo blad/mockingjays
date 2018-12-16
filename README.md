@@ -88,6 +88,8 @@ new Mockingjays().start({
   - *Default: false*
 - **passthrough** - Indicates if the request/response cache should be ignored. Each request will passthrough the proxy, but not read/write to any cache files.
   - *Default: false*
+-  **queryParameterBlacklist** - Comma separated list of query parameters that should not be cached.
+  - *Default: ''*
 - **responseHeaderBlacklist** - Indicates headers that should not be recorded to the cache file. Things like date or fields that may change the file during refreshes are ideal candidates.
   - *Default: []* (Record all headers)
 - **transitionConfig** - Path or Object to the transition config Object. The transition config defined a mapping between requests that cause state changes, and the requests that are affected. [See Feature File for Example](features/stateful_requests.feature)
