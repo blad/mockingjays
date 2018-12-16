@@ -1,17 +1,20 @@
+import fs from 'fs';
 import http from 'http';
 import querystring from 'querystring';
 
-import {Then, When} from 'cucumber';
 import R from 'ramda';
-import {expect} from 'mocha';
+import {Then, When} from 'cucumber';
+import {expect} from 'chai';
 
 When('I make a {string} request to {string} with the query parameters:',
-  function (method, path, table, done) {
+  function (method, rawPath, table, done) {
     const queryString = querystring.stringify(table.rowsHash());
+    const path = queryString ? rawPath : `${rawPath}?${queryString}`;
+
     const options = {
       hostname: 'localhost',
       port: this.options.port,
-      path: path + queryString,
+      path,
       method
     };
 
@@ -21,7 +24,6 @@ When('I make a {string} request to {string} with the query parameters:',
       response.on('data', chunk => data.push(chunk));
       response.on('end', function() {
         this.result = data;
-        console.log('RESULT', this.result);
         done(data ? undefined : 'Empty Response');
       });
       response.on('error', () => done('Error during request.'));
@@ -31,8 +33,8 @@ When('I make a {string} request to {string} with the query parameters:',
     req.end();
 });
 
-Then("the {string} cache file doesn't contain the following query strings keys:",
-  function (table) {
+Then("the {string} cache file doesn't contain the following query parameters:",
+  function (path, table) {
     const blacklistedKeys = table.raw();
     const files = this.cacheFiles(this.options.cacheDir, path);
 
@@ -41,13 +43,11 @@ Then("the {string} cache file doesn't contain the following query strings keys:"
       return;
     }
 
-    const fileContents = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}))
-    const queryStringValues = querystring.parse(fileContents.request.path);
+    const fileContents = JSON.parse(fs.readFileSync(files[0], {encoding: 'utf-8'}));
+    const queryParameterValues = querystring.parse(fileContents.request.path);
+    const queryParameterKeys = Object.keys(queryParameterValues);
 
-    const cacheFileContains = R.pipe(
-      R.keys(queryStringValues),
-      R.contains(expectedBlacklistedQueryStringKeys)
+    blacklistedKeys.forEach(key =>
+      expect(queryParameterKeys.includes(key)).to.be.false
     );
-
-    expect(cacheFileContains(blacklistedKeys)).to.be.false;
 });

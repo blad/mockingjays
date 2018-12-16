@@ -58,7 +58,7 @@ Then(/^I see a cache file for "([^"]*)" with the following headers:$/, function 
   done(!requiredHeadersFound ? 'Missing Headers': null);
 });
 
-Then('I can see one cache file for {string}', function (path, table) {
+Then('I can see one cache file for {string}', function(path) {
   const files = this.cacheFiles(this.options.cacheDir, path);
   const errorMsg = `Expecting 1 file for form-data. ${files.length} found`;
 
