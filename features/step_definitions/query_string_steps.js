@@ -6,7 +6,7 @@ import R from 'ramda';
 import {Then, When} from 'cucumber';
 import {expect} from 'chai';
 
-When('I make a {string} request to {string} with the query parameters:',
+When('I make a {word} request to {string} with the query parameters:',
   function (method, rawPath, table, done) {
     const queryString = querystring.stringify(table.rowsHash());
     const path = queryString ? rawPath : `${rawPath}?${queryString}`;

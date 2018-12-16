@@ -14,7 +14,7 @@ Feature: Query String Blacklist
       | serverBaseUrl        | http://localhost:9001 |
     And I serve
     And I see no error
-    And I make a "GET" request to "/queryStringRequest" with the query parameters:
+    And I make a GET request to "/queryStringRequest" with the query parameters:
       | KEY   | VALUE                             |
       | token | super-secret-authentication-token |
       | woot  | Yeah!                             |
