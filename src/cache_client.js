@@ -1,7 +1,5 @@
 import fs from 'fs';
-import qs from 'querystring';
 import path from 'path';
-import url from 'url';
 
 import Colorize from './colorize';
 import FileSystemHelper from './filesystem_helper';
@@ -13,17 +11,17 @@ import Util from './util';
 const RW_MODE = fs.F_OK | fs.R_OK | fs.W_OK;
 const EXT = '.json';
 
-let replaceQueryParam = function(directoryName) {
+let replaceQueryParam = function (directoryName) {
   let queryParamStartIndex = directoryName.indexOf('?');
 
-  if (queryParamStartIndex == -1){
+  if (queryParamStartIndex == -1) {
     return directoryName;
   }
 
   return directoryName.substr(0, queryParamStartIndex);
-}
+};
 
-let CacheClient = function(options) {
+let CacheClient = function (options) {
   this.accessLogFile = options.accessLogFile;
   this.cacheDir = options.cacheDir;
   this.cacheHeader = options.cacheHeader;
@@ -35,13 +33,13 @@ let CacheClient = function(options) {
   this.responseHeaderBlacklist = options.responseHeaderBlacklist;
   this.whiteLabel = options.whiteLabel;
   FileSystemHelper.logger = options.logger;
-}
+};
 
 
 CacheClient.prototype.isCached = function (request) {
-  if (this.passthrough) {return false;}
+  if (this.passthrough) { return false; }
   return this.isInOverrideCache(request) || this.isInCached(request);
-}
+};
 
 
 CacheClient.prototype.isInOverrideCache = function (request) {
@@ -55,7 +53,7 @@ CacheClient.prototype.isInOverrideCache = function (request) {
   } catch (error) {
     return false;
   }
-}
+};
 
 
 CacheClient.prototype.isInCached = function (request) {
@@ -65,7 +63,7 @@ CacheClient.prototype.isInCached = function (request) {
   } catch (error) {
     return false;
   }
-}
+};
 
 
 CacheClient.prototype.getReadFileName = function (request) {
@@ -78,7 +76,7 @@ CacheClient.prototype.getReadFileName = function (request) {
   }
 
   return this.requestPath(request);
-}
+};
 
 
 CacheClient.prototype.getWriteFileName = function (request) {
@@ -86,7 +84,7 @@ CacheClient.prototype.getWriteFileName = function (request) {
     return this.requestPathOverride(request);
   }
   return this.requestPath(request);
-}
+};
 
 
 CacheClient.prototype.writeToAccessFile = function (filePath) {
@@ -96,7 +94,7 @@ CacheClient.prototype.writeToAccessFile = function (filePath) {
   fs.appendFile(this.accessLogFile, filePath + '\n', (err) => {
     if (err) throw err;
   });
-}
+};
 
 
 CacheClient.prototype.fetch = function (request) {
@@ -105,11 +103,11 @@ CacheClient.prototype.fetch = function (request) {
   this.writeToAccessFile(filePath);
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {
-      if (err) {return reject(err);}
+      if (err) { return reject(err); }
       resolve(Util.parseJSON(data));
     });
   });
-}
+};
 
 
 CacheClient.prototype.record = function (request, response) {
@@ -121,14 +119,14 @@ CacheClient.prototype.record = function (request, response) {
       response.request.path
     );
 
-    let responseString = Util.stringify(response) + "\n";
+    let responseString = Util.stringify(response) + '\n';
 
     let writeToFile = () => {
-      if (this.passthrough) {return resolve(response);}
+      if (this.passthrough) { return resolve(response); }
       let targetFile = this.getWriteFileName(request);
       this.writeToAccessFile(targetFile);
       fs.writeFile(targetFile, responseString, (err) => {
-        if (err) {return reject(err);}
+        if (err) { return reject(err); }
         resolve(response);
       });
     };
@@ -139,7 +137,7 @@ CacheClient.prototype.record = function (request, response) {
     }
     writeToFile();
   });
-}
+};
 
 
 CacheClient.prototype.remove = function (request, originalFilename) {
@@ -154,24 +152,24 @@ CacheClient.prototype.remove = function (request, originalFilename) {
 
         let message = 'Unable to Delete File: ' + filePath;
         this.logger.error(message, error);
-        return reject(error)
+        return reject(error);
       });
     } else {
       this.logger.info('Path does not exist for request. Skipping action.');
       resolve();
     }
   });
-}
+};
 
 
 CacheClient.prototype.directory = function (request, rootDir) {
   let requestPath = request.path || '';
-  let pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1
+  let pathEndsSlash = requestPath.lastIndexOf('/') == path.length - 1;
   requestPath = pathEndsSlash ? requestPath.substr(0, requestPath.length - 1) : requestPath;
   requestPath = requestPath.split('/').map(replaceQueryParam).join('/').toLowerCase();
 
   return path.join(rootDir, requestPath);
-}
+};
 
 
 CacheClient.prototype.requestPathOverride = function (request) {
@@ -179,7 +177,7 @@ CacheClient.prototype.requestPathOverride = function (request) {
   let directory = this.directory(request, this.overrideCacheDir);
 
   return path.join(directory, requestHash) + EXT;
-}
+};
 
 
 CacheClient.prototype.requestPath = function (request) {
@@ -187,13 +185,13 @@ CacheClient.prototype.requestPath = function (request) {
   let directory = this.directory(request, this.cacheDir);
 
   return path.join(directory, requestHash) + EXT;
-}
+};
 
 
 CacheClient.prototype.requestHash = function (request) {
   return new RequestHash(request, this.cacheHeader, this.whiteLabel, this.ignoreJsonBodyPath)
     .toString()
     .substr(0,10);
-}
+};
 
-export default CacheClient
+export default CacheClient;

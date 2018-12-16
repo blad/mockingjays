@@ -224,7 +224,7 @@ DefaultOptions.prototype._handleQueryStringBlacklist = function (defaults, optio
     options.queryParameterBlacklist || defaults.queryParameterBlacklist,
     options
   );
-}
+};
 
 
 export default DefaultOptions;
