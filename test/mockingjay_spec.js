@@ -1,17 +1,17 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import Mockingjay from '../src/mockingjay';
 
 describe('Mockingjay', function () {
 
   describe('simplify', function () {
-    let mockingjay = new Mockingjay({serverBaseUrl: 'http://www.google.com'});
+    let mockingjay = new Mockingjay({ serverBaseUrl: 'http://www.google.com' });
 
     it('should prepare options for HTTP request', function () {
       let givenRequest = {
         url: '/query',
         method: 'GET',
         body: '',
-        headers: {authorization: 'Basic 12334'}
+        headers: { authorization: 'Basic 12334' }
       };
 
       expect(mockingjay.simplify(givenRequest)).to.deep.equal({
@@ -20,7 +20,7 @@ describe('Mockingjay', function () {
         path: '/query',
         method: 'GET',
         body: '',
-        headers: {authorization: 'Basic 12334'},
+        headers: { authorization: 'Basic 12334' },
         transaction: ''
       });
     });

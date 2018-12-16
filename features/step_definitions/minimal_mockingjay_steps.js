@@ -1,6 +1,5 @@
 import Mockingjays from '../../index';
-import {Given, Then, When} from 'cucumber';
-import path from 'path';
+import { Given, Then, When } from 'cucumber';
 
 Given(/^I want to create a Mockingjay instance with no options$/, function (done) {
   this.options = {};
@@ -9,7 +8,7 @@ Given(/^I want to create a Mockingjay instance with no options$/, function (done
 
 
 Given(/^I want to create a Mockingjay instance with the following options$/, function (optionsTable, done) {
-  let options = {}
+  let options = {};
   optionsTable.rows().forEach(function (row) {
     return options[row[0]] = row[1];
   });
@@ -24,7 +23,7 @@ When(/^I serve$/, function (done) {
     this.mockingjay = new Mockingjays().start(this.options, done);
   } catch (error) {
     this.error = error;
-    done()
+    done();
   }
 });
 

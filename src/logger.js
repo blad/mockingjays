@@ -8,7 +8,7 @@ let Level = {
   DEBUG: 4
 };
 
-let Logger = function() {
+let Logger = function () {
   this.level = Level.INFO;
   if (arguments.length > 0) {
     this.setLevel.apply(this, arguments);
@@ -34,34 +34,35 @@ Logger.prototype.setLevel = function (logLevel) {
       this.level = Level.NONE;
       break;
     default:
+    // eslint-disable-next-line no-console
       console.warn('Unknown Log Level, Setting level to INFO');
       this.level = Level.INFO;
   }
-}
+};
 
 
 Logger.prototype.debug = function () {
   Array.prototype.unshift.call(arguments, Level.DEBUG);
   this.log.apply(this, arguments);
-}
+};
 
 
 Logger.prototype.info = function () {
   Array.prototype.unshift.call(arguments, Level.INFO);
   this.log.apply(this, arguments);
-}
+};
 
 
 Logger.prototype.error = function () {
   Array.prototype.unshift.call(arguments, Level.ERROR);
   this.log.apply(this, arguments);
-}
+};
 
 
 Logger.prototype.warn = function () {
   Array.prototype.unshift.call(arguments, Level.WARN);
   this.log.apply(this, arguments);
-}
+};
 
 
 Logger.prototype.log = function () {
@@ -73,20 +74,24 @@ Logger.prototype.log = function () {
   if (level <= this.level) {
     switch (level) {
       case Level.ERROR:
+      // eslint-disable-next-line no-console
         console.error(Colorize.red('ERROR:    '), this.formatLines(messages).join(' '));
         break;
       case Level.WARN:
+      // eslint-disable-next-line no-console
         console.warn(Colorize.yellow('WARN:     '), this.formatLines(messages).join(' '));
         break;
       case Level.DEBUG:
+      // eslint-disable-next-line no-console
         console.warn(Colorize.blue('DEBUG:    '), this.formatLines(messages).join(' '));
         break;
       case Level.INFO:
+      // eslint-disable-next-line no-console
         console.log(Colorize.blue('INFO:     '), this.formatLines(messages).join(' '));
         break;
     }
   }
-}
+};
 
 Logger.prototype.formatLines = function (lines) {
   let newLines = [];
@@ -99,6 +104,6 @@ Logger.prototype.formatLines = function (lines) {
     }
   }
   return newLines;
-}
+};
 
 export default Logger;

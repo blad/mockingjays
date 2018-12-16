@@ -1,22 +1,22 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import TransactionState from '../src/transaction_state';
 
 
-describe('TransactionState', function() {
+describe('TransactionState', function () {
 
-  describe('state with populated configuration', function() {
+  describe('state with populated configuration', function () {
     let transactionConfig = {
-      "/api/": {
-        "method": "GET",
-        "status": 200,
-        "links": [
+      '/api/': {
+        'method': 'GET',
+        'status': 200,
+        'links': [
           {
-            "path": "/api/people/1/",
-            "method": "GET"
+            'path': '/api/people/1/',
+            'method': 'GET'
           }
         ]
       }
-    }
+    };
     let transactionState = new TransactionState(transactionConfig);
 
     it('should identify stateful transaction', function () {
@@ -49,7 +49,7 @@ describe('TransactionState', function() {
   });
 
 
-  describe('state with empty configuration', function() {
+  describe('state with empty configuration', function () {
     let transactionState = new TransactionState({});
 
     it('should identify stateful transaction', function () {
