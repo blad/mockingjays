@@ -7,20 +7,20 @@ let Util = {
 
 Util.determinePort = function (urlInfo) {
   return parseInt(urlInfo.port) || (urlInfo.protocol === 'https:' ? 443 : 80);
-}
+};
 
 
 Util.stringify = function (inputObject) {
   let jsonObject = inputObject || '';
 
   try {
-    switch (typeof(jsonObject)) {
+    switch (typeof (jsonObject)) {
       case 'object':
         return JSON.stringify(jsonObject, null, 2);
       case 'string':
-        return jsonObject
+        return jsonObject;
       case 'function':
-        return '[Function]'
+        return '[Function]';
       default:
         return jsonObject.toString();
     }
@@ -28,7 +28,7 @@ Util.stringify = function (inputObject) {
     Util.logger.warn('Error While Stringifying Object: ', error);
     return jsonObject.toString();
   }
-}
+};
 
 
 Util.parseJSON = function (jsonString) {
@@ -37,12 +37,12 @@ Util.parseJSON = function (jsonString) {
   } catch (error) {
     return jsonString;
   }
-}
+};
 
 
 Util.simpleCopy = function (target) {
   return JSON.parse(JSON.stringify(target));
-}
+};
 
 
 Util.regExArrayContains = function (regExArray, value) {
@@ -51,7 +51,7 @@ Util.regExArrayContains = function (regExArray, value) {
     return expressionMatched || Boolean(matchList && matchList.length > 0);
   };
   return regExArray.reduce(inList, false);
-}
+};
 
 
 Util.sortObjectKeys = function (originalObject) {

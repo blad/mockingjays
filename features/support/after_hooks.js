@@ -1,6 +1,6 @@
-import {After, Before} from 'cucumber';
+import { After } from 'cucumber';
 
-After(function (scenario) {
+After(function () {
   // Clean Up After Every Scenario:
   if (this.mockingjay) {
     this.mockingjay.close();

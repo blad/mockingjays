@@ -26,7 +26,7 @@ const makeHostAndPortAgnostic = R.compose(
 
 const composeSignature = R.compose(computeHash, JSON.stringify, Util.sortObjectKeys, stringifyBody);
 
-function computeHash(payload) {
+function computeHash (payload) {
   let shasum = crypto.createHash('sha1');
   shasum.update(payload);
   return shasum.digest('hex');
@@ -42,11 +42,11 @@ let RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPat
 
 
 RequestHash.prototype.toString = function () {
-  return composeSignature(this._filteredAttributes())
+  return composeSignature(this._filteredAttributes());
 };
 
 const stubIgnoredJsonPaths = (payload, path) => {
-  if (typeof(payload.body) !== "object") {
+  if (typeof (payload.body) !== 'object') {
     return payload;
   }
 
@@ -70,7 +70,7 @@ RequestHash.prototype._filteredAttributes = function () {
         R.compose(HeaderUtil.filterHeaders(this.cacheHeaders), R.prop('headers')),
         R.identity
       ]),
-  )(this.request)
-}
+  )(this.request);
+};
 
 export default RequestHash;

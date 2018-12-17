@@ -1,35 +1,35 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import RequestHash from '../src/request_hash';
 
 
-describe('RequestHash with Empty Body', function() {
+describe('RequestHash with Empty Body', function () {
   let exampleRequestA = {
     hostname: 'swapi.co',
     path: '/api/',
     port: 80,
-    headers: {'authorization': '12345', 'content-type': 'application/json'},
+    headers: { 'authorization': '12345', 'content-type': 'application/json' },
     body: ''
-  }
+  };
 
   let exampleRequestADomainB = {
     hostname: 'notarealdomain.com',
     path: '/api/',
     port: 8080,
-    headers: {'authorization': '12345', 'content-type': 'application/json'},
+    headers: { 'authorization': '12345', 'content-type': 'application/json' },
     body: ''
-  }
+  };
 
   let exampleRequestB = {
     hostname: 'swapi.co',
     path: '/api/people/1/',
     port: 80,
-    headers: {'authorization': '98745', 'content-type': 'application/json'},
+    headers: { 'authorization': '98745', 'content-type': 'application/json' },
     body: ''
-  }
+  };
 
-  describe('toString()', function() {
+  describe('toString()', function () {
     it('should NOT be equal when headers are considered', function () {
-      let cacheHeadersAuthorization = ['authorization']
+      let cacheHeadersAuthorization = ['authorization'];
       let hashA = new RequestHash(exampleRequestA, cacheHeadersAuthorization);
       let hashB = new RequestHash(exampleRequestB, cacheHeadersAuthorization);
 
@@ -37,7 +37,7 @@ describe('RequestHash with Empty Body', function() {
     });
 
     it('should be NOT be equal when headers are not considered', function () {
-      let cacheHeaders = []
+      let cacheHeaders = [];
       let hashA = new RequestHash(exampleRequestA, cacheHeaders);
       let hashB = new RequestHash(exampleRequestB, cacheHeaders);
 
@@ -46,14 +46,14 @@ describe('RequestHash with Empty Body', function() {
 
 
     it('should hash to a different value with a white label flag', function () {
-      let cacheHeaders = []
+      let cacheHeaders = [];
       let hashAWhiteLabel = new RequestHash(exampleRequestA, cacheHeaders, true);
       let hashA = new RequestHash(exampleRequestA, cacheHeaders);
       expect(hashAWhiteLabel.toString()).to.not.equal(hashA.toString());
     });
 
     it('should hash to the same value with a white label flag', function () {
-      let cacheHeaders = []
+      let cacheHeaders = [];
       let hashA = new RequestHash(exampleRequestA, cacheHeaders, true);
       let hashB = new RequestHash(exampleRequestADomainB, cacheHeaders, true);
       expect(hashA.toString()).to.equal(hashB.toString());
@@ -61,9 +61,9 @@ describe('RequestHash with Empty Body', function() {
   });
 
 
-  describe('_filteredAttributes()', function() {
+  describe('_filteredAttributes()', function () {
     it('should NOT be equal when headers are included', function () {
-      let cacheHeadersAuthorization = ['authorization']
+      let cacheHeadersAuthorization = ['authorization'];
       let hashA = new RequestHash(exampleRequestA, cacheHeadersAuthorization);
       let hashB = new RequestHash(exampleRequestB, cacheHeadersAuthorization);
 
@@ -71,7 +71,7 @@ describe('RequestHash with Empty Body', function() {
     });
 
     it('should be NOT be equal when headers are excluded', function () {
-      let cacheHeaders = []
+      let cacheHeaders = [];
       let hashA = new RequestHash(exampleRequestA, cacheHeaders);
       let hashB = new RequestHash(exampleRequestB, cacheHeaders);
 
@@ -79,7 +79,7 @@ describe('RequestHash with Empty Body', function() {
     });
 
     it('should be filter all headers out', function () {
-      let cacheHeaders = []
+      let cacheHeaders = [];
       let hashA = new RequestHash(exampleRequestA, cacheHeaders);
       expect(hashA._filteredAttributes()).to.deep.equal({
         hostname: 'swapi.co',
@@ -91,14 +91,14 @@ describe('RequestHash with Empty Body', function() {
     });
 
     it('should be keep defined headers headers', function () {
-      let cacheHeaders = ['content-type']
+      let cacheHeaders = ['content-type'];
       let hashA = new RequestHash(exampleRequestA, cacheHeaders);
       expect(hashA._filteredAttributes()).to.deep.equal({
         hostname: 'swapi.co',
         path: '/api/',
         port: 80,
         body: '',
-        headers: {'content-type': 'application/json'}
+        headers: { 'content-type': 'application/json' }
       });
     });
 
@@ -107,7 +107,7 @@ describe('RequestHash with Empty Body', function() {
         hostname: 'swapi.co',
         path: '/api/',
         port: 80,
-        headers: {'authorization': '98745', 'content-type': 'application/json'},
+        headers: { 'authorization': '98745', 'content-type': 'application/json' },
         body: {
           a: {
             b: {
@@ -143,7 +143,7 @@ describe('RequestHash with Empty Body', function() {
         hostname: 'swapi.co',
         path: '/api/',
         port: 80,
-        headers: {'authorization': '98745', 'content-type': 'application/json'},
+        headers: { 'authorization': '98745', 'content-type': 'application/json' },
         body: {
           a: {
             b: 'Example Value'

@@ -20,9 +20,9 @@ const KNOWN_TEXTUAL_CONTENT_TYPES = [
 
 
 let isInWhiteList = R.curry((key, value) => {
-  let isAllowed = R.find(R.equals(key), HEADER_WHITE_LIST)
-  let isNonEmptyContentLength = !(key === 'content-length' && value === "0");
-  return isAllowed && isNonEmptyContentLength
+  let isAllowed = R.find(R.equals(key), HEADER_WHITE_LIST);
+  let isNonEmptyContentLength = !(key === 'content-length' && value === '0');
+  return isAllowed && isNonEmptyContentLength;
 });
 
 
@@ -30,7 +30,7 @@ let isInWhiteList = R.curry((key, value) => {
 let getTextualContentTypeReducer = R.curry((contentType, isTextual, current) => {
   // Treating a missing content type as a textual type.
   return isTextual || !contentType || (contentType.indexOf(current) > -1);
-})
+});
 
 
 let HeaderUtil = {
@@ -70,7 +70,7 @@ HeaderUtil.filterHeaders =  R.curry((wantedHeaders, requestHeaders) => {
  * requestHeaders - Object of headers.
  */
 HeaderUtil.removeHeaders =  function (targetHeader, requestHeaders) {
-  return R.reduce((obj, key) => R.dissoc(key, obj), requestHeaders, targetHeader || [])
+  return R.reduce((obj, key) => R.dissoc(key, obj), requestHeaders, targetHeader || []);
 };
 
 
@@ -98,7 +98,7 @@ HeaderUtil.standardize = function (requestHeaders) {
   let reducer = (targetObj, [key, value]) => R.assoc(key, value, targetObj);
 
   return R.transduce(transform, reducer, {}, entries);
-}
+};
 
 
 /**

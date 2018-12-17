@@ -1,30 +1,30 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import DefaultOptions from '../src/default_options';
 
-let DEFAULTS = {}
-describe('DefaultOptions', function() {
+let DEFAULTS = {};
+describe('DefaultOptions', function () {
 
-  describe('_handeBaseUrlDefault', function() {
+  describe('_handeBaseUrlDefault', function () {
     let defaults = new DefaultOptions(); // Deafaults Object is not stateful.
-    let userProvidedInput = {}
+    let userProvidedInput = {};
 
-    it('should expect a serverBaseUrl value from the user', function() {
-      expect(function() { defaults._handleBaseUrlDefault(DEFAULTS, userProvidedInput)}).to.throw('serverBaseUrl is required! It can not be empty.');
-    })
-  })
+    it('should expect a serverBaseUrl value from the user', function () {
+      expect(function () { defaults._handleBaseUrlDefault(DEFAULTS, userProvidedInput); }).to.throw('serverBaseUrl is required! It can not be empty.');
+    });
+  });
 
 
-  describe('_handleCacheDirectoryDefault', function() {
+  describe('_handleCacheDirectoryDefault', function () {
     let defaults = new DefaultOptions(); // Deafaults Object is not stateful.
-    let userProvidedInput = {}
+    let userProvidedInput = {};
 
-    it('should expect a default cacheDir value from the user', function() {
-      expect(function() { defaults._handleCacheDirectoryDefault(DEFAULTS, userProvidedInput)}).to.throw('cacheDir is required! It can not be empty.');
-    })
-  })
+    it('should expect a default cacheDir value from the user', function () {
+      expect(function () { defaults._handleCacheDirectoryDefault(DEFAULTS, userProvidedInput); }).to.throw('cacheDir is required! It can not be empty.');
+    });
+  });
 
 
-  describe('merge()', function() {
+  describe('merge()', function () {
     let defaults = new DefaultOptions(); // Deafaults Object is not stateful.
 
     it('merges successuflly when ALL options are provided', function () {
@@ -59,13 +59,12 @@ describe('DefaultOptions', function() {
         logLevel: 'debug',
         readOnly: false,
         requestResponseLogFile: '/request/response.log',
-	      ignoreJsonBodyPath: [],
         transitionConfig: {},
         queryParameterBlacklist: 'butt,things',
         whiteLabel: true
       };
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);
-    })
+    });
 
 
 
@@ -94,11 +93,10 @@ describe('DefaultOptions', function() {
         readOnly: false,
         logLevel: 'info',
         transitionConfig: {},
-	      ignoreJsonBodyPath: [],
         whiteLabel: false
       };
 
       expect(defaults.merge(userProvidedOptions)).to.deep.equal(expectedOptionsOutput);
-    })
-  })
-})
+    });
+  });
+});
