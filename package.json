@@ -1,6 +1,6 @@
 {
   "name": "mockingjays",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Mockingjays is a proxying library that responds with previously observed responses.",
   "main": "build/index.js",
   "scripts": {
@@ -15,8 +15,7 @@
     "test": "npm run test:unit && npm run test:feature",
     "test:unit": "npm run clean && npm run build && mocha --exit ./build/test",
     "test:feature": "npm run clean && npm run build && (cd build && cucumber-js)",
-    "test:feature:only":
-      "npm run clean && npm run build && (cd build && cucumber-js --tags '@Only')"
+    "test:feature:only": "npm run clean && npm run build && (cd build && cucumber-js --tags '@Only')"
   },
   "repository": {
     "type": "git",
