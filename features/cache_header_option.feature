@@ -1,4 +1,4 @@
-Feature: Minimal Mockingjay Instance
+Feature: Cache Header Option
 
   As a user of Mockingjays
   I want to be able to specify cache headers
