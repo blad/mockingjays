@@ -10,7 +10,7 @@
     "build:test:feature": "babel features -d build/features --copy-files",
     "build:test:unit": "babel test -d build/test --copy-files",
     "clean": "rm -rf build/temp/",
-    "lint": "eslint src/ test/ features/ index.js",
+    "lint": "eslint bin/ src/ test/ features/ index.js",
     "prepublish": "rm -rf build && npm run build:core",
     "test": "npm run test:unit && npm run test:feature",
     "test:unit": "npm run clean && npm run build && mocha --exit ./build/test",

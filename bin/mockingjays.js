@@ -10,6 +10,7 @@ switch (true) {
     HelpMenu();
     break;
   case OptionParser.shouldDisplayVersion(userOptions):
+    // eslint-disable-next-line no-console
     console.log('Mockingjays v2.0.0-alpha');
     break;
   case OptionParser.shouldRehash(userOptions):
@@ -19,6 +20,7 @@ switch (true) {
     new Mockingjays().start(userOptions);
     break;
   default:
+    // eslint-disable-next-line no-console
     console.log('Error Parsing Options. Expected: serve, rehash, --help, or --version');
     HelpMenu();
 }
