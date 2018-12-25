@@ -4,11 +4,12 @@ import querystring from 'querystring';
 
 import { Then, When } from 'cucumber';
 import { expect } from 'chai';
+import R from 'ramda';
 
 When('I make a {word} request to {string} with the query parameters:',
   function (method, rawPath, table, done) {
     const queryString = querystring.stringify(table.rowsHash());
-    const path = queryString ? rawPath : `${rawPath}?${queryString}`;
+    const path = queryString ? `${rawPath}?${queryString}` : rawPath;
 
     const options = {
       hostname: 'localhost',
@@ -34,7 +35,7 @@ When('I make a {word} request to {string} with the query parameters:',
 
 Then("the {string} cache file doesn't contain the following query parameters:",
   function (path, table) {
-    const blacklistedKeys = table.raw();
+    const blacklistedKeys = R.flatten(table.raw());
     const files = this.cacheFiles(this.options.cacheDir, path);
 
     if (files.length != 1) {
@@ -44,10 +45,20 @@ Then("the {string} cache file doesn't contain the following query parameters:",
     }
 
     const fileContents = JSON.parse(fs.readFileSync(files[0], { encoding: 'utf-8' }));
-    const queryParameterValues = querystring.parse(fileContents.request.path);
+    const requestPath = fileContents.request.path;
+
+    const queryStringIndex = requestPath.indexOf('?');
+    const thereAreNoQueryParameters = queryStringIndex === -1;
+
+    if (thereAreNoQueryParameters) return;
+
+    const queryString = requestPath.substr(queryStringIndex + 1);
+    const queryParameterValues = querystring.parse(queryString);
+
     const queryParameterKeys = Object.keys(queryParameterValues);
 
-    blacklistedKeys.forEach(key =>
-      expect(queryParameterKeys.includes(key)).to.be.false
-    );
+    blacklistedKeys.forEach(key => {
+      const errorMessage = `Expected "${key}" to not be in query string`;
+      expect(queryParameterKeys.includes(key), errorMessage).to.be.false;
+    });
   });
