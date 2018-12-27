@@ -33,5 +33,15 @@ describe('QueryStringUtil', function () {
           .to.equal(filteredPath);
       });
     });
+
+    // TODO: Probably better to solve with a programmatic solution like
+    // data generators.
+    describe('when blacklisted query parameters have whitespace', function () {
+      it(`parses the blacklisted query parameters correctly and returns the
+          path as expected`, function () {
+        expect(filterQueryParameters('smoke, toke, bloke ', path))
+          .to.equal(pathWithoutQueryParameters);
+      });
+    });
   });
 });

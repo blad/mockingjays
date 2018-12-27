@@ -7,7 +7,11 @@ const filterQueryParameters = (blacklist, path) => {
   const queryStringIndex = path.indexOf('?');
   if (queryStringIndex === -1) return path;
 
-  const blacklistArray = blacklist.split(',');
+  const blacklistArray = R.pipe(
+    R.split(','),
+    R.map(R.trim)
+  )(blacklist);
+
   const host = path.substr(0, queryStringIndex);
   const queryString = path.substr(queryStringIndex + 1);
 
