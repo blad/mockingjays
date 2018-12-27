@@ -192,6 +192,7 @@ CacheClient.prototype.requestHash = function (request) {
   const hashParams = {
     cacheHeaders: this.cacheHeader,
     ignoreJsonBodyPath: this.ignoreJsonBodyPath,
+    queryParameterBlacklist: this.queryParameterBlacklist,
     request: request,
     whiteLabel: this.whiteLabel
   };
