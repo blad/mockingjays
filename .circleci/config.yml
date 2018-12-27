@@ -7,5 +7,6 @@ jobs:
       - checkout
       - run: npm install --dev
       - run: npm run build
+      - run: npm run lint
       - run: npm run test:unit
       - run: npm run test:feature
