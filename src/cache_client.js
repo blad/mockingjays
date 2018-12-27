@@ -189,7 +189,14 @@ CacheClient.prototype.requestPath = function (request) {
 
 
 CacheClient.prototype.requestHash = function (request) {
-  return new RequestHash(request, this.cacheHeader, this.whiteLabel, this.ignoreJsonBodyPath)
+  const hashParams = {
+    cacheHeaders: this.cacheHeader,
+    ignoreJsonBodyPath: this.ignoreJsonBodyPath,
+    request: request,
+    whiteLabel: this.whiteLabel
+  };
+
+  return new RequestHash(hashParams)
     .toString()
     .substr(0,10);
 };

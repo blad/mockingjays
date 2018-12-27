@@ -33,7 +33,7 @@ function computeHash (payload) {
 }
 
 
-let RequestHash = function (request, cacheHeaders, whiteLabel, ignoreJsonBodyPath) {
+let RequestHash = function ({request, cacheHeaders, whiteLabel, ignoreJsonBodyPath}) {
   this.request = request;
   this.cacheHeaders = cacheHeaders;
   this.whiteLabel = whiteLabel;
